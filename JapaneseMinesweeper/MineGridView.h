@@ -7,12 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-
-struct JMSPosition
-{
-    NSInteger row;
-    NSInteger column;
-};
+#import "Structs.h"
+#import "Enums.h"
 
 @interface MineGridView : UIView
 
@@ -22,5 +18,7 @@ struct JMSPosition
 - (BOOL) clickedWithCoordinate: (CGPoint)point;
 - (void) longTappedWithCoordinate: (CGPoint)point;
 - (NSInteger) cellsLeftToOpen;
+- (CGFloat) bonus: (struct JMSPosition)position;
+- (MineGridCellState) cellState: (struct JMSPosition)position;
 
 @end

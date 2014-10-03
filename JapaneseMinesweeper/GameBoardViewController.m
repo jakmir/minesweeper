@@ -18,6 +18,8 @@
 
 @end
 
+const CGFloat baseScore = 100;
+
 @implementation GameBoardViewController
 
 - (void)viewDidLoad
@@ -25,8 +27,6 @@
     [super viewDidLoad];
     
     initialTapPerformed = NO;
-    
-
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -78,14 +78,17 @@
     
     CGPoint coord = [gestureRecognizer locationInView:self.mineGridView];
     
+    struct JMSPosition position = [self.mineGridView cellPositionWithCoordinateInside:coord];
     if (!initialTapPerformed)
     {
-        struct JMSPosition position = [self.mineGridView cellPositionWithCoordinateInside:coord];
         [self.mineGridView fillWithMines:self.coverageRate exceptPosition:position];
         initialTapPerformed = YES;
     }
     
+    MineGridCellState oldState = [self.mineGridView cellState:position];
     BOOL mine = [self.mineGridView clickedWithCoordinate:coord];
+    MineGridCellState newState = [self.mineGridView cellState:position];
+    
     if (mine)
     {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Oops" message:@"Oops" delegate:self
@@ -95,6 +98,12 @@
     else
     {
         self.cellsLeftCount = [self.mineGridView cellsLeftToOpen];
+        
+        //just opened the cell, not possible to do that twice.
+        if (oldState != MineGridCellStateOpened && newState == MineGridCellStateOpened)
+        {
+            self.score += baseScore * (1 + [self.mineGridView bonus:position]);
+        }
         if (self.cellsLeftCount == 0)
         {
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Congratulations" message:@"You won this round" delegate:self

@@ -7,21 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Enums.h"
+#import "Structs.h"
 
 @class MineGridView;
-
-struct MineGridCellInfo {
-    NSInteger minesLeftDirection;
-    NSInteger minesRightDirection;
-    NSInteger minesTopDirection;
-    NSInteger minesBottomDirection;
-};
-
-typedef NS_ENUM(NSUInteger, MineGridCellState) {
-    MineGridCellStateOpened,
-    MineGridCellStateMarked,
-    MineGridCellStateClosed,
-};
 
 @interface MineGridCell : UIView
 

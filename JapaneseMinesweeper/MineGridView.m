@@ -187,6 +187,61 @@ const NSInteger spacing = 1;
     return position;
 }
 
+- (CGFloat)bonus:(struct JMSPosition)position
+{
+    NSInteger leftBound = position.column, rightBound = position.column;
+    NSInteger topBound = position.row, bottomBound = position.row;
+    
+    BOOL(^isNotOpened)(MineGridCell *) = ^BOOL (MineGridCell *cell)
+    {
+        return cell && cell.state != MineGridCellStateOpened;
+    };
+    MineGridCell *cell;
+    do
+    {
+        leftBound--;
+        cell = leftBound >= 0 ? map[leftBound][position.row] : nil;
+    }
+    while (isNotOpened(cell));
+    
+    do
+    {
+        rightBound++;
+        cell = rightBound < count ? map[rightBound][position.row] : nil;
+    }
+    while (isNotOpened(cell));
+    
+    do
+    {
+        topBound--;
+        cell = topBound >= 0 ? map[position.column][topBound] : nil;
+    }
+    while (isNotOpened(cell));
+    
+    do
+    {
+        bottomBound++;
+        cell = bottomBound < count ? map[position.column][bottomBound] : nil;
+    }
+    while (isNotOpened(cell));
+    
+    NSLog(@"horizontal: %d <-> %d", leftBound, rightBound);
+    NSLog(@"vertical  : %d <-> %d", topBound, bottomBound);
+    
+    
+    return 0.5;
+}
+
+- (MineGridCellState) cellState:(struct JMSPosition)position
+{
+    MineGridCell *cell = map[position.column][position.row];
+    if (cell)
+    {
+        return cell.state;
+    }
+    return MineGridCellStateClosed;
+}
+
 - (BOOL) clickedWithCoordinate: (CGPoint)point
 {
     MineGridCell *cell = [self cellWithCoordinateInside:point];
@@ -212,6 +267,8 @@ const NSInteger spacing = 1;
             [cell setState:MineGridCellStateMarked];
     }
 }
+
+
 /*
  // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.

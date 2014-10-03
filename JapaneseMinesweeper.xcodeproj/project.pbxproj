@@ -51,6 +51,8 @@
 		F7B88BEB19C3AB2A00F6585E /* MineGridView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MineGridView.m; sourceTree = "<group>"; };
 		F7B88BEE19C46FDF00F6585E /* MineGridCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MineGridCell.h; sourceTree = "<group>"; };
 		F7B88BEF19C46FDF00F6585E /* MineGridCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MineGridCell.m; sourceTree = "<group>"; };
+		FD98C96819DEFCD00035125E /* Enums.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Enums.h; sourceTree = "<group>"; };
+		FD98C96919DEFD490035125E /* Structs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Structs.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +107,8 @@
 				F73BD86219C395EF00CD51B9 /* Supporting Files */,
 				F7B88BE619C3A87900F6585E /* GameBoardViewController.h */,
 				F7B88BE719C3A87900F6585E /* GameBoardViewController.m */,
+				FD98C96819DEFCD00035125E /* Enums.h */,
+				FD98C96919DEFD490035125E /* Structs.h */,
 			);
 			path = JapaneseMinesweeper;
 			sourceTree = "<group>";

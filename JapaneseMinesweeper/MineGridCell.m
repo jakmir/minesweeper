@@ -9,6 +9,9 @@
 #import "MineGridCell.h"
 
 @implementation MineGridCell
+{
+    CAGradientLayer *gradientLayer;
+}
 
 - (instancetype) initWithFrame:(CGRect)frame
 {
@@ -25,25 +28,29 @@
 {
     [super drawRect:rect];
     
+    if (gradientLayer)
+    {
+        [gradientLayer removeFromSuperlayer];
+    }
     CGRect rectangle = rect;
     CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextFillRect(context, rectangle);
-    CGContextSetRGBStrokeColor(context, 0.8, 0.8, 0.8, 1);
+    CGContextSetRGBStrokeColor(context, 0.9, 0.9, 0.9, 1);
     CGContextSetLineWidth(context, 1.0);
+    
     switch (self.state)
     {
         case MineGridCellStateClosed:
         {
-            CGContextSetRGBFillColor(context, 0.25, 0.25, 0.25, 1);
+            CGContextSetRGBFillColor(context, 0.67, 0.67, 0.67, 1);
             CGContextFillRect(context, rectangle);
         }
             break;
         case MineGridCellStateMarked:
         {
-            CGContextSetRGBFillColor(context, 0.4, 0.28, 0, 1);
+            CGContextSetRGBFillColor(context, 0.3, 0.5, 0.3, 1);
             CGContextFillRect(context, rectangle);
             UIFont* font = [UIFont systemFontOfSize:28];
-            UIColor* textColor = [UIColor redColor];
+            UIColor* textColor = [UIColor greenColor];
             NSDictionary* stringAttrs = @{NSFontAttributeName: font, NSForegroundColorAttributeName:textColor};
             
             NSAttributedString* attrStr = [[NSAttributedString alloc] initWithString:@"F" attributes:stringAttrs];
@@ -53,9 +60,9 @@
             break;
         case MineGridCellStateOpened:
         {
-            CGContextSetRGBFillColor(context, 0.7, 0.7, 0.7, 1);
+            CGContextSetRGBFillColor(context, 0.76, 0.76, 0.8, 1);
             CGContextFillRect(context, rectangle);
-            UIFont* font = [UIFont systemFontOfSize:self.mine ? 60 : 20];
+            UIFont* font = [UIFont systemFontOfSize:self.mine ? 90 : 20];
             UIColor* textColor = [UIColor whiteColor];
             NSDictionary* stringAttrs = @{NSFontAttributeName: font, NSForegroundColorAttributeName:textColor};
             
@@ -63,7 +70,7 @@
             
             if (self.mine)
             {
-                [@"*" drawAtPoint:CGPointMake(25.f, 10.f) withAttributes:stringAttrs];
+                [@"*" drawAtPoint:CGPointMake(19.f, 1.f) withAttributes:stringAttrs];
             }
             else
             {

@@ -8,6 +8,9 @@
 
 #import "MineGridView.h"
 #import "MineGridCell.h"
+
+#define SLIGHTLY_BIG_VALUEF 1e10;
+
 const NSInteger count = 10;
 const NSInteger padding = 19;
 const NSInteger spacing = 1;
@@ -15,6 +18,7 @@ const NSInteger spacing = 1;
 @implementation MineGridView
 {
     NSArray *map;
+    CAGradientLayer *layer;
 }
 
 - (instancetype) initWithCoder:(NSCoder *)aDecoder
@@ -62,9 +66,9 @@ const NSInteger spacing = 1;
 
 - (void) fillWithMines:(CGFloat)coverageRate exceptPosition:(struct JMSPosition)position
 {
-    NSInteger quantity = coverageRate * count * count;
+    NSInteger quantity = roundf(coverageRate * count * count);
     
-    for (int mineNumber = 0; mineNumber <= quantity; mineNumber++)
+    for (int mineNumber = 1; mineNumber <= quantity; mineNumber++)
     {
         BOOL mine;
         NSInteger r, c;
@@ -78,6 +82,7 @@ const NSInteger spacing = 1;
         }
         while (mine || (r == position.row && c == position.column));
         mineGridCell.mine = YES;
+        [mineGridCell setNeedsDisplay];
     }
     
     [self evaluateMapCellInfos];
@@ -129,10 +134,16 @@ const NSInteger spacing = 1;
                 cellInfo.minesRightDirection = right;
                 
                 cell.cellInfo = cellInfo;
+
             }
 
         }
             
+}
+
+- (NSInteger) cellsCount
+{
+    return count * count;
 }
 
 - (NSInteger) cellsLeftToOpen
@@ -187,6 +198,7 @@ const NSInteger spacing = 1;
     return position;
 }
 
+
 - (CGFloat)bonus:(struct JMSPosition)position
 {
     NSInteger leftBound = position.column, rightBound = position.column;
@@ -196,6 +208,12 @@ const NSInteger spacing = 1;
     {
         return cell && cell.state != MineGridCellStateOpened;
     };
+    
+    BOOL (^insideGameboard)(NSInteger) = ^BOOL(NSInteger coordinate)
+    {
+        return coordinate >= 0 && coordinate < count;
+    };
+    
     MineGridCell *cell;
     do
     {
@@ -228,8 +246,86 @@ const NSInteger spacing = 1;
     NSLog(@"horizontal: %d <-> %d", leftBound, rightBound);
     NSLog(@"vertical  : %d <-> %d", topBound, bottomBound);
     
+    CGFloat a = SLIGHTLY_BIG_VALUEF;
+    CGFloat b = SLIGHTLY_BIG_VALUEF;
     
-    return 0.5;
+    CGFloat bonus = 0, mines, length;
+    MineGridCell *cell1, *cell2;
+    
+    BOOL leftBoundInside = insideGameboard(leftBound);
+    BOOL rightBoundInside = insideGameboard(rightBound);
+    BOOL topBoundInside = insideGameboard(topBound);
+    BOOL bottomBoundInside = insideGameboard(bottomBound);
+    BOOL horizontalLineWithPivot = leftBoundInside || rightBoundInside;
+    BOOL verticalLinesWithPivot = topBoundInside || bottomBoundInside;
+    
+    if (horizontalLineWithPivot)
+    {
+        length = rightBound - leftBound - 1;
+        
+        if (!leftBoundInside)
+        {
+            leftBound = 0;
+        }
+        if (!rightBoundInside)
+        {
+            rightBound = count - 1;
+        }
+
+        cell1 = map[leftBound][position.row];
+        cell2 = map[rightBound][position.row];
+        mines = rightBoundInside ? cell2.cellInfo.minesLeftDirection - cell1.cellInfo.minesLeftDirection
+                                 : cell1.cellInfo.minesRightDirection - cell2.cellInfo.minesRightDirection;
+        
+        if (mines > 0)
+        {
+            a = length/mines;
+        }
+    }
+    
+    if (verticalLinesWithPivot)
+    {
+        length = bottomBound - topBound - 1;
+        
+        if (!topBoundInside)
+        {
+            topBound = 0;
+        }
+        if (!bottomBoundInside)
+        {
+            bottomBound = count - 1;
+        }
+
+        cell1 = map[position.column][topBound];
+        cell2 = map[position.column][bottomBound];
+        mines = bottomBoundInside ? cell2.cellInfo.minesTopDirection - cell1.cellInfo.minesTopDirection
+                                  : cell1.cellInfo.minesBottomDirection - cell2.cellInfo.minesBottomDirection;
+        
+        if (mines > 0)
+        {
+            b = length/mines;
+        }
+    }
+    
+    if (horizontalLineWithPivot)
+    {
+        if (verticalLinesWithPivot)
+        {
+            bonus = 1 / (2 + a * b - a - b);
+        }
+        else
+        {
+            bonus = 1/a;
+        }
+    }
+    else
+    {
+        if (verticalLinesWithPivot)
+        {
+            bonus = 1/b;
+        }
+    }
+    return fabsf(bonus) < 1e-4 ? 0 : bonus;
 }
 
 - (MineGridCellState) cellState:(struct JMSPosition)position
@@ -261,20 +357,28 @@ const NSInteger spacing = 1;
     
     if (cell)
     {
-        if (cell.state == MineGridCellStateMarked)
-            [cell setState:MineGridCellStateClosed];
-        else
-            [cell setState:MineGridCellStateMarked];
+        switch (cell.state)
+        {
+            case MineGridCellStateMarked:
+                [cell setState:MineGridCellStateClosed];
+                break;
+            case MineGridCellStateClosed:
+                [cell setState:MineGridCellStateMarked];
+                break;
+            default:
+                break;
+        }
     }
 }
 
 
-/*
- // Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
+- (void)drawRect:(CGRect)rect
+{
+    NSLog(@"%s", __FUNCTION__);
+    
+    [super drawRect:rect];
+    
 }
-*/
+
 
 @end

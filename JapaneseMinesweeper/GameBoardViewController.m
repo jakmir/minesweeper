@@ -7,18 +7,22 @@
 //
 
 #import "GameBoardViewController.h"
+#import "MineGridCell.h"
+#import "UIColor+ColorFromHexString.h"
 
 @interface GameBoardViewController ()
 {
     BOOL initialTapPerformed;
+    NSInteger minesCount;
 }
 
-@property (nonatomic) NSInteger score;
+@property (nonatomic) CGFloat score;
 @property (nonatomic) NSInteger cellsLeftCount;
+@property (nonatomic) NSInteger cellsMarked;
 
 @end
 
-const CGFloat baseScore = 100;
+const CGFloat baseScore = 175;
 
 @implementation GameBoardViewController
 
@@ -29,13 +33,8 @@ const CGFloat baseScore = 100;
     initialTapPerformed = NO;
 }
 
-- (void)viewWillAppear:(BOOL)animated
+- (void)addGestureRecognizers
 {
-    [super viewWillAppear:animated];
-    
-    self.score = 0;
-    self.cellsLeftCount = (NSInteger)((1 - self.coverageRate) * 100);
-    
     UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTap:)];
     [self.mineGridView addGestureRecognizer:tapRecognizer];
     
@@ -44,12 +43,46 @@ const CGFloat baseScore = 100;
     [self.mineGridView addGestureRecognizer:longTapRecognizer];
 }
 
-- (void)viewWillDisappear:(BOOL)animated
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    self.score = 0;
+    self.cellsLeftCount = (NSInteger)((1 - self.coverageRate) * 100);
+    minesCount = [self.mineGridView cellsCount] - self.cellsLeftCount;
+    self.cellsMarked = 0;
+    
+    [self addGestureRecognizers];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [self drawGradients];
+}
+
+- (void)removeGestureRecognizers
 {
     [self.mineGridView.gestureRecognizers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         UIGestureRecognizer *gr = obj;
         [self.mineGridView removeGestureRecognizer:gr];
     }];
+}
+
+- (void) drawGradients
+{
+    [self.scoreView drawGradientWithStartColor:[UIColor colorFromInteger:0xffff9500]
+                                andFinishColor:[UIColor colorFromInteger:0xfff75e3a]];
+    [self.markedMinesCountView drawGradientWithStartColor:[UIColor colorFromInteger:0xffc644fc]
+                                           andFinishColor:[UIColor colorFromInteger:0xff5856d6]];
+    [self.cellsCountView drawGradientWithStartColor:[UIColor colorFromInteger:0xff1d77ef]
+                                     andFinishColor:[UIColor colorFromInteger:0xff83f3fd]];
+    [self.btnMainMenu drawGradientWithStartColor:[UIColor colorFromInteger:0x1fcfcfcf] andFinishColor:[UIColor colorFromInteger:0x1fbfbfbf]];
+    [self.btnLeaderboards drawGradientWithStartColor:[UIColor colorFromInteger:0x1fcfcfcf] andFinishColor:[UIColor colorFromInteger:0x1fbfbfbf]];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [self removeGestureRecognizers];
 }
 
 - (void)didReceiveMemoryWarning
@@ -58,12 +91,17 @@ const CGFloat baseScore = 100;
     // Dispose of any resources that can be recreated.
 }
 
+- (BOOL) prefersStatusBarHidden
+{
+    return YES;
+}
+
 #pragma mark - synchronize labels with real values
 
-- (void) setScore:(NSInteger)score
+- (void) setScore:(CGFloat)score
 {
     _score = score;
-    [self.lbScore setText:[@(score) stringValue]];
+    [self.lbScore setText:[@((NSInteger)score) stringValue]];
 }
 
 - (void) setCellsLeftCount:(NSInteger)cellsLeftCount
@@ -72,6 +110,22 @@ const CGFloat baseScore = 100;
     [self.lbCellsLeft setText:[@(cellsLeftCount) stringValue]];
 }
 
+- (void) setCellsMarked:(NSInteger)cellsMarked
+{
+    _cellsMarked = cellsMarked;
+    
+    NSString *stringToDisplay = [NSString stringWithFormat:@"%d/%d", cellsMarked, minesCount];
+    NSUInteger len = [@(cellsMarked) stringValue].length;
+    NSMutableAttributedString * string = [[NSMutableAttributedString alloc] initWithString:stringToDisplay];
+    
+    UIColor *cellsMarkedColor = cellsMarked > minesCount ? [UIColor colorFromInteger:0xffff7f7f] : [UIColor whiteColor];
+    [string addAttribute:NSForegroundColorAttributeName value:cellsMarkedColor range:NSMakeRange(0, len)];
+
+    self.lbCellsMarked.attributedText = string;
+}
+
+#pragma mark - handle taps
+
 - (void) singleTap: (UIGestureRecognizer *)gestureRecognizer
 {
     NSLog(@"%s", __FUNCTION__);
@@ -79,6 +133,9 @@ const CGFloat baseScore = 100;
     CGPoint coord = [gestureRecognizer locationInView:self.mineGridView];
     
     struct JMSPosition position = [self.mineGridView cellPositionWithCoordinateInside:coord];
+    
+    if (position.row == NSNotFound || position.column == NSNotFound) return;
+    
     if (!initialTapPerformed)
     {
         [self.mineGridView fillWithMines:self.coverageRate exceptPosition:position];
@@ -102,10 +159,16 @@ const CGFloat baseScore = 100;
         //just opened the cell, not possible to do that twice.
         if (oldState != MineGridCellStateOpened && newState == MineGridCellStateOpened)
         {
-            self.score += baseScore * (1 + [self.mineGridView bonus:position]);
+            if (oldState == MineGridCellStateMarked)
+            {
+                self.cellsMarked--;
+            }
+            self.score += baseScore * pow(1 + self.coverageRate, 3) * pow(1 + [self.mineGridView bonus:position], 3);
         }
+        
         if (self.cellsLeftCount == 0)
         {
+            self.score *= (1 + self.coverageRate);
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Congratulations" message:@"You won this round" delegate:self
                                                       cancelButtonTitle:@"Play again" otherButtonTitles:nil];
             [alertView show];
@@ -118,10 +181,28 @@ const CGFloat baseScore = 100;
     if (gestureRecognizer.state == UIGestureRecognizerStateBegan)
     {
         NSLog(@"%s", __FUNCTION__);
-    
-        [self.mineGridView longTappedWithCoordinate:[gestureRecognizer locationInView:self.mineGridView]];
+        
+        CGPoint coord = [gestureRecognizer locationInView:self.mineGridView];
+        struct JMSPosition position = [self.mineGridView cellPositionWithCoordinateInside:coord];
+        
+        if (position.row == NSNotFound || position.column == NSNotFound) return;
+        
+        MineGridCellState oldState = [self.mineGridView cellState:position];
+        [self.mineGridView longTappedWithCoordinate:coord];
+        MineGridCellState newState = [self.mineGridView cellState:position];
+        
+        if (oldState == MineGridCellStateMarked && newState == MineGridCellStateClosed)
+        {
+            self.cellsMarked--;
+        }
+        if (oldState == MineGridCellStateClosed && newState == MineGridCellStateMarked)
+        {
+            self.cellsMarked++;
+        }
     }
 }
+
+#pragma mark - alerts
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {

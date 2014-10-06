@@ -20,5 +20,6 @@
 - (NSInteger) cellsLeftToOpen;
 - (CGFloat) bonus: (struct JMSPosition)position;
 - (MineGridCellState) cellState: (struct JMSPosition)position;
+- (NSInteger) cellsCount;
 
 @end

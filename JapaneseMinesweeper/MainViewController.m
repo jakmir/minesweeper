@@ -6,18 +6,30 @@
 //  Copyright (c) 2014 Jakmir. All rights reserved.
 //
 
-#import "ViewController.h"
-
+#import "MainViewController.h"
 #import "GameBoardViewController.h"
-@interface ViewController ()
+#import "UIColor+ColorFromHexString.h"
+@interface MainViewController ()
 
 @end
 
-@implementation ViewController
+@implementation MainViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    NSArray *gradientButtons = @[self.btnStart, self.btnLeaderboard, self.btnComplexityLevel];
+    for (GradientButton *gradientButton in gradientButtons)
+    {
+        [gradientButton drawGradientWithStartColor:[UIColor colorFromInteger:0xff00cfff]
+                                    andFinishColor:[UIColor colorFromInteger:0xff007fff]];
+        [gradientButton.layer setCornerRadius:16];
+        [gradientButton.layer setMasksToBounds:YES];
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -40,8 +52,9 @@
 {
     if ([segue.identifier isEqualToString:@"toGame"])
     {
+        NSInteger level = [[NSUserDefaults standardUserDefaults] integerForKey:@"level"];
         GameBoardViewController *destinationController = (GameBoardViewController *)segue.destinationViewController;
-        destinationController.coverageRate = (self.slider.value / 100);
+        destinationController.coverageRate = (level == 0 ?  25 : level) / 100.0;
     }
 }
 @end

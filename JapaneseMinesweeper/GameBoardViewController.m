@@ -9,6 +9,7 @@
 #import "GameBoardViewController.h"
 #import "MineGridCell.h"
 #import "UIColor+ColorFromHexString.h"
+#import "UIImage+ImageEffects.h"
 
 @interface GameBoardViewController ()
 {
@@ -37,7 +38,7 @@ const CGFloat baseScore = 175;
 {
     UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTap:)];
     [self.mineGridView addGestureRecognizer:tapRecognizer];
-    
+
     UILongPressGestureRecognizer *longTapRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longTap:)];
     longTapRecognizer.minimumPressDuration = 0.5f;
     [self.mineGridView addGestureRecognizer:longTapRecognizer];
@@ -57,6 +58,8 @@ const CGFloat baseScore = 175;
 
 - (void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:animated];
+    
     [self drawGradients];
 }
 
@@ -70,12 +73,12 @@ const CGFloat baseScore = 175;
 
 - (void) drawGradients
 {
-    [self.scoreView drawGradientWithStartColor:[UIColor colorFromInteger:0xffff9500]
-                                andFinishColor:[UIColor colorFromInteger:0xfff75e3a]];
-    [self.markedMinesCountView drawGradientWithStartColor:[UIColor colorFromInteger:0xffc644fc]
-                                           andFinishColor:[UIColor colorFromInteger:0xff5856d6]];
-    [self.cellsCountView drawGradientWithStartColor:[UIColor colorFromInteger:0xff1d77ef]
-                                     andFinishColor:[UIColor colorFromInteger:0xff83f3fd]];
+    [self.scoreView drawGradientWithStartColor:[UIColor colorFromInteger:0xffe7e7e7]
+                                andFinishColor:[UIColor colorFromInteger:0xfff0f0f0]];
+    [self.markedMinesCountView drawGradientWithStartColor:[UIColor colorFromInteger:0xffe7e7e7]
+                                           andFinishColor:[UIColor colorFromInteger:0xfff0f0f0]];
+    [self.cellsCountView drawGradientWithStartColor:[UIColor colorFromInteger:0xffe7e7e7]
+                                     andFinishColor:[UIColor colorFromInteger:0xfff0f0f0]];
     [self.btnMainMenu drawGradientWithStartColor:[UIColor colorFromInteger:0x1fcfcfcf] andFinishColor:[UIColor colorFromInteger:0x1fbfbfbf]];
     [self.btnLeaderboards drawGradientWithStartColor:[UIColor colorFromInteger:0x1fcfcfcf] andFinishColor:[UIColor colorFromInteger:0x1fbfbfbf]];
 }
@@ -114,14 +117,24 @@ const CGFloat baseScore = 175;
 {
     _cellsMarked = cellsMarked;
     
-    NSString *stringToDisplay = [NSString stringWithFormat:@"%d/%d", cellsMarked, minesCount];
+    NSString *stringToDisplay = [NSString stringWithFormat:@"%ld/%ld", (long)cellsMarked, (long)minesCount];
     NSUInteger len = [@(cellsMarked) stringValue].length;
     NSMutableAttributedString * string = [[NSMutableAttributedString alloc] initWithString:stringToDisplay];
     
-    UIColor *cellsMarkedColor = cellsMarked > minesCount ? [UIColor colorFromInteger:0xffff7f7f] : [UIColor whiteColor];
+    UIColor *cellsMarkedColor = cellsMarked > minesCount ? [UIColor colorFromInteger:0xffff7f7f] : [UIColor darkGrayColor];
     [string addAttribute:NSForegroundColorAttributeName value:cellsMarkedColor range:NSMakeRange(0, len)];
 
     self.lbCellsMarked.attributedText = string;
+}
+
+-(UIImage *)blurredSnapshot
+{
+    UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, NO, [UIScreen mainScreen].scale);
+    [self.view drawViewHierarchyInRect:self.view.frame afterScreenUpdates:NO];
+    UIImage *snapshotImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIImage *blurredSnapshotImage = [snapshotImage applyDarkEffect];
+    UIGraphicsEndImageContext();
+    return blurredSnapshotImage;
 }
 
 #pragma mark - handle taps
@@ -151,6 +164,12 @@ const CGFloat baseScore = 175;
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Oops" message:@"Oops" delegate:self
                                                       cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alertView show];
+        /*
+        UIImageView *iv = [[UIImageView alloc] initWithFrame:self.view.frame];
+        iv.image = [self blurredSnapshot];
+        [self.view addSubview:iv];
+        [self.view bringSubviewToFront:iv];
+         */
     }
     else
     {
@@ -178,10 +197,9 @@ const CGFloat baseScore = 175;
 
 - (void) longTap: (UIGestureRecognizer *)gestureRecognizer
 {
+    NSLog(@"%s", __FUNCTION__);
     if (gestureRecognizer.state == UIGestureRecognizerStateBegan)
     {
-        NSLog(@"%s", __FUNCTION__);
-        
         CGPoint coord = [gestureRecognizer locationInView:self.mineGridView];
         struct JMSPosition position = [self.mineGridView cellPositionWithCoordinateInside:coord];
         

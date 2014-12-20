@@ -18,4 +18,11 @@ typedef NS_ENUM(NSUInteger, MineGridCellState) {
     MineGridCellStateClosed,
 };
 
+typedef NS_ENUM(NSUInteger, JMSGameDifficulty) {
+    JMSGameDifficultyUndefined,
+    JMSGameDifficultyEasy,
+    JMSGameDifficultyMedium,
+    JMSGameDifficultyHard,
+};
+
 #endif

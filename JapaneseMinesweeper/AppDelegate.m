@@ -16,7 +16,17 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
+    
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    if (![userDefaults boolForKey:@"isFirstRun"])
+    {
+        [userDefaults setBool:YES forKey:@"isFirstRun"];
+        [userDefaults setInteger:25 forKey:@"level"];
+        [userDefaults setBool:NO forKey:@"isMuted"];
+        [userDefaults setFloat:0.5 forKey:@"holdDuration"];
+        
+        [userDefaults synchronize];
+    }
     return YES;
 }
 

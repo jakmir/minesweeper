@@ -11,6 +11,7 @@
 @implementation MineGridCell
 {
     CAGradientLayer *gradientLayer;
+    CALayer *blurLayer;
 }
 
 - (instancetype) initWithFrame:(CGRect)frame
@@ -28,45 +29,55 @@
 {
     [super drawRect:rect];
     
-    if (gradientLayer)
+    /*
+    if (!blurLayer)
     {
-        [gradientLayer removeFromSuperlayer];
+        blurLayer = [CALayer layer];
+        blurLayer.frame = rect;
+        CIFilter *blur = [CIFilter filterWithName:@"CIGaussianBlur"];
+        [blur setDefaults];
+        blurLayer.backgroundFilters = [NSArray arrayWithObject:blur];
+        
+        self.layer.mask = blurLayer;
     }
+    */
+    
     CGRect rectangle = rect;
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextSetRGBStrokeColor(context, 0.9, 0.9, 0.9, 1);
     CGContextSetLineWidth(context, 1.0);
     
+    self.backgroundColor = [UIColor clearColor];
+    
     switch (self.state)
     {
         case MineGridCellStateClosed:
         {
-            CGContextSetRGBFillColor(context, 0.67, 0.67, 0.67, 1);
+            CGContextSetRGBFillColor(context, 0.5, 0.5, 0.5, 1);
             CGContextFillRect(context, rectangle);
+            self.alpha = 0.5;
         }
             break;
         case MineGridCellStateMarked:
         {
             CGContextSetRGBFillColor(context, 0.3, 0.5, 0.3, 1);
             CGContextFillRect(context, rectangle);
-            UIFont* font = [UIFont systemFontOfSize:28];
-            UIColor* textColor = [UIColor greenColor];
-            NSDictionary* stringAttrs = @{NSFontAttributeName: font, NSForegroundColorAttributeName:textColor};
             
-            NSAttributedString* attrStr = [[NSAttributedString alloc] initWithString:@"F" attributes:stringAttrs];
+            self.layer.contents = (__bridge id)([UIImage imageNamed:@"flag"].CGImage);
             
-            [attrStr drawAtPoint:CGPointMake(27.f, 18.f)];
+            self.alpha = 1;
         }
             break;
         case MineGridCellStateOpened:
         {
-            CGContextSetRGBFillColor(context, 0.76, 0.76, 0.8, 1);
+            self.alpha = 1;
+
+            CGContextClearRect(context, rectangle);
+            CGContextSetRGBFillColor(context, 1, 1, 1, 0.2);
             CGContextFillRect(context, rectangle);
             UIFont* font = [UIFont systemFontOfSize:self.mine ? 90 : 20];
-            UIColor* textColor = [UIColor whiteColor];
+            UIColor* textColor = [UIColor lightTextColor];
             NSDictionary* stringAttrs = @{NSFontAttributeName: font, NSForegroundColorAttributeName:textColor};
-            
-
             
             if (self.mine)
             {

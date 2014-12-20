@@ -8,6 +8,7 @@
 
 #import "MineGridView.h"
 #import "MineGridCell.h"
+#import "UIColor+ColorFromHexString.h"
 
 #define SLIGHTLY_BIG_VALUEF 1e10;
 
@@ -18,7 +19,7 @@ const NSInteger spacing = 1;
 @implementation MineGridView
 {
     NSArray *map;
-    CAGradientLayer *layer;
+    CALayer *layer;
 }
 
 - (instancetype) initWithCoder:(NSCoder *)aDecoder
@@ -26,6 +27,7 @@ const NSInteger spacing = 1;
     if (self = [super initWithCoder:aDecoder])
     {
         [self prepareCells];
+        [self prepareGradientLayer];        
     }
     return self;
 }
@@ -35,8 +37,24 @@ const NSInteger spacing = 1;
     if (self = [super initWithFrame:frame])
     {
         [self prepareCells];
+        [self prepareGradientLayer];
     }
     return self;
+}
+
+- (void) prepareGradientLayer
+{
+    /*
+    if (!layer)
+    {
+        layer = [CALayer layer];
+        layer.frame = CGRectMake(padding, padding, CGRectGetWidth(self.frame) - padding * 2 + 1, CGRectGetHeight(self.frame) - padding * 2 + 1);
+        layer.position = CGPointMake(CGRectGetWidth(self.frame) / 2 , CGRectGetHeight(self.frame) / 2 - 1);
+        layer.backgroundColor = (__bridge CGColorRef)([UIColor colorWithPatternImage:[UIImage imageNamed:@"cell"]]);
+    }
+    */
+    //self.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"metal2"]];
+    self.backgroundColor = [UIColor colorWithRed:0 green:0.3 blue:0.6 alpha:1];
 }
 
 - (void) prepareCells
@@ -134,11 +152,8 @@ const NSInteger spacing = 1;
                 cellInfo.minesRightDirection = right;
                 
                 cell.cellInfo = cellInfo;
-
             }
-
         }
-            
 }
 
 - (NSInteger) cellsCount

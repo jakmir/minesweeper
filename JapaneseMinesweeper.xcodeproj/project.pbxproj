@@ -11,14 +11,18 @@
 		F707112319E1EF6000D3BBD2 /* GradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = F707112219E1EF6000D3BBD2 /* GradientView.m */; };
 		F707112819E1F23A00D3BBD2 /* UIColor+ColorFromHexString.m in Sources */ = {isa = PBXBuildFile; fileRef = F707112719E1F23A00D3BBD2 /* UIColor+ColorFromHexString.m */; };
 		F707112B19E20F5600D3BBD2 /* GradientButton.m in Sources */ = {isa = PBXBuildFile; fileRef = F707112A19E20F5600D3BBD2 /* GradientButton.m */; };
+		F73B168C1A438E8E0085A18A /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = F73B168B1A438E8E0085A18A /* UIImage+ImageEffects.m */; };
+		F73B168F1A44AC520085A18A /* UIView+Blur.m in Sources */ = {isa = PBXBuildFile; fileRef = F73B168E1A44AC520085A18A /* UIView+Blur.m */; };
+		F73B16911A44AE0E0085A18A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F73B16901A44AE0E0085A18A /* QuartzCore.framework */; };
 		F73BD86519C395EF00CD51B9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F73BD86419C395EF00CD51B9 /* main.m */; };
 		F73BD86819C395F000CD51B9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F73BD86719C395F000CD51B9 /* AppDelegate.m */; };
 		F73BD86B19C395F000CD51B9 /* JapaneseMinesweeper.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F73BD86919C395F000CD51B9 /* JapaneseMinesweeper.xcdatamodeld */; };
-		F73BD86E19C395F000CD51B9 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F73BD86D19C395F000CD51B9 /* ViewController.m */; };
+		F73BD86E19C395F000CD51B9 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F73BD86D19C395F000CD51B9 /* MainViewController.m */; };
 		F73BD87119C395F000CD51B9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F73BD86F19C395F000CD51B9 /* Main.storyboard */; };
 		F73BD87319C395F000CD51B9 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F73BD87219C395F000CD51B9 /* Images.xcassets */; };
 		F73BD87619C395F000CD51B9 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = F73BD87419C395F000CD51B9 /* LaunchScreen.xib */; };
 		F73BD88219C395F000CD51B9 /* JapaneseMinesweeperTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F73BD88119C395F000CD51B9 /* JapaneseMinesweeperTests.m */; };
+		F77BA48F19F0867600DDE946 /* OptionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F77BA48E19F0867600DDE946 /* OptionsViewController.m */; };
 		F7B88BE819C3A87900F6585E /* GameBoardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F7B88BE719C3A87900F6585E /* GameBoardViewController.m */; };
 		F7B88BEC19C3AB2A00F6585E /* MineGridView.m in Sources */ = {isa = PBXBuildFile; fileRef = F7B88BEB19C3AB2A00F6585E /* MineGridView.m */; };
 		F7B88BF019C46FDF00F6585E /* MineGridCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F7B88BEF19C46FDF00F6585E /* MineGridCell.m */; };
@@ -42,20 +46,27 @@
 		F707112719E1F23A00D3BBD2 /* UIColor+ColorFromHexString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+ColorFromHexString.m"; sourceTree = "<group>"; };
 		F707112919E20F5600D3BBD2 /* GradientButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GradientButton.h; sourceTree = "<group>"; };
 		F707112A19E20F5600D3BBD2 /* GradientButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GradientButton.m; sourceTree = "<group>"; };
+		F73B168A1A438E8E0085A18A /* UIImage+ImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageEffects.h"; sourceTree = "<group>"; };
+		F73B168B1A438E8E0085A18A /* UIImage+ImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageEffects.m"; sourceTree = "<group>"; };
+		F73B168D1A44AC520085A18A /* UIView+Blur.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Blur.h"; sourceTree = "<group>"; };
+		F73B168E1A44AC520085A18A /* UIView+Blur.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Blur.m"; sourceTree = "<group>"; };
+		F73B16901A44AE0E0085A18A /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		F73BD85F19C395EF00CD51B9 /* JapaneseMinesweeper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JapaneseMinesweeper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F73BD86319C395EF00CD51B9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F73BD86419C395EF00CD51B9 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		F73BD86619C395EF00CD51B9 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		F73BD86719C395F000CD51B9 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		F73BD86A19C395F000CD51B9 /* JapaneseMinesweeper.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = JapaneseMinesweeper.xcdatamodel; sourceTree = "<group>"; };
-		F73BD86C19C395F000CD51B9 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		F73BD86D19C395F000CD51B9 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		F73BD86C19C395F000CD51B9 /* MainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
+		F73BD86D19C395F000CD51B9 /* MainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		F73BD87019C395F000CD51B9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		F73BD87219C395F000CD51B9 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		F73BD87519C395F000CD51B9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		F73BD87B19C395F000CD51B9 /* JapaneseMinesweeperTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JapaneseMinesweeperTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F73BD88019C395F000CD51B9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F73BD88119C395F000CD51B9 /* JapaneseMinesweeperTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JapaneseMinesweeperTests.m; sourceTree = "<group>"; };
+		F77BA48D19F0867600DDE946 /* OptionsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OptionsViewController.h; sourceTree = "<group>"; };
+		F77BA48E19F0867600DDE946 /* OptionsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OptionsViewController.m; sourceTree = "<group>"; };
 		F7B88BE619C3A87900F6585E /* GameBoardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameBoardViewController.h; sourceTree = "<group>"; };
 		F7B88BE719C3A87900F6585E /* GameBoardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameBoardViewController.m; sourceTree = "<group>"; };
 		F7B88BEA19C3AB2A00F6585E /* MineGridView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MineGridView.h; sourceTree = "<group>"; };
@@ -71,6 +82,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F73B16911A44AE0E0085A18A /* QuartzCore.framework in Frameworks */,
 				F707112019E0C7A700D3BBD2 /* GameKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -90,6 +102,10 @@
 			children = (
 				F707112619E1F23A00D3BBD2 /* UIColor+ColorFromHexString.h */,
 				F707112719E1F23A00D3BBD2 /* UIColor+ColorFromHexString.m */,
+				F73B168A1A438E8E0085A18A /* UIImage+ImageEffects.h */,
+				F73B168B1A438E8E0085A18A /* UIImage+ImageEffects.m */,
+				F73B168D1A44AC520085A18A /* UIView+Blur.h */,
+				F73B168E1A44AC520085A18A /* UIView+Blur.m */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -97,6 +113,7 @@
 		F73BD85619C395EF00CD51B9 = {
 			isa = PBXGroup;
 			children = (
+				F73B16901A44AE0E0085A18A /* QuartzCore.framework */,
 				F707111F19E0C7A700D3BBD2 /* GameKit.framework */,
 				F73BD86119C395EF00CD51B9 /* JapaneseMinesweeper */,
 				F73BD87E19C395F000CD51B9 /* JapaneseMinesweeperTests */,
@@ -121,8 +138,10 @@
 				F7B88BE919C3AB1500F6585E /* Controls */,
 				F73BD86619C395EF00CD51B9 /* AppDelegate.h */,
 				F73BD86719C395F000CD51B9 /* AppDelegate.m */,
-				F73BD86C19C395F000CD51B9 /* ViewController.h */,
-				F73BD86D19C395F000CD51B9 /* ViewController.m */,
+				F73BD86C19C395F000CD51B9 /* MainViewController.h */,
+				F73BD86D19C395F000CD51B9 /* MainViewController.m */,
+				F77BA48D19F0867600DDE946 /* OptionsViewController.h */,
+				F77BA48E19F0867600DDE946 /* OptionsViewController.m */,
 				F73BD86F19C395F000CD51B9 /* Main.storyboard */,
 				F73BD87219C395F000CD51B9 /* Images.xcassets */,
 				F73BD87419C395F000CD51B9 /* LaunchScreen.xib */,
@@ -242,6 +261,7 @@
 					};
 					F73BD87A19C395F000CD51B9 = {
 						CreatedOnToolsVersion = 6.0;
+						DevelopmentTeam = SB3RGW3B8Q;
 						TestTargetID = F73BD85E19C395EF00CD51B9;
 					};
 				};
@@ -294,12 +314,15 @@
 				F7B88BE819C3A87900F6585E /* GameBoardViewController.m in Sources */,
 				F707112319E1EF6000D3BBD2 /* GradientView.m in Sources */,
 				F707112B19E20F5600D3BBD2 /* GradientButton.m in Sources */,
+				F73B168F1A44AC520085A18A /* UIView+Blur.m in Sources */,
 				F73BD86519C395EF00CD51B9 /* main.m in Sources */,
 				F7B88BF019C46FDF00F6585E /* MineGridCell.m in Sources */,
-				F73BD86E19C395F000CD51B9 /* ViewController.m in Sources */,
+				F73BD86E19C395F000CD51B9 /* MainViewController.m in Sources */,
 				F73BD86B19C395F000CD51B9 /* JapaneseMinesweeper.xcdatamodeld in Sources */,
+				F73B168C1A438E8E0085A18A /* UIImage+ImageEffects.m in Sources */,
 				F7B88BEC19C3AB2A00F6585E /* MineGridView.m in Sources */,
 				F707112819E1F23A00D3BBD2 /* UIColor+ColorFromHexString.m in Sources */,
+				F77BA48F19F0867600DDE946 /* OptionsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -358,7 +381,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Denys Melnyk (W8Y9LTK8UT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Denys Melnyk (SB3RGW3B8Q)";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -399,7 +422,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Denys Melnyk (W8Y9LTK8UT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Denys Melnyk (SB3RGW3B8Q)";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -449,6 +472,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -460,6 +485,7 @@
 				INFOPLIST_FILE = JapaneseMinesweeperTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/JapaneseMinesweeper.app/JapaneseMinesweeper";
 			};
 			name = Debug;
@@ -468,6 +494,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -475,6 +503,7 @@
 				INFOPLIST_FILE = JapaneseMinesweeperTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/JapaneseMinesweeper.app/JapaneseMinesweeper";
 			};
 			name = Release;

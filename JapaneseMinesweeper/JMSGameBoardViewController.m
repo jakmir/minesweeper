@@ -6,15 +6,22 @@
 //  Copyright (c) 2014 Jakmir. All rights reserved.
 //
 
-#import "GameBoardViewController.h"
-#import "MineGridCell.h"
+#import "JMSGameBoardViewController.h"
+#import "JMSMineGridCell.h"
+#import "MainViewController.h"
+#import "Classes/JMSGameSessionInfo.h"
 #import "UIColor+ColorFromHexString.h"
 #import "UIImage+ImageEffects.h"
-
-@interface GameBoardViewController ()
+#import "JMSAlertViewController.h"
+#import <GameKit/GKLocalPlayer.h>
+#import <GameKit/GKScore.h>
+#import <GameKit/GKGameCenterViewController.h>
+#import "JMSLeaderboardManager.h"
+@interface JMSGameBoardViewController ()
 {
     BOOL initialTapPerformed;
     NSInteger minesCount;
+    NSUInteger level;
 }
 
 @property (nonatomic) CGFloat score;
@@ -25,14 +32,7 @@
 
 const CGFloat baseScore = 175;
 
-@implementation GameBoardViewController
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    
-    initialTapPerformed = NO;
-}
+@implementation JMSGameBoardViewController
 
 - (void)addGestureRecognizers
 {
@@ -40,20 +40,37 @@ const CGFloat baseScore = 175;
     [self.mineGridView addGestureRecognizer:tapRecognizer];
 
     UILongPressGestureRecognizer *longTapRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longTap:)];
-    longTapRecognizer.minimumPressDuration = 0.5f;
+    CGFloat minimumPressDuration = [[NSUserDefaults standardUserDefaults] floatForKey:@"holdDuration"];
+    longTapRecognizer.minimumPressDuration = minimumPressDuration;
     [self.mineGridView addGestureRecognizer:longTapRecognizer];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
-    self.score = 0;
-    self.cellsLeftCount = (NSInteger)((1 - self.coverageRate) * 100);
-    minesCount = [self.mineGridView cellsCount] - self.cellsLeftCount;
-    self.cellsMarked = 0;
-    
-    [self addGestureRecognizers];
+
+    if (self.mainViewController.gameSessionInfo)
+    {
+        initialTapPerformed = YES;
+        
+        JMSGameSessionInfo *gameSessionInfo = self.mainViewController.gameSessionInfo;
+        [self setScore:gameSessionInfo.score];
+        level = gameSessionInfo.level;
+        [self.mineGridView importMap:gameSessionInfo.map];
+        [self setCellsLeftCount:self.mineGridView.cellsLeftToOpen];
+        minesCount = level;
+        [self setCellsMarked:gameSessionInfo.markedCellsCount];
+    }
+    else
+    {
+        initialTapPerformed = NO;
+        [self setScore:0];
+        level = [[NSUserDefaults standardUserDefaults] integerForKey:@"level"];
+        [self setCellsLeftCount:100 - level];
+        minesCount = level;
+        [self setCellsMarked:0];
+    }
+
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -61,6 +78,9 @@ const CGFloat baseScore = 175;
     [super viewDidAppear:animated];
     
     [self drawGradients];
+    [self.mineGridView refreshCells];    
+    [self addGestureRecognizers];
+   
 }
 
 - (void)removeGestureRecognizers
@@ -86,6 +106,8 @@ const CGFloat baseScore = 175;
 - (void)viewWillDisappear:(BOOL)animated
 {
     [self removeGestureRecognizers];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)didReceiveMemoryWarning
@@ -104,13 +126,15 @@ const CGFloat baseScore = 175;
 - (void) setScore:(CGFloat)score
 {
     _score = score;
-    [self.lbScore setText:[@((NSInteger)score) stringValue]];
+
+    [self.lbScore setText:[@(lroundf(score)) stringValue]];
 }
 
 - (void) setCellsLeftCount:(NSInteger)cellsLeftCount
 {
     _cellsLeftCount = cellsLeftCount;
-    [self.lbCellsLeft setText:[@(cellsLeftCount) stringValue]];
+    CGFloat progress = 100 * (100.0 - level - self.cellsLeftCount) / (100 - level);
+    [self.lbProgress setText:[NSString stringWithFormat:@"%ld%%", lroundf(progress)]];
 }
 
 - (void) setCellsMarked:(NSInteger)cellsMarked
@@ -151,19 +175,26 @@ const CGFloat baseScore = 175;
     
     if (!initialTapPerformed)
     {
-        [self.mineGridView fillWithMines:self.coverageRate exceptPosition:position];
+        [self.mineGridView fillMapWithLevel:level exceptPosition:position];
         initialTapPerformed = YES;
     }
     
-    MineGridCellState oldState = [self.mineGridView cellState:position];
+    JMSMineGridCellState oldState = [self.mineGridView cellState:position];
     BOOL mine = [self.mineGridView clickedWithCoordinate:coord];
-    MineGridCellState newState = [self.mineGridView cellState:position];
+    JMSMineGridCellState newState = [self.mineGridView cellState:position];
     
     if (mine)
     {
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Oops" message:@"Oops" delegate:self
-                                                      cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alertView show];
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Lost"
+                                                                  message:@"There was a mine in that cell."
+                                                           preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *submitAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
+                                                                 handler:^(UIAlertAction *action) {
+                                                                     [self postScore];
+                                                                 }];
+        [alertController addAction:submitAction];
+
+        [self presentViewController:alertController animated:YES completion:nil];
         /*
         UIImageView *iv = [[UIImageView alloc] initWithFrame:self.view.frame];
         iv.image = [self blurredSnapshot];
@@ -182,15 +213,18 @@ const CGFloat baseScore = 175;
             {
                 self.cellsMarked--;
             }
-            self.score += baseScore * pow(1 + self.coverageRate, 3) * pow(1 + [self.mineGridView bonus:position], 3);
+
+            self.score += baseScore * pow(1 + level / 100.0, 3) * pow(1 + [self.mineGridView bonus:position], 3);
         }
         
         if (self.cellsLeftCount == 0)
         {
-            self.score *= (1 + self.coverageRate);
+            self.score *= (1 + level / 100.0);
+            [self postScore];
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Congratulations" message:@"You won this round" delegate:self
                                                       cancelButtonTitle:@"Play again" otherButtonTitles:nil];
             [alertView show];
+
         }
     }
 }
@@ -205,9 +239,9 @@ const CGFloat baseScore = 175;
         
         if (position.row == NSNotFound || position.column == NSNotFound) return;
         
-        MineGridCellState oldState = [self.mineGridView cellState:position];
+        JMSMineGridCellState oldState = [self.mineGridView cellState:position];
         [self.mineGridView longTappedWithCoordinate:coord];
-        MineGridCellState newState = [self.mineGridView cellState:position];
+        JMSMineGridCellState newState = [self.mineGridView cellState:position];
         
         if (oldState == MineGridCellStateMarked && newState == MineGridCellStateClosed)
         {
@@ -224,7 +258,64 @@ const CGFloat baseScore = 175;
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self.mainViewController setGameSessionInfo:nil];
+    [self dismissViewControllerAnimated:NO completion:nil];
+}
+
+#pragma mark - Upper Menu Actions
+
+- (IBAction)backToMainMenu
+{
+    if (initialTapPerformed)
+    {
+        JMSGameSessionInfo *gameSessionInfo = [JMSGameSessionInfo new];
+        gameSessionInfo.map = [self.mineGridView exportMap];
+        gameSessionInfo.score = self.score;
+        gameSessionInfo.level = level;
+        self.mainViewController.gameSessionInfo = gameSessionInfo;
+    }
+    [self dismissViewControllerAnimated:NO completion:nil];
+}
+
+- (IBAction)resetGame
+{
+}
+
+#pragma mark - Submit results 
+
+- (void)postScore
+{
+    [self postScoreLocally];
+    if ([[GKLocalPlayer localPlayer] isAuthenticated])
+    {
+        [self postScoreToGameCenter];
+    }
+}
+- (void)postScoreLocally
+{
+    CGFloat progress = (100.0-level-self.cellsLeftCount) / (100-level);
+    [[[JMSLeaderboardManager alloc] init] postGameScore:self.score
+                                                  level:level
+                                               progress:progress];
+}
+
+- (void)postScoreToGameCenter
+{
+    // Report the high score to Game Center
+    GKScore *scoreReporter = [[GKScore alloc] initWithLeaderboardIdentifier:@"JMSMainLeaderboard"
+                                                                     player:[GKLocalPlayer localPlayer]];
+    scoreReporter.value = lroundf(self.score);
+
+    [GKScore reportScores:@[scoreReporter] withCompletionHandler:^(NSError *error) {
+        if (error)
+        {
+            NSLog(@"Failed to report score. Reason is: %@", error.localizedDescription);
+        }
+        else
+        {
+            NSLog(@"Reported score successfully");
+        }
+    }];
 }
 
 @end

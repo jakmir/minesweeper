@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="14B17" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" initialViewController="vXZ-lx-hvc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="14C106a" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" initialViewController="vXZ-lx-hvc">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
     </dependencies>
@@ -12,27 +12,35 @@
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                         <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Japanese Minesweeper" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="o68-EY-UG6">
+                                <rect key="frame" x="41" y="0.0" width="686" height="307"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="AcademyEngravedLetPlain" family="Academy Engraved LET" pointSize="100"/>
+                                <color key="textColor" red="0.0" green="0.68235294120000001" blue="0.94117647059999998" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                                <color key="shadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <size key="shadowOffset" width="2" height="2"/>
+                            </label>
                             <view contentMode="scaleToFill" id="Qe1-5E-hHz">
-                                <rect key="frame" x="192" y="299" width="384" height="425.00000000000006"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <rect key="frame" x="192" y="315" width="384" height="596"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="e2E-Xw-dcG" customClass="GradientButton">
-                                        <rect key="frame" x="67" y="0.0" width="250" height="74"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="e2E-Xw-dcG" customClass="JMSGradientButton">
+                                        <rect key="frame" x="0.0" y="0.0" width="384" height="74"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" red="0.0" green="0.68235294120000001" blue="0.94117647059999998" alpha="1" colorSpace="calibratedRGB"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="36"/>
                                         <size key="titleShadowOffset" width="1" height="1"/>
-                                        <state key="normal" title="Play">
+                                        <state key="normal" title="New game">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <color key="titleShadowColor" white="0.5" alpha="0.5" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="startGame" destination="vXZ-lx-hvc" eventType="touchUpInside" id="Kto-Cy-YZb"/>
-                                            <segue destination="3UF-V5-MR8" kind="modal" identifier="toGame" id="4Sv-4U-rGo"/>
+                                            <segue destination="3UF-V5-MR8" kind="modal" identifier="toGame" animates="NO" id="4Sv-4U-rGo"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="eRA-Bq-gov" customClass="GradientButton">
-                                        <rect key="frame" x="67" y="351" width="250" height="74"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="eRA-Bq-gov" customClass="JMSGradientButton">
+                                        <rect key="frame" x="0.0" y="353" width="384" height="74"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <color key="backgroundColor" red="0.0" green="0.68235294120000001" blue="0.94117647059999998" alpha="1" colorSpace="calibratedRGB"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="36"/>
@@ -42,11 +50,22 @@
                                             <color key="titleShadowColor" white="0.5" alpha="0.5" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="startGame" destination="vXZ-lx-hvc" eventType="touchUpInside" id="VKG-tM-ybC"/>
+                                            <segue destination="Skf-Cj-sjx" kind="modal" id="PUD-No-And"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="86h-eI-uVR" customClass="GradientButton">
-                                        <rect key="frame" x="67" y="176" width="250" height="74"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="1xK-lr-N9O" customClass="JMSGradientButton">
+                                        <rect key="frame" x="0.0" y="522" width="384" height="74"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <color key="backgroundColor" red="0.0" green="0.68235294120000001" blue="0.94117647059999998" alpha="1" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="36"/>
+                                        <size key="titleShadowOffset" width="1" height="1"/>
+                                        <state key="normal" title="How to play">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="0.5" colorSpace="calibratedWhite"/>
+                                        </state>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="86h-eI-uVR" customClass="JMSGradientButton">
+                                        <rect key="frame" x="0.0" y="171" width="384" height="74"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" red="0.0" green="0.68235294120000001" blue="0.94117647059999998" alpha="1" colorSpace="calibratedRGB"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="36"/>
@@ -56,23 +75,13 @@
                                             <color key="titleShadowColor" white="0.5" alpha="0.5" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="startGame" destination="vXZ-lx-hvc" eventType="touchUpInside" id="cpj-Qt-7su"/>
-                                            <segue destination="Qyo-d9-5cW" kind="modal" id="nwA-TP-reZ"/>
+                                            <segue destination="Qyo-d9-5cW" kind="modal" animates="NO" id="nwA-TP-reZ"/>
                                         </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Japanese Minesweeper" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="o68-EY-UG6">
-                                <rect key="frame" x="16" y="87" width="736" height="79"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="Futura-CondensedExtraBold" family="Futura" pointSize="48"/>
-                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                                <color key="shadowColor" red="1" green="1" blue="1" alpha="0.5" colorSpace="calibratedRGB"/>
-                                <size key="shadowOffset" width="1" height="-1"/>
-                            </label>
                         </subviews>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <color key="tintColor" red="0.5" green="0.0" blue="0.89860139859999999" alpha="1" colorSpace="calibratedRGB"/>
@@ -82,6 +91,8 @@
                         <outlet property="btnComplexityLevel" destination="86h-eI-uVR" id="vwG-az-ngC"/>
                         <outlet property="btnLeaderboard" destination="eRA-Bq-gov" id="b0R-kv-eUJ"/>
                         <outlet property="btnStart" destination="e2E-Xw-dcG" id="TmA-1E-H5n"/>
+                        <outlet property="btnTutorial" destination="1xK-lr-N9O" id="ibk-sn-g6V"/>
+                        <outlet property="buttonListContainer" destination="Qe1-5E-hHz" id="dbz-Y5-P4g"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
@@ -91,54 +102,60 @@
         <!--Game Board View Controller-->
         <scene sceneID="LMr-6e-8dc">
             <objects>
-                <viewController id="3UF-V5-MR8" customClass="GameBoardViewController" sceneMemberID="viewController">
+                <viewController id="3UF-V5-MR8" customClass="JMSGameBoardViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Za7-Ib-MZz">
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" id="Z4T-SU-pho" customClass="MineGridView">
+                            <view contentMode="scaleToFill" id="Z4T-SU-pho" customClass="JMSMineGridView">
                                 <rect key="frame" x="0.0" y="256" width="768" height="768"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                             <view contentMode="scaleToFill" id="XUO-h1-XJS">
-                                <rect key="frame" x="0.0" y="0.0" width="768" height="62"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <rect key="frame" x="0.0" y="0.0" width="768" height="64"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" id="kjE-xz-TRM" customClass="GradientButton">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" id="kjE-xz-TRM" customClass="JMSGradientButton">
                                         <rect key="frame" x="518" y="8" width="219" height="46"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="21"/>
                                         <size key="titleShadowOffset" width="1" height="1"/>
-                                        <state key="normal" title="LEADERBOARDS">
+                                        <state key="normal" title="RESET GAME">
                                             <color key="titleColor" red="0.57254901960000004" green="0.57254901960000004" blue="0.57254901960000004" alpha="1" colorSpace="calibratedRGB"/>
                                             <color key="titleShadowColor" white="0.75" alpha="0.5" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="resetGame" destination="3UF-V5-MR8" eventType="touchUpInside" id="CxF-y6-Rxu"/>
+                                        </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" id="NvZ-iE-SsV" customClass="GradientButton">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" id="NvZ-iE-SsV" customClass="JMSGradientButton">
                                         <rect key="frame" x="28" y="8" width="219" height="46"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="21"/>
                                         <size key="titleShadowOffset" width="1" height="1"/>
                                         <state key="normal" title="MAIN MENU">
                                             <color key="titleColor" red="0.57254901960000004" green="0.57254901960000004" blue="0.57254901960000004" alpha="1" colorSpace="calibratedRGB"/>
                                             <color key="titleShadowColor" white="0.75174825174825177" alpha="0.5" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="backToMainMenu" destination="3UF-V5-MR8" eventType="touchUpInside" id="ZcD-wX-EDC"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                             </view>
                             <view contentMode="scaleToFill" id="97Z-RI-fYt">
-                                <rect key="frame" x="0.0" y="62" width="768" height="194"/>
+                                <rect key="frame" x="0.0" y="64" width="768" height="192"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" id="wR1-bp-zPc" customClass="GradientView">
-                                        <rect key="frame" x="28" y="28" width="220" height="140"/>
+                                    <view contentMode="scaleToFill" id="wR1-bp-zPc" customClass="JMSGradientView">
+                                        <rect key="frame" x="28" y="27" width="220" height="140"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="8192" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="biy-1E-8Wj">
                                                 <rect key="frame" x="0.0" y="62" width="220" height="58"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="60"/>
                                                 <color key="textColor" red="0.0" green="0.80000000000000004" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
@@ -147,7 +164,7 @@
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SCORE" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="oR2-8t-m07">
                                                 <rect key="frame" x="0.0" y="8" width="220" height="44"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="28"/>
                                                 <color key="textColor" red="0.0" green="0.80000000000000004" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
@@ -155,20 +172,20 @@
                                         </subviews>
                                         <color key="backgroundColor" white="0.85033645069999997" alpha="1" colorSpace="calibratedWhite"/>
                                     </view>
-                                    <view contentMode="scaleToFill" id="XTf-ah-2mq" customClass="GradientView">
-                                        <rect key="frame" x="519" y="28" width="220" height="140"/>
+                                    <view contentMode="scaleToFill" id="XTf-ah-2mq" customClass="JMSGradientView">
+                                        <rect key="frame" x="519" y="27" width="220" height="140"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CELLS" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="APp-XT-Rh3">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PROGRESS" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="APp-XT-Rh3">
                                                 <rect key="frame" x="0.0" y="8" width="220" height="44"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="28"/>
                                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="57" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Ygo-1k-Ond">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="57%" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Ygo-1k-Ond">
                                                 <rect key="frame" x="8" y="62" width="204" height="61"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="54"/>
                                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
@@ -176,20 +193,20 @@
                                         </subviews>
                                         <color key="backgroundColor" white="0.85033645069999997" alpha="1" colorSpace="calibratedWhite"/>
                                     </view>
-                                    <view contentMode="scaleToFill" id="5V6-NW-6VF" customClass="GradientView">
-                                        <rect key="frame" x="274" y="28" width="220" height="140"/>
+                                    <view contentMode="scaleToFill" id="5V6-NW-6VF" customClass="JMSGradientView">
+                                        <rect key="frame" x="274" y="27" width="220" height="140"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="9/20" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="G1f-jA-nFf">
                                                 <rect key="frame" x="0.0" y="62" width="220" height="61"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="54"/>
                                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="MARKED" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="5A7-5Z-pFf">
                                                 <rect key="frame" x="0.0" y="8" width="220" height="44"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="28"/>
                                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
@@ -206,18 +223,20 @@
                     <connections>
                         <outlet property="btnLeaderboards" destination="kjE-xz-TRM" id="yFO-Ct-z7a"/>
                         <outlet property="btnMainMenu" destination="NvZ-iE-SsV" id="KXX-Bz-EC6"/>
+                        <outlet property="buttonsPanelView" destination="XUO-h1-XJS" id="HI7-XH-paM"/>
                         <outlet property="cellsCountView" destination="XTf-ah-2mq" id="2aP-Mc-196"/>
-                        <outlet property="lbCellsLeft" destination="Ygo-1k-Ond" id="OR3-YW-XOA"/>
                         <outlet property="lbCellsMarked" destination="G1f-jA-nFf" id="Jqs-ua-ZVj"/>
+                        <outlet property="lbProgress" destination="Ygo-1k-Ond" id="XQ4-zU-nnx"/>
                         <outlet property="lbScore" destination="biy-1E-8Wj" id="H94-7h-Tne"/>
                         <outlet property="markedMinesCountView" destination="5V6-NW-6VF" id="TMj-d2-dZO"/>
                         <outlet property="mineGridView" destination="Z4T-SU-pho" id="uAz-pg-2we"/>
+                        <outlet property="resultsView" destination="97Z-RI-fYt" id="kGc-sd-gtN"/>
                         <outlet property="scoreView" destination="wR1-bp-zPc" id="yCN-kg-52j"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qw0-T6-NPn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1701" y="160"/>
+            <point key="canvasLocation" x="1709" y="-92"/>
         </scene>
         <!--Options View Controller-->
         <scene sceneID="I5C-AT-qFf">
@@ -227,7 +246,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Lvi-YS-yc3" customClass="GradientButton">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Lvi-YS-yc3" customClass="JMSGradientButton">
                                 <rect key="frame" x="259" y="930" width="250" height="74"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <color key="backgroundColor" red="0.0" green="0.68235294120000001" blue="0.94117647059999998" alpha="1" colorSpace="calibratedRGB"/>
@@ -242,81 +261,94 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" id="VyV-sw-vZt">
-                                <rect key="frame" x="16" y="374" width="736" height="206"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <rect key="frame" x="16" y="553" width="736" height="272"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hold duration" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="AzL-e9-mFR">
-                                        <rect key="frame" x="-16" y="66" width="237" height="40"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enable sounds" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="T1b-gu-8ID">
+                                        <rect key="frame" x="3" y="157" width="385" height="40"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="21"/>
                                         <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mute sounds" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="T1b-gu-8ID">
-                                        <rect key="frame" x="-16" y="114" width="237" height="40"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Submit score to game center" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="6F5-L0-1HF">
+                                        <rect key="frame" x="3" y="224" width="385" height="40"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="21"/>
                                         <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" id="Cad-Wf-kLD">
+                                        <rect key="frame" x="416" y="161" width="51" height="31"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="onTintColor" red="0.0" green="0.68235294120000001" blue="0.94117647059999998" alpha="1" colorSpace="calibratedRGB"/>
+                                    </switch>
+                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" id="iX1-g3-NR5">
+                                        <rect key="frame" x="416" y="228" width="51" height="31"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="onTintColor" red="0.0" green="0.68235294120000001" blue="0.94117647059999998" alpha="1" colorSpace="calibratedRGB"/>
+                                    </switch>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="General settings" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="7Zw-yK-84V">
+                                        <rect key="frame" x="0.0" y="0.0" width="736" height="46"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="26"/>
+                                        <color key="textColor" red="0.0" green="0.68235294120000001" blue="0.94117647059999998" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.25" maxValue="0.75" id="30Z-ix-ci4">
-                                        <rect key="frame" x="254" y="71" width="327" height="31"/>
+                                        <rect key="frame" x="414" y="97" width="231" height="31"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="minimumTrackTintColor" red="0.0" green="0.68235294120000001" blue="0.94117647059999998" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="thumbTintColor" red="0.0" green="0.68235294120000001" blue="0.94117647059999998" alpha="1" colorSpace="calibratedRGB"/>
                                         <connections>
                                             <action selector="sliderValueChanged:" destination="Qyo-d9-5cW" eventType="valueChanged" id="chK-mw-rru"/>
                                         </connections>
                                     </slider>
-                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" id="Cad-Wf-kLD">
-                                        <rect key="frame" x="256" y="118" width="51" height="31"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="onTintColor" red="0.0" green="0.68235294120000001" blue="0.94117647059999998" alpha="1" colorSpace="calibratedRGB"/>
-                                    </switch>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0.5" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="789-TF-NUb">
-                                        <rect key="frame" x="625" y="71" width="95" height="30"/>
+                                        <rect key="frame" x="664" y="97" width="64" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="28"/>
                                         <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="General settings" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="7Zw-yK-84V">
-                                        <rect key="frame" x="0.0" y="0.0" width="736" height="58"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="26"/>
-                                        <color key="textColor" red="0.0" green="0.68235294120000001" blue="0.94117647059999998" alpha="1" colorSpace="calibratedRGB"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hold duration" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="AzL-e9-mFR">
+                                        <rect key="frame" x="8" y="97" width="380" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="21"/>
+                                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                             <view contentMode="scaleToFill" id="YQh-po-CHV">
-                                <rect key="frame" x="16" y="41" width="736" height="298"/>
+                                <rect key="frame" x="16" y="20" width="736" height="328"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Easy" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="dOT-QL-dE6">
-                                        <rect key="frame" x="0.0" y="79" width="90" height="59"/>
+                                        <rect key="frame" x="0.0" y="109" width="90" height="59"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="24"/>
                                         <color key="textColor" red="0.52156862749999999" green="0.85098039219999999" blue="0.74901960779999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Medium" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="v07-cc-Jvw">
-                                        <rect key="frame" x="0.0" y="154" width="90" height="59"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                        <rect key="frame" x="0.0" y="184" width="90" height="59"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="24"/>
                                         <color key="textColor" red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hard" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ZY5-YM-kJd">
-                                        <rect key="frame" x="0.0" y="231" width="90" height="59"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <rect key="frame" x="0.0" y="261" width="90" height="59"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="24"/>
                                         <color key="textColor" red="1" green="0.23423841779999999" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <view contentMode="scaleToFill" id="KLH-je-NlD" customClass="GradientView">
-                                        <rect key="frame" x="156" y="71" width="540" height="75"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <view contentMode="scaleToFill" id="KLH-je-NlD" customClass="JMSGradientView">
+                                        <rect key="frame" x="156" y="101" width="540" height="75"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
                                             <button opaque="NO" tag="17" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="jrQ-SL-bNl">
                                                 <rect key="frame" x="88" y="8" width="58" height="58"/>
@@ -383,9 +415,9 @@
                                             </button>
                                         </subviews>
                                     </view>
-                                    <view contentMode="scaleToFill" id="a4D-Dc-zCg" customClass="GradientView">
-                                        <rect key="frame" x="156" y="223" width="540" height="75"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    <view contentMode="scaleToFill" id="a4D-Dc-zCg" customClass="JMSGradientView">
+                                        <rect key="frame" x="156" y="253" width="540" height="75"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
                                             <button opaque="NO" tag="34" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="6Ah-bp-vPU">
                                                 <rect key="frame" x="319" y="9" width="58" height="58"/>
@@ -452,9 +484,9 @@
                                             </button>
                                         </subviews>
                                     </view>
-                                    <view contentMode="scaleToFill" id="y0v-CU-hhd" customClass="GradientView">
-                                        <rect key="frame" x="156" y="147" width="540" height="75"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                    <view contentMode="scaleToFill" id="y0v-CU-hhd" customClass="JMSGradientView">
+                                        <rect key="frame" x="156" y="177" width="540" height="75"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
                                             <button opaque="NO" tag="27" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="uON-zc-QDh">
                                                 <rect key="frame" x="319" y="9" width="58" height="58"/>
@@ -523,14 +555,14 @@
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Difficulty level" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="5JJ-yD-9HS">
                                         <rect key="frame" x="0.0" y="8" width="736" height="37"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="26"/>
                                         <color key="textColor" red="0.0" green="0.68235294120000001" blue="0.94117647059999998" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select amount of mines on the gameboard." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="PLH-IB-ITf">
-                                        <rect key="frame" x="0.0" y="45" width="736" height="18"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <rect key="frame" x="0.0" y="53" width="736" height="18"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="13"/>
                                         <color key="textColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
@@ -543,38 +575,153 @@
                     </view>
                     <connections>
                         <outlet property="btnSave" destination="Lvi-YS-yc3" id="ew5-92-lW4"/>
+                        <outlet property="difficultyLevel" destination="YQh-po-CHV" id="m9U-yJ-Cp2"/>
+                        <outlet property="generalSettings" destination="VyV-sw-vZt" id="WIG-VH-3Bo"/>
                         <outlet property="gvEasyLevel" destination="KLH-je-NlD" id="sbR-eF-seD"/>
                         <outlet property="gvHardLevel" destination="a4D-Dc-zCg" id="QK3-7J-WwB"/>
                         <outlet property="gvMiddleLevel" destination="y0v-CU-hhd" id="HoB-VL-E4L"/>
                         <outlet property="lbHoldDuration" destination="789-TF-NUb" id="b3L-Ee-vhd"/>
                         <outlet property="slHoldDuration" destination="30Z-ix-ci4" id="Z9d-Wy-BO3"/>
-                        <outlet property="swMute" destination="Cad-Wf-kLD" id="UQr-v9-e6X"/>
-                        <outletCollection property="buttonListEasy" destination="Suw-l0-BU3" id="7ue-eB-VIo"/>
-                        <outletCollection property="buttonListEasy" destination="jrQ-SL-bNl" id="5t4-DZ-5bm"/>
-                        <outletCollection property="buttonListEasy" destination="urL-HC-5CR" id="kCa-RX-hb3"/>
-                        <outletCollection property="buttonListEasy" destination="dow-m9-jzW" id="II4-FG-5N8"/>
-                        <outletCollection property="buttonListEasy" destination="FWB-vc-qsD" id="xFn-0N-bMQ"/>
-                        <outletCollection property="buttonListEasy" destination="V5S-RG-WQv" id="Ubo-zw-AZs"/>
+                        <outlet property="swGameCenterSubmit" destination="iX1-g3-NR5" id="SFs-4c-MdI"/>
+                        <outlet property="swSoundEnabled" destination="Cad-Wf-kLD" id="gtE-M2-eif"/>
                         <outletCollection property="buttonListEasy" destination="jnQ-RC-a6L" id="ZRl-67-xwA"/>
-                        <outletCollection property="buttonListMiddle" destination="uON-zc-QDh" id="yqr-Vf-Nve"/>
                         <outletCollection property="buttonListMiddle" destination="1Yz-wP-PqT" id="vwV-qd-9E7"/>
-                        <outletCollection property="buttonListMiddle" destination="Gfa-BD-CQe" id="kxk-Hn-mcT"/>
-                        <outletCollection property="buttonListMiddle" destination="Lh6-dG-J65" id="hU2-yS-Bip"/>
                         <outletCollection property="buttonListMiddle" destination="YkV-ph-Ogu" id="fx5-Rm-zkP"/>
-                        <outletCollection property="buttonListMiddle" destination="zzo-is-uQl" id="08U-tL-s1s"/>
-                        <outletCollection property="buttonListMiddle" destination="XAa-JG-jxS" id="acv-Za-9H4"/>
-                        <outletCollection property="buttonListHard" destination="6Ah-bp-vPU" id="OLm-uT-78E"/>
-                        <outletCollection property="buttonListHard" destination="jU3-L2-mLT" id="bak-qA-z3f"/>
-                        <outletCollection property="buttonListHard" destination="Srm-yb-jO0" id="7Pt-6E-7GV"/>
-                        <outletCollection property="buttonListHard" destination="zL1-a8-2P4" id="Svb-LT-HKG"/>
                         <outletCollection property="buttonListHard" destination="FSp-cO-mp5" id="6iY-cR-Ck3"/>
-                        <outletCollection property="buttonListHard" destination="GXc-xH-FpQ" id="JgL-NA-yDL"/>
+                        <outletCollection property="buttonListHard" destination="6Ah-bp-vPU" id="OLm-uT-78E"/>
                         <outletCollection property="buttonListHard" destination="5c3-aO-Wgr" id="0DR-7L-N3n"/>
+                        <outletCollection property="buttonListEasy" destination="V5S-RG-WQv" id="Ubo-zw-AZs"/>
+                        <outletCollection property="buttonListHard" destination="Srm-yb-jO0" id="7Pt-6E-7GV"/>
+                        <outletCollection property="buttonListHard" destination="GXc-xH-FpQ" id="JgL-NA-yDL"/>
+                        <outletCollection property="buttonListEasy" destination="jrQ-SL-bNl" id="5t4-DZ-5bm"/>
+                        <outletCollection property="buttonListEasy" destination="dow-m9-jzW" id="II4-FG-5N8"/>
+                        <outletCollection property="buttonListMiddle" destination="uON-zc-QDh" id="yqr-Vf-Nve"/>
+                        <outletCollection property="buttonListEasy" destination="FWB-vc-qsD" id="xFn-0N-bMQ"/>
+                        <outletCollection property="buttonListEasy" destination="urL-HC-5CR" id="kCa-RX-hb3"/>
+                        <outletCollection property="buttonListMiddle" destination="XAa-JG-jxS" id="acv-Za-9H4"/>
+                        <outletCollection property="buttonListHard" destination="zL1-a8-2P4" id="Svb-LT-HKG"/>
+                        <outletCollection property="buttonListMiddle" destination="Gfa-BD-CQe" id="kxk-Hn-mcT"/>
+                        <outletCollection property="buttonListEasy" destination="Suw-l0-BU3" id="7ue-eB-VIo"/>
+                        <outletCollection property="buttonListMiddle" destination="zzo-is-uQl" id="08U-tL-s1s"/>
+                        <outletCollection property="buttonListMiddle" destination="Lh6-dG-J65" id="hU2-yS-Bip"/>
+                        <outletCollection property="buttonListHard" destination="jU3-L2-mLT" id="bak-qA-z3f"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EpI-TA-dVp" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1701" y="1323"/>
+            <point key="canvasLocation" x="2689" y="756"/>
+        </scene>
+        <!--Leaderboard Table View Controller-->
+        <scene sceneID="UI3-1Q-S8x">
+            <objects>
+                <viewController id="Skf-Cj-sjx" customClass="JMSLeaderboardTableViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="BSd-ud-8D9">
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="High Score" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Pd7-7w-cEG">
+                                <rect key="frame" x="123" y="64" width="523" height="78"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="32"/>
+                                <color key="textColor" red="0.0" green="0.68235294120000001" blue="0.94117647059999998" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="58" sectionHeaderHeight="22" sectionFooterHeight="22" id="jQN-Tq-xRD">
+                                <rect key="frame" x="123" y="150" width="523" height="854"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="separatorColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationWidth="0.0" shouldIndentWhileEditing="NO" reuseIdentifier="ScoreCell" rowHeight="58" id="zPR-Rm-mrB" customClass="JMSScoreTableViewCell">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="zPR-Rm-mrB" id="VtW-iC-ujf">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="100%" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="FrR-DY-2tl">
+                                                    <rect key="frame" x="244" y="0.0" width="75" height="57"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="21"/>
+                                                    <color key="textColor" red="0.0" green="0.59999999999999998" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="27" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="LRD-ZL-3F4">
+                                                    <rect key="frame" x="194" y="0.0" width="42" height="57"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="22"/>
+                                                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1048576" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="W22-f0-AfS">
+                                                    <rect key="frame" x="0.0" y="0.0" width="222" height="57"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="28"/>
+                                                    <color key="textColor" red="0.0" green="0.68235294120000001" blue="0.94117647059999998" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="31 Feb 2015" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="CNg-su-OkK">
+                                                    <rect key="frame" x="327" y="0.0" width="188" height="57"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="lbDateTime" destination="CNg-su-OkK" id="IiH-cq-GWV"/>
+                                            <outlet property="lbLevel" destination="LRD-ZL-3F4" id="43c-1l-jO7"/>
+                                            <outlet property="lbProgress" destination="FrR-DY-2tl" id="Iqj-qQ-UD0"/>
+                                            <outlet property="lbScore" destination="W22-f0-AfS" id="VX8-Ca-d1f"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="Skf-Cj-sjx" id="SVE-Mp-Fl0"/>
+                                    <outlet property="delegate" destination="Skf-Cj-sjx" id="ZQo-Mt-KSb"/>
+                                </connections>
+                            </tableView>
+                            <view contentMode="scaleToFill" id="wLw-8P-1Wp">
+                                <rect key="frame" x="0.0" y="0.0" width="768" height="64"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" id="o8x-Au-iys" customClass="JMSGradientButton">
+                                        <rect key="frame" x="447" y="8" width="290" height="46"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="21"/>
+                                        <size key="titleShadowOffset" width="1" height="1"/>
+                                        <state key="normal" title="GAME CENTER BOARDS">
+                                            <color key="titleColor" red="0.57254901960000004" green="0.57254901960000004" blue="0.57254901960000004" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleShadowColor" white="0.75" alpha="0.5" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="openGameboardScreen" destination="Skf-Cj-sjx" eventType="touchUpInside" id="RAl-FE-gdj"/>
+                                            <action selector="resetGame" destination="3UF-V5-MR8" eventType="touchUpInside" id="LiU-QA-vHa"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" id="4ds-Im-0Uw" customClass="JMSGradientButton">
+                                        <rect key="frame" x="28" y="8" width="290" height="46"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="21"/>
+                                        <size key="titleShadowOffset" width="1" height="1"/>
+                                        <state key="normal" title="MAIN MENU">
+                                            <color key="titleColor" red="0.57254901960000004" green="0.57254901960000004" blue="0.57254901960000004" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleShadowColor" white="0.75174825170000004" alpha="0.5" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="back" destination="Skf-Cj-sjx" eventType="touchUpInside" id="urC-Kn-FDe"/>
+                                            <action selector="backToMainMenu" destination="3UF-V5-MR8" eventType="touchUpInside" id="DWW-gi-vvX"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Nu1-zT-s39" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1709" y="1566"/>
         </scene>
     </scenes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

@@ -7,15 +7,20 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "GradientButton.h"
+#import "JMSGradientButton.h"
+
+
+@class JMSGameSessionInfo;
 
 @interface MainViewController : UIViewController
 
-@property (weak, nonatomic) IBOutlet GradientButton *btnStart;
-@property (weak, nonatomic) IBOutlet GradientButton *btnComplexityLevel;
-@property (weak, nonatomic) IBOutlet GradientButton *btnLeaderboard;
+@property (weak, nonatomic) IBOutlet JMSGradientButton *btnStart;
+@property (weak, nonatomic) IBOutlet JMSGradientButton *btnComplexityLevel;
+@property (weak, nonatomic) IBOutlet JMSGradientButton *btnLeaderboard;
+@property (weak, nonatomic) IBOutlet JMSGradientButton *btnTutorial;
+@property (weak, nonatomic) IBOutlet UIView *buttonListContainer;
 
-- (IBAction)startGame;
+@property (nonatomic, strong) JMSGameSessionInfo *gameSessionInfo;
 
 @end
 

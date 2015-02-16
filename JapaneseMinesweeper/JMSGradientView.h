@@ -1,5 +1,5 @@
 //
-//  GradientButton.h
+//  GradientView.h
 //  JapaneseMinesweeper
 //
 //  Created by Jakmir on 10/6/14.
@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface GradientButton : UIButton
+@interface JMSGradientView : UIView
 
 - (void) drawGradientWithStartColor:(UIColor *)startColor andFinishColor:(UIColor *)finishColor;
 

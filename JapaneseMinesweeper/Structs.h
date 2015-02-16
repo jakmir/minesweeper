@@ -17,7 +17,7 @@ struct JMSPosition
     NSInteger column;
 };
 
-struct MineGridCellInfo {
+struct JMSMineGridCellNeighboursSummary {
     NSInteger minesLeftDirection;
     NSInteger minesRightDirection;
     NSInteger minesTopDirection;

@@ -6,27 +6,35 @@
 //  Copyright (c) 2014 Jakmir. All rights reserved.
 //
 
-#import "AppDelegate.h"
+#import "JMSAppDelegate.h"
 
-@interface AppDelegate ()
+@interface JMSAppDelegate ()
 
 @end
 
-@implementation AppDelegate
+@implementation JMSAppDelegate
 
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+    static dispatch_once_t predicate;
+    dispatch_once(&predicate, ^{
+        NSTimeInterval timeInterval = [NSDate timeIntervalSinceReferenceDate];
+        srand(timeInterval);
+    });
     
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    if (![userDefaults boolForKey:@"isFirstRun"])
+    if (![userDefaults boolForKey:@"userDefaultsInitialized"])
     {
-        [userDefaults setBool:YES forKey:@"isFirstRun"];
+        [userDefaults setBool:YES forKey:@"userDefaultsInitialized"];
         [userDefaults setInteger:25 forKey:@"level"];
-        [userDefaults setBool:NO forKey:@"isMuted"];
+        [userDefaults setBool:YES forKey:@"soundEnabled"];
+        [userDefaults setBool:YES forKey:@"shouldSubmitToGameCenter"];
         [userDefaults setFloat:0.5 forKey:@"holdDuration"];
         
         [userDefaults synchronize];
     }
+    
     return YES;
 }
 

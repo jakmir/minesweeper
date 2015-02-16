@@ -6,9 +6,10 @@
 //  Copyright (c) 2014 Jakmir. All rights reserved.
 //
 
-#import "MineGridCell.h"
+#import "JMSMineGridCell.h"
+#import "Classes/JMSMineGridCellInfo.h"
 
-@implementation MineGridCell
+@implementation JMSMineGridCell
 {
     CAGradientLayer *gradientLayer;
     CALayer *blurLayer;
@@ -18,7 +19,7 @@
 {
     if (self = [super initWithFrame:frame])
     {
-        self.state = MineGridCellStateClosed;
+        _state = MineGridCellStateClosed;
     }
     return self;
 }
@@ -27,6 +28,7 @@
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect
 {
+    NSLog(@"%s", __FUNCTION__);
     [super drawRect:rect];
     
     /*
@@ -44,7 +46,7 @@
     
     CGRect rectangle = rect;
     CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextSetRGBStrokeColor(context, 0.9, 0.9, 0.9, 1);
+    CGContextSetRGBStrokeColor(context, 0.9, 0.9, 0.9, 0.5);
     CGContextSetLineWidth(context, 1.0);
     
     self.backgroundColor = [UIColor clearColor];
@@ -60,9 +62,8 @@
             break;
         case MineGridCellStateMarked:
         {
-            CGContextSetRGBFillColor(context, 0.3, 0.5, 0.3, 1);
+            CGContextSetRGBFillColor(context, 1, 1, 1, 0.5);
             CGContextFillRect(context, rectangle);
-            
             self.layer.contents = (__bridge id)([UIImage imageNamed:@"flag"].CGImage);
             
             self.alpha = 1;
@@ -90,12 +91,15 @@
                 CGContextAddLineToPoint(context, rect.size.width, rect.size.height);
                 CGContextMoveToPoint(context, rect.size.width, 0);
                 CGContextAddLineToPoint(context, 0, rect.size.height);
-                CGContextClosePath(context);
-                CGContextDrawPath(context, kCGPathFillStroke);
+
                 [[@(self.cellInfo.minesLeftDirection) stringValue] drawAtPoint:CGPointMake(7, 22) withAttributes:stringAttrs];
                 [[@(self.cellInfo.minesRightDirection) stringValue] drawAtPoint:CGPointMake(54, 22) withAttributes:stringAttrs];
                 [[@(self.cellInfo.minesTopDirection) stringValue] drawAtPoint:CGPointMake(31, 2) withAttributes:stringAttrs];
                 [[@(self.cellInfo.minesBottomDirection) stringValue] drawAtPoint:CGPointMake(31, 44) withAttributes:stringAttrs];
+                
+                CGContextClosePath(context);
+                CGContextDrawPath(context, kCGPathFillStroke);
+
             }
         }
             break;
@@ -104,7 +108,7 @@
     }
 }
 
-- (void) setState:(MineGridCellState)state
+- (void) setState:(JMSMineGridCellState)state
 {
     if (_state != state)
     {
@@ -113,4 +117,19 @@
     }
 }
 
+- (JMSMineGridCellInfo *)exportCell
+{
+    JMSMineGridCellInfo *result = [JMSMineGridCellInfo new];
+    result.mine = self.mine;
+    result.state = self.state;
+    result.cellInfo = self.cellInfo;
+    return result;
+}
+
+- (void)import:(JMSMineGridCellInfo *)mineGridCellInfo
+{
+    _mine = mineGridCellInfo.mine;
+    _cellInfo = mineGridCellInfo.cellInfo;
+    _state = mineGridCellInfo.state;
+}
 @end

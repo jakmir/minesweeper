@@ -8,14 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		F707112019E0C7A700D3BBD2 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F707111F19E0C7A700D3BBD2 /* GameKit.framework */; };
-		F707112319E1EF6000D3BBD2 /* GradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = F707112219E1EF6000D3BBD2 /* GradientView.m */; };
+		F707112319E1EF6000D3BBD2 /* JMSGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = F707112219E1EF6000D3BBD2 /* JMSGradientView.m */; };
 		F707112819E1F23A00D3BBD2 /* UIColor+ColorFromHexString.m in Sources */ = {isa = PBXBuildFile; fileRef = F707112719E1F23A00D3BBD2 /* UIColor+ColorFromHexString.m */; };
-		F707112B19E20F5600D3BBD2 /* GradientButton.m in Sources */ = {isa = PBXBuildFile; fileRef = F707112A19E20F5600D3BBD2 /* GradientButton.m */; };
+		F707112B19E20F5600D3BBD2 /* JMSGradientButton.m in Sources */ = {isa = PBXBuildFile; fileRef = F707112A19E20F5600D3BBD2 /* JMSGradientButton.m */; };
 		F73B168C1A438E8E0085A18A /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = F73B168B1A438E8E0085A18A /* UIImage+ImageEffects.m */; };
 		F73B168F1A44AC520085A18A /* UIView+Blur.m in Sources */ = {isa = PBXBuildFile; fileRef = F73B168E1A44AC520085A18A /* UIView+Blur.m */; };
 		F73B16911A44AE0E0085A18A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F73B16901A44AE0E0085A18A /* QuartzCore.framework */; };
 		F73BD86519C395EF00CD51B9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F73BD86419C395EF00CD51B9 /* main.m */; };
-		F73BD86819C395F000CD51B9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F73BD86719C395F000CD51B9 /* AppDelegate.m */; };
+		F73BD86819C395F000CD51B9 /* JMSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F73BD86719C395F000CD51B9 /* JMSAppDelegate.m */; };
 		F73BD86B19C395F000CD51B9 /* JapaneseMinesweeper.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F73BD86919C395F000CD51B9 /* JapaneseMinesweeper.xcdatamodeld */; };
 		F73BD86E19C395F000CD51B9 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F73BD86D19C395F000CD51B9 /* MainViewController.m */; };
 		F73BD87119C395F000CD51B9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F73BD86F19C395F000CD51B9 /* Main.storyboard */; };
@@ -23,9 +23,18 @@
 		F73BD87619C395F000CD51B9 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = F73BD87419C395F000CD51B9 /* LaunchScreen.xib */; };
 		F73BD88219C395F000CD51B9 /* JapaneseMinesweeperTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F73BD88119C395F000CD51B9 /* JapaneseMinesweeperTests.m */; };
 		F77BA48F19F0867600DDE946 /* OptionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F77BA48E19F0867600DDE946 /* OptionsViewController.m */; };
-		F7B88BE819C3A87900F6585E /* GameBoardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F7B88BE719C3A87900F6585E /* GameBoardViewController.m */; };
-		F7B88BEC19C3AB2A00F6585E /* MineGridView.m in Sources */ = {isa = PBXBuildFile; fileRef = F7B88BEB19C3AB2A00F6585E /* MineGridView.m */; };
-		F7B88BF019C46FDF00F6585E /* MineGridCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F7B88BEF19C46FDF00F6585E /* MineGridCell.m */; };
+		F7ADBED91A8FE9A4003BAAF2 /* JMSMineGridCellInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = F7ADBED81A8FE9A4003BAAF2 /* JMSMineGridCellInfo.m */; };
+		F7ADBEDC1A8FF53B003BAAF2 /* JMSGameSessionInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = F7ADBEDB1A8FF53B003BAAF2 /* JMSGameSessionInfo.m */; };
+		F7ADBEE11A911DDC003BAAF2 /* JMSAlertViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F7ADBEE01A911DDC003BAAF2 /* JMSAlertViewController.m */; };
+		F7ADBEEA1A913EC5003BAAF2 /* JMSGameKitHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = F7ADBEE91A913EC5003BAAF2 /* JMSGameKitHelper.m */; };
+		F7ADBEED1A9151FE003BAAF2 /* JMSScoreTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F7ADBEEC1A9151FE003BAAF2 /* JMSScoreTableViewCell.m */; };
+		F7ADBEF01A9152F4003BAAF2 /* JMSLeaderboardTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F7ADBEEF1A9152F4003BAAF2 /* JMSLeaderboardTableViewController.m */; };
+		F7ADBEF71A915486003BAAF2 /* JMSGameSession.m in Sources */ = {isa = PBXBuildFile; fileRef = F7ADBEF61A915486003BAAF2 /* JMSGameSession.m */; };
+		F7ADBEFA1A915549003BAAF2 /* JMSDataManagerBase.m in Sources */ = {isa = PBXBuildFile; fileRef = F7ADBEF91A915549003BAAF2 /* JMSDataManagerBase.m */; };
+		F7ADBEFD1A9155C6003BAAF2 /* JMSLeaderboardManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F7ADBEFC1A9155C6003BAAF2 /* JMSLeaderboardManager.m */; };
+		F7B88BE819C3A87900F6585E /* JMSGameBoardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F7B88BE719C3A87900F6585E /* JMSGameBoardViewController.m */; };
+		F7B88BEC19C3AB2A00F6585E /* JMSMineGridView.m in Sources */ = {isa = PBXBuildFile; fileRef = F7B88BEB19C3AB2A00F6585E /* JMSMineGridView.m */; };
+		F7B88BF019C46FDF00F6585E /* JMSMineGridCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F7B88BEF19C46FDF00F6585E /* JMSMineGridCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,12 +49,12 @@
 
 /* Begin PBXFileReference section */
 		F707111F19E0C7A700D3BBD2 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
-		F707112119E1EF6000D3BBD2 /* GradientView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GradientView.h; sourceTree = "<group>"; };
-		F707112219E1EF6000D3BBD2 /* GradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GradientView.m; sourceTree = "<group>"; };
+		F707112119E1EF6000D3BBD2 /* JMSGradientView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMSGradientView.h; sourceTree = "<group>"; };
+		F707112219E1EF6000D3BBD2 /* JMSGradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMSGradientView.m; sourceTree = "<group>"; };
 		F707112619E1F23A00D3BBD2 /* UIColor+ColorFromHexString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+ColorFromHexString.h"; sourceTree = "<group>"; };
 		F707112719E1F23A00D3BBD2 /* UIColor+ColorFromHexString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+ColorFromHexString.m"; sourceTree = "<group>"; };
-		F707112919E20F5600D3BBD2 /* GradientButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GradientButton.h; sourceTree = "<group>"; };
-		F707112A19E20F5600D3BBD2 /* GradientButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GradientButton.m; sourceTree = "<group>"; };
+		F707112919E20F5600D3BBD2 /* JMSGradientButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMSGradientButton.h; sourceTree = "<group>"; };
+		F707112A19E20F5600D3BBD2 /* JMSGradientButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMSGradientButton.m; sourceTree = "<group>"; };
 		F73B168A1A438E8E0085A18A /* UIImage+ImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageEffects.h"; sourceTree = "<group>"; };
 		F73B168B1A438E8E0085A18A /* UIImage+ImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageEffects.m"; sourceTree = "<group>"; };
 		F73B168D1A44AC520085A18A /* UIView+Blur.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Blur.h"; sourceTree = "<group>"; };
@@ -54,8 +63,8 @@
 		F73BD85F19C395EF00CD51B9 /* JapaneseMinesweeper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JapaneseMinesweeper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F73BD86319C395EF00CD51B9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F73BD86419C395EF00CD51B9 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		F73BD86619C395EF00CD51B9 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		F73BD86719C395F000CD51B9 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		F73BD86619C395EF00CD51B9 /* JMSAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JMSAppDelegate.h; sourceTree = "<group>"; };
+		F73BD86719C395F000CD51B9 /* JMSAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JMSAppDelegate.m; sourceTree = "<group>"; };
 		F73BD86A19C395F000CD51B9 /* JapaneseMinesweeper.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = JapaneseMinesweeper.xcdatamodel; sourceTree = "<group>"; };
 		F73BD86C19C395F000CD51B9 /* MainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		F73BD86D19C395F000CD51B9 /* MainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
@@ -67,12 +76,30 @@
 		F73BD88119C395F000CD51B9 /* JapaneseMinesweeperTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JapaneseMinesweeperTests.m; sourceTree = "<group>"; };
 		F77BA48D19F0867600DDE946 /* OptionsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OptionsViewController.h; sourceTree = "<group>"; };
 		F77BA48E19F0867600DDE946 /* OptionsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OptionsViewController.m; sourceTree = "<group>"; };
-		F7B88BE619C3A87900F6585E /* GameBoardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameBoardViewController.h; sourceTree = "<group>"; };
-		F7B88BE719C3A87900F6585E /* GameBoardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameBoardViewController.m; sourceTree = "<group>"; };
-		F7B88BEA19C3AB2A00F6585E /* MineGridView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MineGridView.h; sourceTree = "<group>"; };
-		F7B88BEB19C3AB2A00F6585E /* MineGridView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MineGridView.m; sourceTree = "<group>"; };
-		F7B88BEE19C46FDF00F6585E /* MineGridCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MineGridCell.h; sourceTree = "<group>"; };
-		F7B88BEF19C46FDF00F6585E /* MineGridCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MineGridCell.m; sourceTree = "<group>"; };
+		F7ADBED71A8FE9A4003BAAF2 /* JMSMineGridCellInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMSMineGridCellInfo.h; sourceTree = "<group>"; };
+		F7ADBED81A8FE9A4003BAAF2 /* JMSMineGridCellInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMSMineGridCellInfo.m; sourceTree = "<group>"; };
+		F7ADBEDA1A8FF53B003BAAF2 /* JMSGameSessionInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMSGameSessionInfo.h; sourceTree = "<group>"; };
+		F7ADBEDB1A8FF53B003BAAF2 /* JMSGameSessionInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMSGameSessionInfo.m; sourceTree = "<group>"; };
+		F7ADBEDF1A911DDC003BAAF2 /* JMSAlertViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMSAlertViewController.h; sourceTree = "<group>"; };
+		F7ADBEE01A911DDC003BAAF2 /* JMSAlertViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMSAlertViewController.m; sourceTree = "<group>"; };
+		F7ADBEE81A913EC5003BAAF2 /* JMSGameKitHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMSGameKitHelper.h; sourceTree = "<group>"; };
+		F7ADBEE91A913EC5003BAAF2 /* JMSGameKitHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMSGameKitHelper.m; sourceTree = "<group>"; };
+		F7ADBEEB1A9151FE003BAAF2 /* JMSScoreTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMSScoreTableViewCell.h; sourceTree = "<group>"; };
+		F7ADBEEC1A9151FE003BAAF2 /* JMSScoreTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMSScoreTableViewCell.m; sourceTree = "<group>"; };
+		F7ADBEEE1A9152F4003BAAF2 /* JMSLeaderboardTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMSLeaderboardTableViewController.h; sourceTree = "<group>"; };
+		F7ADBEEF1A9152F4003BAAF2 /* JMSLeaderboardTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMSLeaderboardTableViewController.m; sourceTree = "<group>"; };
+		F7ADBEF51A915486003BAAF2 /* JMSGameSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JMSGameSession.h; path = JapaneseMinesweeper/JMSGameSession.h; sourceTree = SOURCE_ROOT; };
+		F7ADBEF61A915486003BAAF2 /* JMSGameSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JMSGameSession.m; path = JapaneseMinesweeper/JMSGameSession.m; sourceTree = SOURCE_ROOT; };
+		F7ADBEF81A915549003BAAF2 /* JMSDataManagerBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JMSDataManagerBase.h; path = JapaneseMinesweeper/JMSDataManagerBase.h; sourceTree = SOURCE_ROOT; };
+		F7ADBEF91A915549003BAAF2 /* JMSDataManagerBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JMSDataManagerBase.m; path = JapaneseMinesweeper/JMSDataManagerBase.m; sourceTree = SOURCE_ROOT; };
+		F7ADBEFB1A9155C6003BAAF2 /* JMSLeaderboardManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JMSLeaderboardManager.h; path = JapaneseMinesweeper/JMSLeaderboardManager.h; sourceTree = SOURCE_ROOT; };
+		F7ADBEFC1A9155C6003BAAF2 /* JMSLeaderboardManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JMSLeaderboardManager.m; path = JapaneseMinesweeper/JMSLeaderboardManager.m; sourceTree = SOURCE_ROOT; };
+		F7B88BE619C3A87900F6585E /* JMSGameBoardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMSGameBoardViewController.h; sourceTree = "<group>"; };
+		F7B88BE719C3A87900F6585E /* JMSGameBoardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMSGameBoardViewController.m; sourceTree = "<group>"; };
+		F7B88BEA19C3AB2A00F6585E /* JMSMineGridView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMSMineGridView.h; sourceTree = "<group>"; };
+		F7B88BEB19C3AB2A00F6585E /* JMSMineGridView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMSMineGridView.m; sourceTree = "<group>"; };
+		F7B88BEE19C46FDF00F6585E /* JMSMineGridCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMSMineGridCell.h; sourceTree = "<group>"; };
+		F7B88BEF19C46FDF00F6585E /* JMSMineGridCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMSMineGridCell.m; sourceTree = "<group>"; };
 		FD98C96819DEFCD00035125E /* Enums.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Enums.h; sourceTree = "<group>"; };
 		FD98C96919DEFD490035125E /* Structs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Structs.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -133,11 +160,14 @@
 		F73BD86119C395EF00CD51B9 /* JapaneseMinesweeper */ = {
 			isa = PBXGroup;
 			children = (
+				F7ADBEF11A915382003BAAF2 /* DAL */,
+				F7ADBEE71A913EA5003BAAF2 /* Helpers */,
+				F7ADBEDE1A911DC5003BAAF2 /* Controllers */,
+				F7ADBED61A8FE995003BAAF2 /* Classes */,
 				F707112419E1F1E400D3BBD2 /* Extensions */,
-				F7B88BED19C46FB900F6585E /* Objects */,
 				F7B88BE919C3AB1500F6585E /* Controls */,
-				F73BD86619C395EF00CD51B9 /* AppDelegate.h */,
-				F73BD86719C395F000CD51B9 /* AppDelegate.m */,
+				F73BD86619C395EF00CD51B9 /* JMSAppDelegate.h */,
+				F73BD86719C395F000CD51B9 /* JMSAppDelegate.m */,
 				F73BD86C19C395F000CD51B9 /* MainViewController.h */,
 				F73BD86D19C395F000CD51B9 /* MainViewController.m */,
 				F77BA48D19F0867600DDE946 /* OptionsViewController.h */,
@@ -145,12 +175,13 @@
 				F73BD86F19C395F000CD51B9 /* Main.storyboard */,
 				F73BD87219C395F000CD51B9 /* Images.xcassets */,
 				F73BD87419C395F000CD51B9 /* LaunchScreen.xib */,
-				F73BD86919C395F000CD51B9 /* JapaneseMinesweeper.xcdatamodeld */,
 				F73BD86219C395EF00CD51B9 /* Supporting Files */,
-				F7B88BE619C3A87900F6585E /* GameBoardViewController.h */,
-				F7B88BE719C3A87900F6585E /* GameBoardViewController.m */,
+				F7B88BE619C3A87900F6585E /* JMSGameBoardViewController.h */,
+				F7B88BE719C3A87900F6585E /* JMSGameBoardViewController.m */,
 				FD98C96819DEFCD00035125E /* Enums.h */,
 				FD98C96919DEFD490035125E /* Structs.h */,
+				F7ADBEEE1A9152F4003BAAF2 /* JMSLeaderboardTableViewController.h */,
+				F7ADBEEF1A9152F4003BAAF2 /* JMSLeaderboardTableViewController.m */,
 			);
 			path = JapaneseMinesweeper;
 			sourceTree = "<group>";
@@ -181,26 +212,64 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		F7ADBED61A8FE995003BAAF2 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				F7ADBED71A8FE9A4003BAAF2 /* JMSMineGridCellInfo.h */,
+				F7ADBED81A8FE9A4003BAAF2 /* JMSMineGridCellInfo.m */,
+				F7ADBEDA1A8FF53B003BAAF2 /* JMSGameSessionInfo.h */,
+				F7ADBEDB1A8FF53B003BAAF2 /* JMSGameSessionInfo.m */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		F7ADBEDE1A911DC5003BAAF2 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				F7ADBEDF1A911DDC003BAAF2 /* JMSAlertViewController.h */,
+				F7ADBEE01A911DDC003BAAF2 /* JMSAlertViewController.m */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		F7ADBEE71A913EA5003BAAF2 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				F7ADBEE81A913EC5003BAAF2 /* JMSGameKitHelper.h */,
+				F7ADBEE91A913EC5003BAAF2 /* JMSGameKitHelper.m */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		F7ADBEF11A915382003BAAF2 /* DAL */ = {
+			isa = PBXGroup;
+			children = (
+				F73BD86919C395F000CD51B9 /* JapaneseMinesweeper.xcdatamodeld */,
+				F7ADBEF51A915486003BAAF2 /* JMSGameSession.h */,
+				F7ADBEF61A915486003BAAF2 /* JMSGameSession.m */,
+				F7ADBEF81A915549003BAAF2 /* JMSDataManagerBase.h */,
+				F7ADBEF91A915549003BAAF2 /* JMSDataManagerBase.m */,
+				F7ADBEFB1A9155C6003BAAF2 /* JMSLeaderboardManager.h */,
+				F7ADBEFC1A9155C6003BAAF2 /* JMSLeaderboardManager.m */,
+			);
+			path = DAL;
+			sourceTree = "<group>";
+		};
 		F7B88BE919C3AB1500F6585E /* Controls */ = {
 			isa = PBXGroup;
 			children = (
-				F7B88BEA19C3AB2A00F6585E /* MineGridView.h */,
-				F7B88BEB19C3AB2A00F6585E /* MineGridView.m */,
-				F7B88BEE19C46FDF00F6585E /* MineGridCell.h */,
-				F7B88BEF19C46FDF00F6585E /* MineGridCell.m */,
-				F707112119E1EF6000D3BBD2 /* GradientView.h */,
-				F707112219E1EF6000D3BBD2 /* GradientView.m */,
-				F707112919E20F5600D3BBD2 /* GradientButton.h */,
-				F707112A19E20F5600D3BBD2 /* GradientButton.m */,
+				F7B88BEA19C3AB2A00F6585E /* JMSMineGridView.h */,
+				F7B88BEB19C3AB2A00F6585E /* JMSMineGridView.m */,
+				F7B88BEE19C46FDF00F6585E /* JMSMineGridCell.h */,
+				F7B88BEF19C46FDF00F6585E /* JMSMineGridCell.m */,
+				F707112119E1EF6000D3BBD2 /* JMSGradientView.h */,
+				F707112219E1EF6000D3BBD2 /* JMSGradientView.m */,
+				F707112919E20F5600D3BBD2 /* JMSGradientButton.h */,
+				F707112A19E20F5600D3BBD2 /* JMSGradientButton.m */,
+				F7ADBEEB1A9151FE003BAAF2 /* JMSScoreTableViewCell.h */,
+				F7ADBEEC1A9151FE003BAAF2 /* JMSScoreTableViewCell.m */,
 			);
 			name = Controls;
-			sourceTree = "<group>";
-		};
-		F7B88BED19C46FB900F6585E /* Objects */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Objects;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -310,19 +379,28 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F73BD86819C395F000CD51B9 /* AppDelegate.m in Sources */,
-				F7B88BE819C3A87900F6585E /* GameBoardViewController.m in Sources */,
-				F707112319E1EF6000D3BBD2 /* GradientView.m in Sources */,
-				F707112B19E20F5600D3BBD2 /* GradientButton.m in Sources */,
+				F73BD86819C395F000CD51B9 /* JMSAppDelegate.m in Sources */,
+				F7B88BE819C3A87900F6585E /* JMSGameBoardViewController.m in Sources */,
+				F7ADBEEA1A913EC5003BAAF2 /* JMSGameKitHelper.m in Sources */,
+				F707112319E1EF6000D3BBD2 /* JMSGradientView.m in Sources */,
+				F707112B19E20F5600D3BBD2 /* JMSGradientButton.m in Sources */,
+				F7ADBEE11A911DDC003BAAF2 /* JMSAlertViewController.m in Sources */,
 				F73B168F1A44AC520085A18A /* UIView+Blur.m in Sources */,
 				F73BD86519C395EF00CD51B9 /* main.m in Sources */,
-				F7B88BF019C46FDF00F6585E /* MineGridCell.m in Sources */,
+				F7B88BF019C46FDF00F6585E /* JMSMineGridCell.m in Sources */,
+				F7ADBEED1A9151FE003BAAF2 /* JMSScoreTableViewCell.m in Sources */,
 				F73BD86E19C395F000CD51B9 /* MainViewController.m in Sources */,
+				F7ADBEFA1A915549003BAAF2 /* JMSDataManagerBase.m in Sources */,
 				F73BD86B19C395F000CD51B9 /* JapaneseMinesweeper.xcdatamodeld in Sources */,
+				F7ADBED91A8FE9A4003BAAF2 /* JMSMineGridCellInfo.m in Sources */,
 				F73B168C1A438E8E0085A18A /* UIImage+ImageEffects.m in Sources */,
-				F7B88BEC19C3AB2A00F6585E /* MineGridView.m in Sources */,
+				F7ADBEDC1A8FF53B003BAAF2 /* JMSGameSessionInfo.m in Sources */,
+				F7ADBEFD1A9155C6003BAAF2 /* JMSLeaderboardManager.m in Sources */,
+				F7B88BEC19C3AB2A00F6585E /* JMSMineGridView.m in Sources */,
 				F707112819E1F23A00D3BBD2 /* UIColor+ColorFromHexString.m in Sources */,
 				F77BA48F19F0867600DDE946 /* OptionsViewController.m in Sources */,
+				F7ADBEF01A9152F4003BAAF2 /* JMSLeaderboardTableViewController.m in Sources */,
+				F7ADBEF71A915486003BAAF2 /* JMSGameSession.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -547,7 +625,8 @@
 				F73BD86A19C395F000CD51B9 /* JapaneseMinesweeper.xcdatamodel */,
 			);
 			currentVersion = F73BD86A19C395F000CD51B9 /* JapaneseMinesweeper.xcdatamodel */;
-			path = JapaneseMinesweeper.xcdatamodeld;
+			name = JapaneseMinesweeper.xcdatamodeld;
+			path = ../JapaneseMinesweeper.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

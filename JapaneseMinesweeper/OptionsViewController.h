@@ -7,17 +7,21 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "GradientView.h"
-#import "GradientButton.h"
+#import "JMSGradientView.h"
+#import "JMSGradientButton.h"
 @interface OptionsViewController : UIViewController
 
-@property (weak, nonatomic) IBOutlet GradientView *gvEasyLevel;
-@property (weak, nonatomic) IBOutlet GradientView *gvHardLevel;
-@property (weak, nonatomic) IBOutlet GradientView *gvMiddleLevel;
-@property (weak, nonatomic) IBOutlet GradientButton *btnSave;
+@property (weak, nonatomic) IBOutlet JMSGradientView *gvEasyLevel;
+@property (weak, nonatomic) IBOutlet JMSGradientView *gvHardLevel;
+@property (weak, nonatomic) IBOutlet JMSGradientView *gvMiddleLevel;
+@property (weak, nonatomic) IBOutlet UIView *difficultyLevel;
+@property (weak, nonatomic) IBOutlet UIView *generalSettings;
+
+@property (weak, nonatomic) IBOutlet JMSGradientButton *btnSave;
 @property (weak, nonatomic) IBOutlet UILabel *lbHoldDuration;
 @property (weak, nonatomic) IBOutlet UISlider *slHoldDuration;
-@property (weak, nonatomic) IBOutlet UISwitch *swMute;
+@property (weak, nonatomic) IBOutlet UISwitch *swSoundEnabled;
+@property (weak, nonatomic) IBOutlet UISwitch *swGameCenterSubmit;
 
 @property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *buttonListEasy;
 @property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *buttonListMiddle;

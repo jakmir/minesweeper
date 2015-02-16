@@ -6,9 +6,11 @@
 //  Copyright (c) 2014 Jakmir. All rights reserved.
 //
 
-#import "MineGridView.h"
-#import "MineGridCell.h"
+#import "JMSMineGridView.h"
+#import "JMSMineGridCell.h"
 #import "UIColor+ColorFromHexString.h"
+#import "Classes/JMSMineGridCellInfo.h"
+#import "Classes/JMSGameSessionInfo.h"
 
 #define SLIGHTLY_BIG_VALUEF 1e10;
 
@@ -16,7 +18,7 @@ const NSInteger count = 10;
 const NSInteger padding = 19;
 const NSInteger spacing = 1;
 
-@implementation MineGridView
+@implementation JMSMineGridView
 {
     NSArray *map;
     CALayer *layer;
@@ -27,33 +29,47 @@ const NSInteger spacing = 1;
     if (self = [super initWithCoder:aDecoder])
     {
         [self prepareCells];
-        [self prepareGradientLayer];        
+        [self prepareBackground];
     }
     return self;
 }
 
-- (instancetype) initWithFrame:(CGRect)frame
+- (void)refreshCells
 {
-    if (self = [super initWithFrame:frame])
+    NSLog(@"%s", __FUNCTION__);
+    
+    for (int col = 0; col < count; col++)
     {
-        [self prepareCells];
-        [self prepareGradientLayer];
+        for (int row = 0; row < count; row++)
+        {
+            JMSMineGridCell *cell = map[col][row];
+            if (cell.state != MineGridCellStateClosed)
+            {
+                [cell setNeedsDisplay];
+                [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate date]];
+            }
+        }
     }
-    return self;
+
 }
 
-- (void) prepareGradientLayer
+- (void)importMap:(NSArray *)gameboardMap
 {
-    /*
-    if (!layer)
+    NSLog(@"%s", __FUNCTION__);
+    
+    for (int col = 0; col < count; col++)
     {
-        layer = [CALayer layer];
-        layer.frame = CGRectMake(padding, padding, CGRectGetWidth(self.frame) - padding * 2 + 1, CGRectGetHeight(self.frame) - padding * 2 + 1);
-        layer.position = CGPointMake(CGRectGetWidth(self.frame) / 2 , CGRectGetHeight(self.frame) / 2 - 1);
-        layer.backgroundColor = (__bridge CGColorRef)([UIColor colorWithPatternImage:[UIImage imageNamed:@"cell"]]);
+        for (int row = 0; row < count; row++)
+        {
+            JMSMineGridCell *cell = map[col][row];
+            JMSMineGridCellInfo *cellInfo = gameboardMap[col][row];
+            [cell import:cellInfo];
+        }
     }
-    */
-    //self.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"metal2"]];
+}
+
+- (void) prepareBackground
+{
     self.backgroundColor = [UIColor colorWithRed:0 green:0.3 blue:0.6 alpha:1];
 }
 
@@ -69,28 +85,30 @@ const NSInteger spacing = 1;
         NSMutableArray *line = [NSMutableArray array];
         for (int row = 0; row < count; row++)
         {
-            CGRect frame = CGRectMake((size.width + spacing) * col + offset.dx, (size.height + spacing) * row + offset.dy, size.width, size.height);
-            MineGridCell *mineGridCell = [[MineGridCell alloc] initWithFrame:frame];
+            CGRect frame = CGRectMake((size.width + spacing) * col + offset.dx,
+                                      (size.height + spacing) * row + offset.dy,
+                                      size.width,
+                                      size.height);
+            JMSMineGridCell *mineGridCell = [[JMSMineGridCell alloc] initWithFrame:frame];
+
             [line addObject:mineGridCell];
             
             [self addSubview:mineGridCell];
         }
         [columns addObject:line];
-
     }
     
     map = columns;
+ 
 }
 
-- (void) fillWithMines:(CGFloat)coverageRate exceptPosition:(struct JMSPosition)position
+- (void) fillMapWithLevel:(NSUInteger)level exceptPosition:(struct JMSPosition)position
 {
-    NSInteger quantity = roundf(coverageRate * count * count);
-    
-    for (int mineNumber = 1; mineNumber <= quantity; mineNumber++)
+     for (int mineNumber = 1; mineNumber <= level; mineNumber++)
     {
         BOOL mine;
         NSInteger r, c;
-        MineGridCell *mineGridCell;
+        JMSMineGridCell *mineGridCell;
         do
         {
             r = rand() % count;
@@ -111,13 +129,13 @@ const NSInteger spacing = 1;
     for (int col = 0; col < count; col++)
         for (int row = 0; row < count; row++)
         {
-            MineGridCell *cell = map[col][row];
+            JMSMineGridCell *cell = map[col][row];
             if (!cell.mine)
             {
                 NSUInteger left = 0, right = 0, up = 0, down = 0;
                 for (int c = 0; c < count; c++)
                 {
-                    MineGridCell *checkingCell = map[c][row];
+                    JMSMineGridCell *checkingCell = map[c][row];
                     if (checkingCell.mine)
                     {
                         if (c < col)
@@ -132,7 +150,7 @@ const NSInteger spacing = 1;
                 }
                 for (int r = 0; r < count; r++)
                 {
-                    MineGridCell *checkingCell = map[col][r];
+                    JMSMineGridCell *checkingCell = map[col][r];
                     if (checkingCell.mine)
                     {
                         if (r < row)
@@ -145,7 +163,7 @@ const NSInteger spacing = 1;
                         }
                     }
                 }
-                struct MineGridCellInfo cellInfo;
+                struct JMSMineGridCellNeighboursSummary cellInfo;
                 cellInfo.minesTopDirection = up;
                 cellInfo.minesBottomDirection = down;
                 cellInfo.minesLeftDirection = left;
@@ -166,7 +184,7 @@ const NSInteger spacing = 1;
     NSInteger count = 0;
     for (NSArray *column in map)
     {
-        for (MineGridCell *cell in column)
+        for (JMSMineGridCell *cell in column)
         {
             if (!cell.mine && cell.state != MineGridCellStateOpened)
             {
@@ -177,9 +195,9 @@ const NSInteger spacing = 1;
     return count;
 }
 
-- (MineGridCell *)cellWithCoordinateInside: (CGPoint)point
+- (JMSMineGridCell *)cellWithCoordinateInside: (CGPoint)point
 {
-    MineGridCell *cell = nil;
+    JMSMineGridCell *cell = nil;
     struct JMSPosition position = [self cellPositionWithCoordinateInside:point];
     if (position.row != NSNotFound && position.column != NSNotFound)
     {
@@ -219,7 +237,7 @@ const NSInteger spacing = 1;
     NSInteger leftBound = position.column, rightBound = position.column;
     NSInteger topBound = position.row, bottomBound = position.row;
     
-    BOOL(^isNotOpened)(MineGridCell *) = ^BOOL (MineGridCell *cell)
+    BOOL(^isNotOpened)(JMSMineGridCell *) = ^BOOL (JMSMineGridCell *cell)
     {
         return cell && cell.state != MineGridCellStateOpened;
     };
@@ -229,7 +247,7 @@ const NSInteger spacing = 1;
         return coordinate >= 0 && coordinate < count;
     };
     
-    MineGridCell *cell;
+    JMSMineGridCell *cell;
     do
     {
         leftBound--;
@@ -265,7 +283,7 @@ const NSInteger spacing = 1;
     CGFloat b = SLIGHTLY_BIG_VALUEF;
     
     CGFloat bonus = 0, mines, length;
-    MineGridCell *cell1, *cell2;
+    JMSMineGridCell *cell1, *cell2;
     
     BOOL leftBoundInside = insideGameboard(leftBound);
     BOOL rightBoundInside = insideGameboard(rightBound);
@@ -343,9 +361,9 @@ const NSInteger spacing = 1;
     return fabsf(bonus) < 1e-4 ? 0 : bonus;
 }
 
-- (MineGridCellState) cellState:(struct JMSPosition)position
+- (JMSMineGridCellState) cellState:(struct JMSPosition)position
 {
-    MineGridCell *cell = map[position.column][position.row];
+    JMSMineGridCell *cell = map[position.column][position.row];
     if (cell)
     {
         return cell.state;
@@ -355,7 +373,7 @@ const NSInteger spacing = 1;
 
 - (BOOL) clickedWithCoordinate: (CGPoint)point
 {
-    MineGridCell *cell = [self cellWithCoordinateInside:point];
+    JMSMineGridCell *cell = [self cellWithCoordinateInside:point];
     
     if (cell)
     {
@@ -368,7 +386,7 @@ const NSInteger spacing = 1;
 
 - (void) longTappedWithCoordinate:(CGPoint)point
 {
-    MineGridCell *cell = [self cellWithCoordinateInside:point];
+    JMSMineGridCell *cell = [self cellWithCoordinateInside:point];
     
     if (cell)
     {
@@ -386,7 +404,6 @@ const NSInteger spacing = 1;
     }
 }
 
-
 - (void)drawRect:(CGRect)rect
 {
     NSLog(@"%s", __FUNCTION__);
@@ -395,5 +412,22 @@ const NSInteger spacing = 1;
     
 }
 
+
+#pragma mark - Export/Import methods
+
+- (NSArray *)exportMap
+{
+    NSMutableArray *localMap = [NSMutableArray array];
+    for (NSArray *vector in map)
+    {
+        NSMutableArray *localVector = [NSMutableArray array];
+        for (JMSMineGridCell *cell in vector)
+        {
+            [localVector addObject:cell.exportCell];
+        }
+        [localMap addObject:localVector];
+    }
+    return localMap;
+}
 
 @end

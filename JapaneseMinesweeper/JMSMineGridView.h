@@ -10,16 +10,20 @@
 #import "Structs.h"
 #import "Enums.h"
 
-@interface MineGridView : UIView
+@class JMSGameSessionInfo;
 
-- (instancetype) initWithFrame:(CGRect)frame;
-- (void) fillWithMines: (CGFloat)coverageRate exceptPosition:(struct JMSPosition)position;
+@interface JMSMineGridView : UIView
+
+- (void) fillMapWithLevel:(NSUInteger)level exceptPosition:(struct JMSPosition)position;
 - (struct JMSPosition)cellPositionWithCoordinateInside: (CGPoint)point;
 - (BOOL) clickedWithCoordinate: (CGPoint)point;
 - (void) longTappedWithCoordinate: (CGPoint)point;
 - (NSInteger) cellsLeftToOpen;
 - (CGFloat) bonus: (struct JMSPosition)position;
-- (MineGridCellState) cellState: (struct JMSPosition)position;
+- (JMSMineGridCellState) cellState: (struct JMSPosition)position;
 - (NSInteger) cellsCount;
 
+- (NSArray *)exportMap;
+- (void)importMap:(NSArray *)gameboardMap;
+- (void)refreshCells;
 @end

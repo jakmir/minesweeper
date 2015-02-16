@@ -12,7 +12,7 @@
 
 #import <UIKit/UIKit.h>
 
-typedef NS_ENUM(NSUInteger, MineGridCellState) {
+typedef NS_ENUM(NSUInteger, JMSMineGridCellState) {
     MineGridCellStateOpened,
     MineGridCellStateMarked,
     MineGridCellStateClosed,

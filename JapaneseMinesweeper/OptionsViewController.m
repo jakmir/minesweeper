@@ -22,8 +22,11 @@
 {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     level = [userDefaults integerForKey:@"level"];
-    self.swMute.on = [userDefaults boolForKey:@"isMuted"];
-    self.slHoldDuration.value = [userDefaults floatForKey:@"holdDuration"];
+    self.swSoundEnabled.on = [userDefaults boolForKey:@"soundEnabled"];
+    self.swGameCenterSubmit.on = [userDefaults boolForKey:@"shouldSubmitToGameCenter"];
+    CGFloat holdDuration = [userDefaults floatForKey:@"holdDuration"];
+    self.slHoldDuration.value = holdDuration;
+    [self sliderValueChanged:self.slHoldDuration];
 }
 
 - (void)viewDidLoad
@@ -45,6 +48,8 @@
     for (UIButton *button in self.buttonListHard) {
         [button addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchUpInside];
     }
+    
+
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -69,17 +74,23 @@
 {
     [super viewDidAppear:animated];
     
-    [self.gvEasyLevel drawGradientWithStartColor:[UIColor colorFromInteger:0xfff0fff7] andFinishColor:[UIColor whiteColor]];
-    [self.gvMiddleLevel drawGradientWithStartColor:[UIColor colorFromInteger:0xfffff7f0] andFinishColor:[UIColor whiteColor]];
-    [self.gvHardLevel drawGradientWithStartColor:[UIColor colorFromInteger:0xfffff0f0] andFinishColor:[UIColor whiteColor]];
-    [self.btnSave drawGradientWithStartColor:[UIColor colorFromInteger:0xff00cfff] andFinishColor:[UIColor colorFromInteger:0xff007fff]];
+    [self.gvEasyLevel drawGradientWithStartColor:[UIColor colorFromInteger:0xfff0fff7]
+                                  andFinishColor:[UIColor whiteColor]];
+    [self.gvMiddleLevel drawGradientWithStartColor:[UIColor colorFromInteger:0xfffff7f0]
+                                    andFinishColor:[UIColor whiteColor]];
+    [self.gvHardLevel drawGradientWithStartColor:[UIColor colorFromInteger:0xfffff0f0]
+                                  andFinishColor:[UIColor whiteColor]];
+    [self.btnSave drawGradientWithStartColor:[UIColor colorFromInteger:0xff00cfff]
+                              andFinishColor:[UIColor colorFromInteger:0xff007fff]];
     
-
     UIButton *button = (UIButton *)[self.view viewWithTag:level];
     if (button)
     {
         [self buttonClick:button];
     }
+    
+    self.generalSettings.center = CGPointMake(CGRectGetMidX(self.view.frame),
+                                              (CGRectGetMaxY(self.difficultyLevel.frame) + CGRectGetMinY(self.btnSave.frame)) / 2);
 }
 
 - (void)didReceiveMemoryWarning
@@ -122,11 +133,12 @@
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     
     [userDefaults setInteger:level forKey:@"level"];
-    [userDefaults setBool:self.swMute.on forKey:@"isMuted"];
+    [userDefaults setBool:self.swSoundEnabled.on forKey:@"soundEnabled"];
     [userDefaults setFloat:self.slHoldDuration.value forKey:@"holdDuration"];
+    [userDefaults setBool:self.swGameCenterSubmit.on forKey:@"shouldSubmitToGameCenter"];
     [userDefaults synchronize];
     
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self dismissViewControllerAnimated:NO completion:nil];
 }
 
 - (IBAction)sliderValueChanged:(UISlider *)sender
@@ -156,14 +168,5 @@
         return JMSGameDifficultyHard;
     return JMSGameDifficultyUndefined;
 }
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

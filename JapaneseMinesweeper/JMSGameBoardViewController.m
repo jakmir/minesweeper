@@ -17,6 +17,7 @@
 #import <GameKit/GKScore.h>
 #import <GameKit/GKGameCenterViewController.h>
 #import "JMSLeaderboardManager.h"
+
 @interface JMSGameBoardViewController ()
 {
     BOOL initialTapPerformed;
@@ -93,14 +94,12 @@ const CGFloat baseScore = 175;
 
 - (void) drawGradients
 {
-    [self.scoreView drawGradientWithStartColor:[UIColor colorFromInteger:0xffe7e7e7]
-                                andFinishColor:[UIColor colorFromInteger:0xfff0f0f0]];
-    [self.markedMinesCountView drawGradientWithStartColor:[UIColor colorFromInteger:0xffe7e7e7]
-                                           andFinishColor:[UIColor colorFromInteger:0xfff0f0f0]];
-    [self.cellsCountView drawGradientWithStartColor:[UIColor colorFromInteger:0xffe7e7e7]
-                                     andFinishColor:[UIColor colorFromInteger:0xfff0f0f0]];
-    [self.btnMainMenu drawGradientWithStartColor:[UIColor colorFromInteger:0x1fcfcfcf] andFinishColor:[UIColor colorFromInteger:0x1fbfbfbf]];
-    [self.btnLeaderboards drawGradientWithStartColor:[UIColor colorFromInteger:0x1fcfcfcf] andFinishColor:[UIColor colorFromInteger:0x1fbfbfbf]];
+    [self.btnMainMenu drawGradientWithStartColor:[UIColor colorFromInteger:0x1f9f9f9f]
+                                  andFinishColor:[UIColor colorFromInteger:0xffcfcfcf]];
+    [self.btnLeaderboards drawGradientWithStartColor:[UIColor colorFromInteger:0x1f9f9f9f]
+                                      andFinishColor:[UIColor colorFromInteger:0xffcfcfcf]];
+    UIColor *patternColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"wallpaper"]];
+    [self.resultsView setBackgroundColor:patternColor];
 }
 
 - (void)viewWillDisappear:(BOOL)animated

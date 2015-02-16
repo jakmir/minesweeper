@@ -12,7 +12,6 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *lbScore;
 @property (weak, nonatomic) IBOutlet UILabel *lbProgress;
-@property (weak, nonatomic) IBOutlet UILabel *lbDateTime;
 @property (weak, nonatomic) IBOutlet UILabel *lbLevel;
 
 @end

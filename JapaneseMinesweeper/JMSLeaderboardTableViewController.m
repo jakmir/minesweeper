@@ -15,7 +15,6 @@
 @interface JMSLeaderboardTableViewController ()
 {
     NSArray *dataSource;
-    NSDateFormatter *dateFormatter;
 }
 @end
 
@@ -26,9 +25,6 @@
     [super viewDidLoad];
     
     dataSource = [[[JMSLeaderboardManager alloc] init] highScoreList];
-    dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
-    [dateFormatter setTimeStyle:NSDateFormatterNoStyle];
 }
 
 - (void)didReceiveMemoryWarning
@@ -104,7 +100,6 @@
     NSUInteger progress = lroundf(gameSession.progress.floatValue * 100);
     cell.lbProgress.text = [NSString stringWithFormat:@"%d%%", progress];
     cell.lbProgress.textColor = progress == 100 ? [UIColor colorFromInteger:0xff009900] : [UIColor colorFromInteger:0xffff7f00];
-    cell.lbDateTime.text = [dateFormatter stringFromDate:gameSession.postedAt];
     return cell;
 }
 

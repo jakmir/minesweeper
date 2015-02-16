@@ -24,6 +24,10 @@
     return self;
 }
 
+- (UIColor *)c:(NSUInteger)clr
+{
+    return [UIColor colorWithHue:0.4 - clr / 15.0 saturation:0.75 brightness:1 alpha:1];
+}
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect
@@ -46,7 +50,7 @@
     
     CGRect rectangle = rect;
     CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextSetRGBStrokeColor(context, 0.9, 0.9, 0.9, 0.5);
+    CGContextSetRGBStrokeColor(context, 0.8, 0.9, 0.9, 0.8);
     CGContextSetLineWidth(context, 1.0);
     
     self.backgroundColor = [UIColor clearColor];
@@ -55,14 +59,14 @@
     {
         case MineGridCellStateClosed:
         {
-            CGContextSetRGBFillColor(context, 0.5, 0.5, 0.5, 1);
+            CGContextSetRGBFillColor(context, 0.8, 0.8, 0.8, 1);
             CGContextFillRect(context, rectangle);
-            self.alpha = 0.5;
+            self.alpha = 0.75;
         }
             break;
         case MineGridCellStateMarked:
         {
-            CGContextSetRGBFillColor(context, 1, 1, 1, 0.5);
+            CGContextSetRGBFillColor(context, 1, 1, 1, 0.75);
             CGContextFillRect(context, rectangle);
             self.layer.contents = (__bridge id)([UIImage imageNamed:@"flag"].CGImage);
             
@@ -74,15 +78,17 @@
             self.alpha = 1;
 
             CGContextClearRect(context, rectangle);
-            CGContextSetRGBFillColor(context, 1, 1, 1, 0.2);
+            CGContextSetRGBFillColor(context, 0.9, 0.9, 0.9, 0.5);
             CGContextFillRect(context, rectangle);
             UIFont* font = [UIFont systemFontOfSize:self.mine ? 90 : 20];
-            UIColor* textColor = [UIColor lightTextColor];
-            NSDictionary* stringAttrs = @{NSFontAttributeName: font, NSForegroundColorAttributeName:textColor};
+            UIColor* textColor = [UIColor colorWithRed:0 green:0.7 * 0.6 blue:0.9 * 0.6 alpha:1];
             
             if (self.mine)
             {
-                [@"*" drawAtPoint:CGPointMake(19.f, 1.f) withAttributes:stringAttrs];
+                [@"*" drawAtPoint:CGPointMake(19.f, 1.f) withAttributes:@{
+                                                                          NSFontAttributeName: font,
+                                                                          NSForegroundColorAttributeName:[UIColor whiteColor]
+                                                                          }];
             }
             else
             {
@@ -92,13 +98,30 @@
                 CGContextMoveToPoint(context, rect.size.width, 0);
                 CGContextAddLineToPoint(context, 0, rect.size.height);
 
-                [[@(self.cellInfo.minesLeftDirection) stringValue] drawAtPoint:CGPointMake(7, 22) withAttributes:stringAttrs];
-                [[@(self.cellInfo.minesRightDirection) stringValue] drawAtPoint:CGPointMake(54, 22) withAttributes:stringAttrs];
-                [[@(self.cellInfo.minesTopDirection) stringValue] drawAtPoint:CGPointMake(31, 2) withAttributes:stringAttrs];
-                [[@(self.cellInfo.minesBottomDirection) stringValue] drawAtPoint:CGPointMake(31, 44) withAttributes:stringAttrs];
+
                 
                 CGContextClosePath(context);
                 CGContextDrawPath(context, kCGPathFillStroke);
+                [[@(self.cellInfo.minesLeftDirection) stringValue] drawAtPoint:CGPointMake(7, 22)
+                                                                withAttributes:@{
+                                                                                 NSFontAttributeName: font,
+                                                                                 NSForegroundColorAttributeName:[self c:self.cellInfo.minesLeftDirection]
+                                                                                 }];
+                [[@(self.cellInfo.minesRightDirection) stringValue] drawAtPoint:CGPointMake(54, 22)
+                                                                 withAttributes:@{
+                                                                                  NSFontAttributeName: font,
+                                                                                  NSForegroundColorAttributeName:[self c:self.cellInfo.minesRightDirection]
+                                                                                  }];
+                [[@(self.cellInfo.minesTopDirection) stringValue] drawAtPoint:CGPointMake(31, 2)
+                                                               withAttributes:@{
+                                                                                NSFontAttributeName: font,
+                                                                                NSForegroundColorAttributeName:[self c:self.cellInfo.minesTopDirection]
+                                                                                }];
+                [[@(self.cellInfo.minesBottomDirection) stringValue] drawAtPoint:CGPointMake(31, 44)
+                                                                  withAttributes:@{
+                                                                                   NSFontAttributeName: font,
+                                                                                   NSForegroundColorAttributeName:[self c:self.cellInfo.minesBottomDirection]
+                                                                                   }];
 
             }
         }

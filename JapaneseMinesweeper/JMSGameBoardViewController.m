@@ -46,6 +46,11 @@ const CGFloat baseScore = 175;
     [self.mineGridView addGestureRecognizer:longTapRecognizer];
 }
 
+- (BOOL) prefersStatusBarHidden
+{
+    return YES;
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -113,11 +118,6 @@ const CGFloat baseScore = 175;
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-- (BOOL) prefersStatusBarHidden
-{
-    return YES;
 }
 
 #pragma mark - synchronize labels with real values

@@ -8,6 +8,7 @@
 
 #import "JMSMineGridCell.h"
 #import "Classes/JMSMineGridCellInfo.h"
+#import "UIColor+ColorFromHexString.h"
 
 @implementation JMSMineGridCell
 {
@@ -24,9 +25,17 @@
     return self;
 }
 
-- (UIColor *)c:(NSUInteger)clr
+- (UIColor *)colorForNeighbourInfoNumber:(NSUInteger)number
 {
-    return [UIColor colorWithHue:0.4 - clr / 15.0 saturation:0.75 brightness:1 alpha:1];
+    switch (number)
+    {
+        case 0: return [UIColor colorFromInteger:0xff00af00];
+        case 1: return [UIColor colorFromInteger:0xff69af00];
+        case 2: return [UIColor colorFromInteger:0xffb1cc00];
+        case 3: return [UIColor colorFromInteger:0xffcc7f00];
+        case 4: return [UIColor colorFromInteger:0xffff6600];
+        default: return [UIColor colorFromInteger:0xffbf2222];
+    }
 }
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
@@ -80,7 +89,8 @@
             CGContextClearRect(context, rectangle);
             CGContextSetRGBFillColor(context, 0.9, 0.9, 0.9, 0.5);
             CGContextFillRect(context, rectangle);
-            UIFont* font = [UIFont systemFontOfSize:self.mine ? 90 : 20];
+
+            UIFont* font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:self.mine ? 90 : 20];
             UIColor* textColor = [UIColor colorWithRed:0 green:0.7 * 0.6 blue:0.9 * 0.6 alpha:1];
             
             if (self.mine)
@@ -105,22 +115,22 @@
                 [[@(self.cellInfo.minesLeftDirection) stringValue] drawAtPoint:CGPointMake(7, 22)
                                                                 withAttributes:@{
                                                                                  NSFontAttributeName: font,
-                                                                                 NSForegroundColorAttributeName:[self c:self.cellInfo.minesLeftDirection]
+                                                                                 NSForegroundColorAttributeName:[self colorForNeighbourInfoNumber:self.cellInfo.minesLeftDirection]
                                                                                  }];
                 [[@(self.cellInfo.minesRightDirection) stringValue] drawAtPoint:CGPointMake(54, 22)
                                                                  withAttributes:@{
                                                                                   NSFontAttributeName: font,
-                                                                                  NSForegroundColorAttributeName:[self c:self.cellInfo.minesRightDirection]
+                                                                                  NSForegroundColorAttributeName:[self colorForNeighbourInfoNumber:self.cellInfo.minesRightDirection]
                                                                                   }];
                 [[@(self.cellInfo.minesTopDirection) stringValue] drawAtPoint:CGPointMake(31, 2)
                                                                withAttributes:@{
                                                                                 NSFontAttributeName: font,
-                                                                                NSForegroundColorAttributeName:[self c:self.cellInfo.minesTopDirection]
+                                                                                NSForegroundColorAttributeName:[self colorForNeighbourInfoNumber:self.cellInfo.minesTopDirection]
                                                                                 }];
                 [[@(self.cellInfo.minesBottomDirection) stringValue] drawAtPoint:CGPointMake(31, 44)
                                                                   withAttributes:@{
                                                                                    NSFontAttributeName: font,
-                                                                                   NSForegroundColorAttributeName:[self c:self.cellInfo.minesBottomDirection]
+                                                                                   NSForegroundColorAttributeName:[self colorForNeighbourInfoNumber:self.cellInfo.minesBottomDirection]
                                                                                    }];
 
             }

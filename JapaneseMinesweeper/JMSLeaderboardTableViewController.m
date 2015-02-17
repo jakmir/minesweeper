@@ -27,6 +27,11 @@
     dataSource = [[[JMSLeaderboardManager alloc] init] highScoreList];
 }
 
+- (BOOL) prefersStatusBarHidden
+{
+    return YES;
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

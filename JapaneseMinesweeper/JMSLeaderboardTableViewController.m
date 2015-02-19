@@ -27,6 +27,13 @@
     dataSource = [[[JMSLeaderboardManager alloc] init] highScoreList];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    [self drawGradients];
+}
+
 - (BOOL) prefersStatusBarHidden
 {
     return YES;
@@ -56,15 +63,7 @@
     CGFloat width = CGRectGetWidth(tableView.frame);
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, width, height)];
     view.backgroundColor = [UIColor whiteColor];
-    UILabel *lbScoreCaption = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, width * 0.3, height)];
-    lbScoreCaption.attributedText = [[NSAttributedString alloc] initWithString:@"Score"
-                                                                    attributes:@{
-                                                                                 NSForegroundColorAttributeName:
-                                                                                     [UIColor darkGrayColor],
-                                                                                 NSFontAttributeName:
-                                                                                     [UIFont systemFontOfSize:17]
-                                                                                 }];
-    UILabel *lbLevelCaption = [[UILabel alloc] initWithFrame:CGRectMake(width * 0.46, 0, width * 0.1, height)];
+    UILabel *lbLevelCaption = [[UILabel alloc] initWithFrame:CGRectMake(width * 0.04, 0, width * 0.3, height)];
     lbLevelCaption.attributedText = [[NSAttributedString alloc] initWithString:@"Level"
                                                                     attributes:@{
                                                                                  NSForegroundColorAttributeName:
@@ -72,26 +71,27 @@
                                                                                  NSFontAttributeName:
                                                                                      [UIFont systemFontOfSize:17]
                                                                                  }];
-    UILabel *lbProgressCaption = [[UILabel alloc] initWithFrame:CGRectMake(width * 0.61, 0, width * 0.15, height)];
+    UILabel *lbProgressCaption = [[UILabel alloc] initWithFrame:CGRectMake(width * 0.34, 0, width * 0.34, height)];
     lbProgressCaption.attributedText = [[NSAttributedString alloc] initWithString:@"Progress"
+                                                                       attributes:@{
+                                                                                 NSForegroundColorAttributeName:
+                                                                                     [UIColor darkGrayColor],
+                                                                                 NSFontAttributeName:
+                                                                                     [UIFont systemFontOfSize:17]
+                                                                                 }];
+
+    UILabel *lbScoreCaption = [[UILabel alloc] initWithFrame:CGRectMake(width * 0.68, 0, width * 0.25, height)];
+    lbScoreCaption.textAlignment = NSTextAlignmentRight;
+    lbScoreCaption.attributedText = [[NSAttributedString alloc] initWithString:@"Score"
                                                                     attributes:@{
                                                                                  NSForegroundColorAttributeName:
                                                                                      [UIColor darkGrayColor],
                                                                                  NSFontAttributeName:
                                                                                      [UIFont systemFontOfSize:17]
                                                                                  }];
-    UILabel *lbDateCaption = [[UILabel alloc] initWithFrame:CGRectMake(width * 0.83, 0, width * 0.17, height)];
-    lbDateCaption.attributedText = [[NSAttributedString alloc] initWithString:@"Played at"
-                                                                       attributes:@{
-                                                                                    NSForegroundColorAttributeName:
-                                                                                        [UIColor darkGrayColor],
-                                                                                    NSFontAttributeName:
-                                                                                        [UIFont systemFontOfSize:17]
-                                                                                    }];
     [view addSubview:lbScoreCaption];
     [view addSubview:lbLevelCaption];
     [view addSubview:lbProgressCaption];
-    [view addSubview:lbDateCaption];
     return view;
 }
 
@@ -139,4 +139,13 @@
     [gameCenterViewController dismissViewControllerAnimated:NO completion:nil];
 }
 
+#pragma mark - UI improvement methods
+
+- (void)drawGradients
+{
+    [self.btnBackToMainMenu drawGradientWithStartColor:[UIColor colorFromInteger:0xffe9e9e9]
+                                        andFinishColor:[UIColor colorFromInteger:0xffcccccc]];
+    [self.btnShowGameCenterScreen drawGradientWithStartColor:[UIColor colorFromInteger:0xffe9e9e9]
+                                              andFinishColor:[UIColor colorFromInteger:0xffcccccc]];
+}
 @end

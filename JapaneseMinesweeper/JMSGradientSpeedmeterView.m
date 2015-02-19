@@ -21,13 +21,13 @@
     if (self = [super initWithCoder:aDecoder])
     {
         _minimumValue = 0;
-        _maximumValue = 1;
+        _maximumValue = UINT32_MAX;
         _power = 0;
         gestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(pan:)];
         [self addGestureRecognizer:gestureRecognizer];
         
         CGPoint centerPoint = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height * 0.95);
-        lbPower = [[UILabel alloc] initWithFrame:CGRectMake(centerPoint.x - 100, centerPoint.y - 100, 200, 100)];
+        lbPower = [[UILabel alloc] initWithFrame:CGRectMake(centerPoint.x - 100, centerPoint.y / 0.95 - 100, 200, 100)];
         lbPower.textAlignment = NSTextAlignmentCenter;
         [self addSubview:lbPower];
     }
@@ -39,19 +39,42 @@
     [self removeGestureRecognizer:gestureRecognizer];
 }
 
+- (void)setMinimumValue:(NSUInteger)minimumValue
+{
+    _minimumValue = minimumValue;
+    if (_minimumValue >= _maximumValue)
+    {
+        _minimumValue = _maximumValue - 1;
+    }
+}
+
+- (void)setMaximumValue:(NSUInteger)maximumValue
+{
+    _maximumValue = maximumValue;
+    if (_maximumValue <= _minimumValue)
+    {
+        _maximumValue = _minimumValue + 1;
+    }
+}
 - (void)setPower:(NSUInteger)power
 {
     _power = MAX(_minimumValue, MIN(power, _maximumValue));
     [self setNeedsDisplay];
 
-    NSAttributedString *s = [[NSAttributedString alloc] initWithString:[@(_power) stringValue]
-                                                            attributes:@{
-                                                                         NSForegroundColorAttributeName:
-                                                                             [UIColor colorFromInteger:0xff00ceef],
-                                                                         NSFontAttributeName:
-                                                                             [UIFont fontWithName:@"HelveticaNeue-Thin" size:100],
-                                                                         }];
-    [lbPower setAttributedText:s];
+    NSShadow *shadow = [[NSShadow alloc] init];
+    shadow.shadowColor = [UIColor colorFromInteger:0x55000000];
+    shadow.shadowBlurRadius = 1.0;
+    shadow.shadowOffset = CGSizeMake(1.0, 1.0);
+    NSAttributedString *str = [[NSAttributedString alloc] initWithString:[@(_power) stringValue]
+                                                              attributes:@{
+                                                                            NSForegroundColorAttributeName:
+                                                                                [UIColor colorFromInteger:0xff333355],
+                                                                            NSFontAttributeName:
+                                                                                [UIFont fontWithName:@"HelveticaNeue-Thin" size:100],
+                                                                            NSShadowAttributeName:
+                                                                                shadow
+                                                                          }];
+    [lbPower setAttributedText:str];
    
 }
 
@@ -61,7 +84,7 @@
     [[UIColor whiteColor] set];
     UIRectFill(self.bounds);
     CGFloat width = self.bounds.size.width;
-    NSUInteger discreteStepsCount = 512;
+    NSUInteger discreteStepsCount = 256;
     CGFloat innerRadius = width/4, outerRadius = width/2;
 
     float smallBase= M_PI * innerRadius / discreteStepsCount;
@@ -77,16 +100,17 @@
     [cell addLineToPoint:CGPointMake(-largeBase /2, outerRadius )];
     [cell closePath];
     
+    NSUInteger extraSteps = 20;
     CGFloat incrementalAngle = M_PI / discreteStepsCount;
 
     CGPoint centerPoint = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height * 0.95);
     CGContextTranslateCTM(context, centerPoint.x, centerPoint.y);
     
     CGContextScaleCTM(context, 0.9, 0.9);
-    CGContextRotateCTM(context, M_PI / 2);
+    CGContextRotateCTM(context, M_PI / 2 - M_PI / extraSteps);
     CGContextRotateCTM(context,-incrementalAngle/2);
     
-    for (NSUInteger i=0; i<discreteStepsCount; i++)
+    for (NSUInteger i=0; i<discreteStepsCount + extraSteps * 3; i++)
     {
         CGFloat hue = 0.25 * (1 - (CGFloat)i/discreteStepsCount);
         [[UIColor colorWithHue:hue saturation:1 brightness:1 alpha:1] set];
@@ -96,16 +120,16 @@
     }
     
     CGFloat progressAngle = M_PI * ((CGFloat)(_power - _minimumValue) / (_maximumValue - _minimumValue));
-    CGPoint p1 = CGPointMake(centerPoint.x - cos(progressAngle - M_PI / 60) * width / 4.6,
-                             centerPoint.y - sin(progressAngle - M_PI / 60) * width / 4.6);
-    CGPoint p2 = CGPointMake(centerPoint.x - cos(progressAngle + M_PI / 60) * width / 4.6,
-                             centerPoint.y - sin(progressAngle + M_PI / 60) * width / 4.6);
-    CGPoint p3 = CGPointMake(centerPoint.x - cos(progressAngle - M_PI / 50) * width / 2.7,
-                             centerPoint.y - sin(progressAngle - M_PI / 50) * width / 2.7);
-    CGPoint p4 = CGPointMake(centerPoint.x - cos(progressAngle + M_PI / 50) * width / 2.7,
-                             centerPoint.y - sin(progressAngle + M_PI / 50) * width / 2.7);
-    CGPoint p5 = CGPointMake(centerPoint.x - cos(progressAngle) * width / 2.4,
-                             centerPoint.y - sin(progressAngle) * width / 2.4);
+    CGPoint p1 = CGPointMake(centerPoint.x - cos(progressAngle - M_PI / 60) * (innerRadius * 0.89),
+                             centerPoint.y - sin(progressAngle - M_PI / 60) * (innerRadius * 0.89));
+    CGPoint p2 = CGPointMake(centerPoint.x - cos(progressAngle + M_PI / 60) * (innerRadius * 0.89),
+                             centerPoint.y - sin(progressAngle + M_PI / 60) * (innerRadius * 0.89));
+    CGPoint p3 = CGPointMake(centerPoint.x - cos(progressAngle - M_PI / 50) * (outerRadius * 0.8),
+                             centerPoint.y - sin(progressAngle - M_PI / 50) * (outerRadius * 0.8));
+    CGPoint p4 = CGPointMake(centerPoint.x - cos(progressAngle + M_PI / 50) * (outerRadius * 0.8),
+                             centerPoint.y - sin(progressAngle + M_PI / 50) * (outerRadius * 0.8));
+    CGPoint p5 = CGPointMake(centerPoint.x - cos(progressAngle) * outerRadius * 0.875,
+                             centerPoint.y - sin(progressAngle) * outerRadius * 0.875);
     if (shapeLayer != nil)
     {
         [shapeLayer removeFromSuperlayer];
@@ -123,8 +147,9 @@
     CGPathCloseSubpath(path);
     
     shapeLayer.path = path;
-    shapeLayer.strokeColor = [UIColor blackColor].CGColor;
-    shapeLayer.fillColor = [UIColor clearColor].CGColor;
+    shapeLayer.strokeColor = [UIColor whiteColor].CGColor;
+    shapeLayer.fillColor = [UIColor colorFromInteger:0x3fffffff].CGColor;
+    shapeLayer.lineWidth = 2;
     CGPathRelease(path);
     [self.layer addSublayer:shapeLayer];
     
@@ -136,7 +161,7 @@
     CGPoint touchLocation = [panGestureRecognizer locationInView:self];
     CGPoint centerPoint = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height * 0.95);
     CGFloat width = self.bounds.size.width;
-    CGFloat innerRadius = width/3.6, outerRadius = width/1.8;
+    CGFloat innerRadius = width/(4/0.9), outerRadius = width/(2/0.9);
     CGFloat distance = hypot(centerPoint.x - touchLocation.x, centerPoint.y - touchLocation.y);
     BOOL inside = distance >= innerRadius && distance <= outerRadius && touchLocation.y < centerPoint.y / 0.95;
     if (!inside) return;

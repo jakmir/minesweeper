@@ -33,6 +33,8 @@
 		F7ADBEFA1A915549003BAAF2 /* JMSDataManagerBase.m in Sources */ = {isa = PBXBuildFile; fileRef = F7ADBEF91A915549003BAAF2 /* JMSDataManagerBase.m */; };
 		F7ADBEFD1A9155C6003BAAF2 /* JMSLeaderboardManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F7ADBEFC1A9155C6003BAAF2 /* JMSLeaderboardManager.m */; };
 		F7ADBF001A929782003BAAF2 /* JMSGradientSpeedmeterView.m in Sources */ = {isa = PBXBuildFile; fileRef = F7ADBEFF1A929782003BAAF2 /* JMSGradientSpeedmeterView.m */; };
+		F7ADBF031A940291003BAAF2 /* JMSMineView.m in Sources */ = {isa = PBXBuildFile; fileRef = F7ADBF021A940291003BAAF2 /* JMSMineView.m */; };
+		F7ADBF061A9422CA003BAAF2 /* HowtoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F7ADBF051A9422CA003BAAF2 /* HowtoViewController.m */; };
 		F7B88BE819C3A87900F6585E /* JMSGameBoardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F7B88BE719C3A87900F6585E /* JMSGameBoardViewController.m */; };
 		F7B88BEC19C3AB2A00F6585E /* JMSMineGridView.m in Sources */ = {isa = PBXBuildFile; fileRef = F7B88BEB19C3AB2A00F6585E /* JMSMineGridView.m */; };
 		F7B88BF019C46FDF00F6585E /* JMSMineGridCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F7B88BEF19C46FDF00F6585E /* JMSMineGridCell.m */; };
@@ -97,6 +99,10 @@
 		F7ADBEFC1A9155C6003BAAF2 /* JMSLeaderboardManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JMSLeaderboardManager.m; path = JapaneseMinesweeper/JMSLeaderboardManager.m; sourceTree = SOURCE_ROOT; };
 		F7ADBEFE1A929782003BAAF2 /* JMSGradientSpeedmeterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMSGradientSpeedmeterView.h; sourceTree = "<group>"; };
 		F7ADBEFF1A929782003BAAF2 /* JMSGradientSpeedmeterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMSGradientSpeedmeterView.m; sourceTree = "<group>"; };
+		F7ADBF011A940291003BAAF2 /* JMSMineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMSMineView.h; sourceTree = "<group>"; };
+		F7ADBF021A940291003BAAF2 /* JMSMineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMSMineView.m; sourceTree = "<group>"; };
+		F7ADBF041A9422CA003BAAF2 /* HowtoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HowtoViewController.h; sourceTree = "<group>"; };
+		F7ADBF051A9422CA003BAAF2 /* HowtoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HowtoViewController.m; sourceTree = "<group>"; };
 		F7B88BE619C3A87900F6585E /* JMSGameBoardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMSGameBoardViewController.h; sourceTree = "<group>"; };
 		F7B88BE719C3A87900F6585E /* JMSGameBoardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMSGameBoardViewController.m; sourceTree = "<group>"; };
 		F7B88BEA19C3AB2A00F6585E /* JMSMineGridView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMSMineGridView.h; sourceTree = "<group>"; };
@@ -185,6 +191,8 @@
 				FD98C96919DEFD490035125E /* Structs.h */,
 				F7ADBEEE1A9152F4003BAAF2 /* JMSLeaderboardTableViewController.h */,
 				F7ADBEEF1A9152F4003BAAF2 /* JMSLeaderboardTableViewController.m */,
+				F7ADBF041A9422CA003BAAF2 /* HowtoViewController.h */,
+				F7ADBF051A9422CA003BAAF2 /* HowtoViewController.m */,
 			);
 			path = JapaneseMinesweeper;
 			sourceTree = "<group>";
@@ -273,6 +281,8 @@
 				F7ADBEEC1A9151FE003BAAF2 /* JMSScoreTableViewCell.m */,
 				F7ADBEFE1A929782003BAAF2 /* JMSGradientSpeedmeterView.h */,
 				F7ADBEFF1A929782003BAAF2 /* JMSGradientSpeedmeterView.m */,
+				F7ADBF011A940291003BAAF2 /* JMSMineView.h */,
+				F7ADBF021A940291003BAAF2 /* JMSMineView.m */,
 			);
 			name = Controls;
 			sourceTree = "<group>";
@@ -390,6 +400,7 @@
 				F7ADBF001A929782003BAAF2 /* JMSGradientSpeedmeterView.m in Sources */,
 				F707112319E1EF6000D3BBD2 /* JMSGradientView.m in Sources */,
 				F707112B19E20F5600D3BBD2 /* JMSGradientButton.m in Sources */,
+				F7ADBF031A940291003BAAF2 /* JMSMineView.m in Sources */,
 				F7ADBEE11A911DDC003BAAF2 /* JMSAlertViewController.m in Sources */,
 				F73B168F1A44AC520085A18A /* UIView+Blur.m in Sources */,
 				F73BD86519C395EF00CD51B9 /* main.m in Sources */,
@@ -397,6 +408,7 @@
 				F7ADBEED1A9151FE003BAAF2 /* JMSScoreTableViewCell.m in Sources */,
 				F73BD86E19C395F000CD51B9 /* MainViewController.m in Sources */,
 				F7ADBEFA1A915549003BAAF2 /* JMSDataManagerBase.m in Sources */,
+				F7ADBF061A9422CA003BAAF2 /* HowtoViewController.m in Sources */,
 				F73BD86B19C395F000CD51B9 /* JapaneseMinesweeper.xcdatamodeld in Sources */,
 				F7ADBED91A8FE9A4003BAAF2 /* JMSMineGridCellInfo.m in Sources */,
 				F73B168C1A438E8E0085A18A /* UIImage+ImageEffects.m in Sources */,

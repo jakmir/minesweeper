@@ -69,9 +69,6 @@
     return YES;
 }
 
-- (IBAction)minesQuantityChanged:(UISlider *)sender {
-}
-
 - (void)updateButtons
 {
     [self.btnStart setTitle:self.gameSessionInfo ? @"Continue" : @"New game" forState:UIControlStateNormal];
@@ -108,7 +105,7 @@
     }
 }
 
-#pragma mark - Game Kit methods
+#pragma mark - GameKit methods
 
 - (void)showAuthenticationViewController
 {

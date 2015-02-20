@@ -17,5 +17,6 @@
 
 @property (weak, nonatomic) IBOutlet JMSGradientButton *btnShowGameCenterScreen;
 @property (weak, nonatomic) IBOutlet JMSGradientButton *btnBackToMainMenu;
+@property (weak, nonatomic) IBOutlet UILabel *lbEmptyRemark;
 
 @end

@@ -33,6 +33,8 @@
 
 - (void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:animated];
+    
     for (JMSGradientButton *gradientButton in self.gradientButtons)
     {
         [gradientButton drawGradientWithStartColor:[UIColor colorFromInteger:0xff00cfff]
@@ -51,6 +53,7 @@
 
 - (void)viewDidDisappear:(BOOL)animated
 {
+    [super viewDidDisappear:animated];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -71,7 +74,7 @@
 
 - (void)updateButtons
 {
-    [self.btnStart setTitle:self.gameSessionInfo ? @"Continue" : @"New game" forState:UIControlStateNormal];
+    [self.btnStart setTitle:_gameSessionInfo != nil ? @"Continue" : @"New game" forState:UIControlStateNormal];
 
     CGFloat heightSum = 0;
     for (JMSGradientButton *gradientButton in [self gradientButtons])

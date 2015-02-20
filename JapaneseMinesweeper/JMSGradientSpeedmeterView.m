@@ -12,7 +12,8 @@
 @implementation JMSGradientSpeedmeterView
 {
     CAShapeLayer *shapeLayer;
-    UIPanGestureRecognizer *gestureRecognizer;
+    UIPanGestureRecognizer *panGestureRecognizer;
+    UITapGestureRecognizer *tapGestureRecognizer;
     UILabel *lbPower;
 }
 
@@ -23,11 +24,13 @@
         _minimumValue = 0;
         _maximumValue = UINT32_MAX;
         _power = 0;
-        gestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(pan:)];
-        [self addGestureRecognizer:gestureRecognizer];
+        panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panOrTap:)];
+        tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(panOrTap:)];
+        [self addGestureRecognizer:panGestureRecognizer];
+        [self addGestureRecognizer:tapGestureRecognizer];
         
         CGPoint centerPoint = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height * 0.95);
-        lbPower = [[UILabel alloc] initWithFrame:CGRectMake(centerPoint.x - 100, centerPoint.y / 0.95 - 100, 200, 100)];
+        lbPower = [[UILabel alloc] initWithFrame:CGRectMake(centerPoint.x - 100, centerPoint.y / 0.95 - 128, 200, 128)];
         lbPower.textAlignment = NSTextAlignmentCenter;
         [self addSubview:lbPower];
     }
@@ -36,7 +39,8 @@
 
 - (void)dealloc
 {
-    [self removeGestureRecognizer:gestureRecognizer];
+    [self removeGestureRecognizer:panGestureRecognizer];
+    [self removeGestureRecognizer:tapGestureRecognizer];
 }
 
 - (void)setMinimumValue:(NSUInteger)minimumValue
@@ -61,18 +65,12 @@
     _power = MAX(_minimumValue, MIN(power, _maximumValue));
     [self setNeedsDisplay];
 
-    NSShadow *shadow = [[NSShadow alloc] init];
-    shadow.shadowColor = [UIColor colorFromInteger:0x55000000];
-    shadow.shadowBlurRadius = 1.0;
-    shadow.shadowOffset = CGSizeMake(1.0, 1.0);
     NSAttributedString *str = [[NSAttributedString alloc] initWithString:[@(_power) stringValue]
                                                               attributes:@{
                                                                             NSForegroundColorAttributeName:
-                                                                                [UIColor colorFromInteger:0xff333355],
+                                                                                [UIColor colorFromInteger:0xffcfcfcf],
                                                                             NSFontAttributeName:
-                                                                                [UIFont fontWithName:@"HelveticaNeue-Thin" size:100],
-                                                                            NSShadowAttributeName:
-                                                                                shadow
+                                                                                [UIFont fontWithName:@"HelveticaNeue-Bold" size:128],
                                                                           }];
     [lbPower setAttributedText:str];
    
@@ -124,10 +122,10 @@
                              centerPoint.y - sin(progressAngle - M_PI / 60) * (innerRadius * 0.89));
     CGPoint p2 = CGPointMake(centerPoint.x - cos(progressAngle + M_PI / 60) * (innerRadius * 0.89),
                              centerPoint.y - sin(progressAngle + M_PI / 60) * (innerRadius * 0.89));
-    CGPoint p3 = CGPointMake(centerPoint.x - cos(progressAngle - M_PI / 50) * (outerRadius * 0.8),
-                             centerPoint.y - sin(progressAngle - M_PI / 50) * (outerRadius * 0.8));
-    CGPoint p4 = CGPointMake(centerPoint.x - cos(progressAngle + M_PI / 50) * (outerRadius * 0.8),
-                             centerPoint.y - sin(progressAngle + M_PI / 50) * (outerRadius * 0.8));
+    CGPoint p3 = CGPointMake(centerPoint.x - cos(progressAngle - M_PI / 52) * (outerRadius * 0.8),
+                             centerPoint.y - sin(progressAngle - M_PI / 52) * (outerRadius * 0.8));
+    CGPoint p4 = CGPointMake(centerPoint.x - cos(progressAngle + M_PI / 52) * (outerRadius * 0.8),
+                             centerPoint.y - sin(progressAngle + M_PI / 52) * (outerRadius * 0.8));
     CGPoint p5 = CGPointMake(centerPoint.x - cos(progressAngle) * outerRadius * 0.875,
                              centerPoint.y - sin(progressAngle) * outerRadius * 0.875);
     if (shapeLayer != nil)
@@ -156,9 +154,9 @@
 
 }
 
-- (void)pan:(UIPanGestureRecognizer *)panGestureRecognizer
+- (void)panOrTap:(UIGestureRecognizer *)gestureRecognizer
 {
-    CGPoint touchLocation = [panGestureRecognizer locationInView:self];
+    CGPoint touchLocation = [gestureRecognizer locationInView:self];
     CGPoint centerPoint = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height * 0.95);
     CGFloat width = self.bounds.size.width;
     CGFloat innerRadius = width/(4/0.9), outerRadius = width/(2/0.9);

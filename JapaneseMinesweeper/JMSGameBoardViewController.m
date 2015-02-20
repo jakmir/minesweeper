@@ -17,12 +17,15 @@
 #import <GameKit/GKScore.h>
 #import <GameKit/GKGameCenterViewController.h>
 #import "JMSLeaderboardManager.h"
+#import "JMSSoundManager.h"
 
 @interface JMSGameBoardViewController ()
 {
     BOOL initialTapPerformed;
     NSInteger minesCount;
     NSUInteger level;
+    
+    JMSSoundManager *soundManager;
 }
 
 @property (nonatomic) CGFloat score;
@@ -37,10 +40,12 @@ const CGFloat baseScore = 175;
 
 - (void)addGestureRecognizers
 {
-    UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTap:)];
+    UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                                    action:@selector(singleTap:)];
     [self.mineGridView addGestureRecognizer:tapRecognizer];
 
-    UILongPressGestureRecognizer *longTapRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longTap:)];
+    UILongPressGestureRecognizer *longTapRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self
+                                                                                                    action:@selector(longTap:)];
     CGFloat minimumPressDuration = [[NSUserDefaults standardUserDefaults] floatForKey:@"holdDuration"];
     longTapRecognizer.minimumPressDuration = minimumPressDuration;
     [self.mineGridView addGestureRecognizer:longTapRecognizer];
@@ -51,39 +56,55 @@ const CGFloat baseScore = 175;
     return YES;
 }
 
+- (void)importFromGameSession
+{
+    initialTapPerformed = YES;
+    
+    JMSGameSessionInfo *gameSessionInfo = self.mainViewController.gameSessionInfo;
+    [self setScore:gameSessionInfo.score];
+    level = gameSessionInfo.level;
+    [self.mineGridView importMap:gameSessionInfo.map];
+    [self setCellsLeftCount:self.mineGridView.cellsLeftToOpen];
+    minesCount = level;
+    [self setCellsMarked:gameSessionInfo.markedCellsCount];
+}
+
+- (void)createNewGame
+{
+    initialTapPerformed = NO;
+    [self setScore:0];
+    level = [[NSUserDefaults standardUserDefaults] integerForKey:@"level"];
+    [self setCellsLeftCount:100 - level];
+    minesCount = level;
+    [self setCellsMarked:0];
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
 
     if (self.mainViewController.gameSessionInfo)
     {
-        initialTapPerformed = YES;
-        
-        JMSGameSessionInfo *gameSessionInfo = self.mainViewController.gameSessionInfo;
-        [self setScore:gameSessionInfo.score];
-        level = gameSessionInfo.level;
-        [self.mineGridView importMap:gameSessionInfo.map];
-        [self setCellsLeftCount:self.mineGridView.cellsLeftToOpen];
-        minesCount = level;
-        [self setCellsMarked:gameSessionInfo.markedCellsCount];
+        [self importFromGameSession];
     }
     else
     {
-        initialTapPerformed = NO;
-        [self setScore:0];
-        level = [[NSUserDefaults standardUserDefaults] integerForKey:@"level"];
-        [self setCellsLeftCount:100 - level];
-        minesCount = level;
-        [self setCellsMarked:0];
+        [self createNewGame];
     }
 
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    soundManager = [[JMSSoundManager alloc] init];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     
-    [self drawGradients];
+    [self configureUI];
     [self.mineGridView refreshCells];    
     [self addGestureRecognizers];
    
@@ -97,18 +118,17 @@ const CGFloat baseScore = 175;
     }];
 }
 
-- (void) drawGradients
+- (void) configureUI
 {
-    [self.btnMainMenu drawGradientWithStartColor:[UIColor colorFromInteger:0x1f9f9f9f]
-                                  andFinishColor:[UIColor colorFromInteger:0xffcfcfcf]];
-    [self.btnLeaderboards drawGradientWithStartColor:[UIColor colorFromInteger:0x1f9f9f9f]
-                                      andFinishColor:[UIColor colorFromInteger:0xffcfcfcf]];
+    [self updateMenu];
     UIColor *patternColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"wallpaper"]];
     [self.resultsView setBackgroundColor:patternColor];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
+    [super viewWillDisappear:animated];
+    
     [self removeGestureRecognizers];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -120,6 +140,44 @@ const CGFloat baseScore = 175;
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - Gameboard control methods
+
+- (void)finalizeGame
+{
+    [self.mineGridView finalizeGame];
+    [self updateMenu];
+}
+
+- (void) updateMenu
+{
+    [self.btnMainMenu drawGradientWithStartColor:[UIColor colorFromInteger:0x1f9f9f9f]
+                                  andFinishColor:[UIColor colorFromInteger:0xffcfcfcf]];
+    
+    UIColor *startColor;
+    UIColor *endColor;
+    NSString *caption;
+    UIColor *captionColor;
+    
+    if (self.mineGridView.gameFinished)
+    {
+        startColor = [UIColor colorFromInteger:0x1f7f7f7f];
+        endColor =[UIColor colorFromInteger:0xffaaaaaa];
+        captionColor = [UIColor colorFromInteger:0xffff3300];
+        caption = @"PLAY AGAIN";
+    }
+    else
+    {
+        startColor = [UIColor colorFromInteger:0x1f9f9f9f];
+        endColor = [UIColor colorFromInteger:0xffcfcfcf];
+        captionColor = [UIColor colorFromInteger:0xffa818ff];
+        caption = @"RESET GAME";
+        
+    }
+    [self.btnResetGame drawGradientWithStartColor:startColor
+                                   andFinishColor:endColor];
+    [self.btnResetGame setTitleColor:captionColor forState:UIControlStateNormal];
+    [self.btnResetGame setTitle:caption forState:UIControlStateNormal];
+}
 #pragma mark - synchronize labels with real values
 
 - (void) setScore:(CGFloat)score
@@ -150,16 +208,6 @@ const CGFloat baseScore = 175;
     self.lbCellsMarked.attributedText = string;
 }
 
--(UIImage *)blurredSnapshot
-{
-    UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, NO, [UIScreen mainScreen].scale);
-    [self.view drawViewHierarchyInRect:self.view.frame afterScreenUpdates:NO];
-    UIImage *snapshotImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIImage *blurredSnapshotImage = [snapshotImage applyDarkEffect];
-    UIGraphicsEndImageContext();
-    return blurredSnapshotImage;
-}
-
 #pragma mark - handle taps
 
 - (void) singleTap: (UIGestureRecognizer *)gestureRecognizer
@@ -184,25 +232,14 @@ const CGFloat baseScore = 175;
     
     if (mine)
     {
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Lost"
-                                                                  message:@"There was a mine in that cell."
-                                                           preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *submitAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
-                                                                 handler:^(UIAlertAction *action) {
-                                                                     [self postScore];
-                                                                 }];
-        [alertController addAction:submitAction];
-
-        [self presentViewController:alertController animated:YES completion:nil];
-        /*
-        UIImageView *iv = [[UIImageView alloc] initWithFrame:self.view.frame];
-        iv.image = [self blurredSnapshot];
-        [self.view addSubview:iv];
-        [self.view bringSubviewToFront:iv];
-         */
+        [soundManager playSoundAction:JMSSoundActionGameFailed];
+        [self postScore];
+        [self finalizeGame];
+        [self.mainViewController setGameSessionInfo:nil];
     }
     else
     {
+        [soundManager playSoundAction:JMSSoundActionCellTap];
         self.cellsLeftCount = [self.mineGridView cellsLeftToOpen];
         
         //just opened the cell, not possible to do that twice.
@@ -218,8 +255,10 @@ const CGFloat baseScore = 175;
         
         if (self.cellsLeftCount == 0)
         {
+            [soundManager playSoundAction:JMSSoundActionLevelCompleted];
             self.score *= (1 + level / 100.0);
             [self postScore];
+            [self finalizeGame];
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Congratulations" message:@"You won this round" delegate:self
                                                       cancelButtonTitle:@"Play again" otherButtonTitles:nil];
             [alertView show];
@@ -257,7 +296,7 @@ const CGFloat baseScore = 175;
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    [self.mainViewController setGameSessionInfo:nil];
+
     [self dismissViewControllerAnimated:NO completion:nil];
 }
 
@@ -265,7 +304,7 @@ const CGFloat baseScore = 175;
 
 - (IBAction)backToMainMenu
 {
-    if (initialTapPerformed)
+    if (initialTapPerformed && !self.mineGridView.gameFinished)
     {
         JMSGameSessionInfo *gameSessionInfo = [JMSGameSessionInfo new];
         gameSessionInfo.map = [self.mineGridView exportMap];
@@ -278,6 +317,10 @@ const CGFloat baseScore = 175;
 
 - (IBAction)resetGame
 {
+    [self.mineGridView resetGame];
+    [self.mainViewController setGameSessionInfo:nil];
+    [self createNewGame];
+    [self updateMenu];    
 }
 
 #pragma mark - Submit results 
@@ -293,7 +336,7 @@ const CGFloat baseScore = 175;
 - (void)postScoreLocally
 {
     CGFloat progress = (100.0-level-self.cellsLeftCount) / (100-level);
-    [[[JMSLeaderboardManager alloc] init] postGameScore:self.score
+    [[[JMSLeaderboardManager alloc] init] postGameScore:lroundf(self.score)
                                                   level:level
                                                progress:progress];
 }

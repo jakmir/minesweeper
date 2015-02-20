@@ -25,6 +25,7 @@
     [super viewDidLoad];
     
     dataSource = [[[JMSLeaderboardManager alloc] init] highScoreList];
+    self.lbEmptyRemark.hidden = dataSource.count > 0;
 }
 
 - (void)viewDidAppear:(BOOL)animated

@@ -26,4 +26,10 @@
 - (NSArray *)exportMap;
 - (void)importMap:(NSArray *)gameboardMap;
 - (void)refreshCells;
+
+- (void)finalizeGame;
+- (void)resetGame;
+
+@property (nonatomic, readonly) BOOL gameFinished;
+
 @end

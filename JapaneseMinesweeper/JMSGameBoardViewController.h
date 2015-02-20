@@ -28,7 +28,7 @@
 @property (weak, nonatomic) IBOutlet UIView *buttonsPanelView;
 
 @property (weak, nonatomic) IBOutlet JMSGradientButton *btnMainMenu;
-@property (weak, nonatomic) IBOutlet JMSGradientButton *btnLeaderboards;
+@property (weak, nonatomic) IBOutlet JMSGradientButton *btnResetGame;
 
 @property (weak, nonatomic) MainViewController *mainViewController;
 

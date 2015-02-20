@@ -50,7 +50,23 @@ const NSInteger spacing = 1;
             }
         }
     }
+}
 
+- (void)refreshAllCells
+{
+    NSLog(@"%s", __FUNCTION__);
+    
+    for (int col = 0; col < count; col++)
+    {
+        for (int row = 0; row < count; row++)
+        {
+            JMSMineGridCell *cell = map[col][row];
+            if (cell.state != MineGridCellStateOpened)
+            {
+                [cell setNeedsDisplay];
+            }
+        }
+    }
 }
 
 - (void)importMap:(NSArray *)gameboardMap
@@ -66,6 +82,22 @@ const NSInteger spacing = 1;
             [cell import:cellInfo];
         }
     }
+}
+
+- (void) resetGame
+{
+    for (int col = 0; col < count; col ++)
+    {
+        for (int row = 0; row < count; row++)
+        {
+            JMSMineGridCell *cell = map[col][row];
+            cell.mine = NO;
+            cell.state = MineGridCellStateClosed;
+            
+        }
+    }
+    _gameFinished = NO;
+    [self refreshAllCells];
 }
 
 - (void) prepareBackground
@@ -90,7 +122,7 @@ const NSInteger spacing = 1;
                                       size.width,
                                       size.height);
             JMSMineGridCell *mineGridCell = [[JMSMineGridCell alloc] initWithFrame:frame];
-
+            mineGridCell.mineGridView = self;
             [line addObject:mineGridCell];
             
             [self addSubview:mineGridCell];
@@ -373,6 +405,8 @@ const NSInteger spacing = 1;
 
 - (BOOL) clickedWithCoordinate: (CGPoint)point
 {
+    if (self.gameFinished) return NO;
+    
     JMSMineGridCell *cell = [self cellWithCoordinateInside:point];
     
     if (cell)
@@ -384,8 +418,16 @@ const NSInteger spacing = 1;
     return NO;
 }
 
+- (void) finalizeGame
+{
+    _gameFinished = YES;
+    [self refreshAllCells];
+}
+
 - (void) longTappedWithCoordinate:(CGPoint)point
 {
+    if (self.gameFinished) return;
+    
     JMSMineGridCell *cell = [self cellWithCoordinateInside:point];
     
     if (cell)

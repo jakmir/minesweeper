@@ -17,7 +17,14 @@
 - (void)drawRect:(CGRect)rect
 {
     NSLog(@"%s", __FUNCTION__);
+    
+    CGColorRef fillColor = [UIColor lightGrayColor].CGColor;
+    
     [super drawRect:rect];
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    [[UIColor clearColor] setFill];    
+    CGContextFillRect(ctx, rect);
+
     CGFloat bigarr[8] = {0, 45, 90, 135, 180, 225, 270, 315};
     CGFloat smallarr[8] = {
                             (bigarr[0] + bigarr[1]) / 2,
@@ -27,7 +34,7 @@
                             (bigarr[4] + bigarr[5]) / 2,
                             (bigarr[5] + bigarr[6]) / 2,
                             (bigarr[6] + bigarr[7]) / 2,
-                            (bigarr[7] + bigarr[0]) / 2
+                            (bigarr[7] + 360) / 2
                             };
         
    
@@ -55,14 +62,13 @@
         [bezierPath addArcWithCenter:c radius:d startAngle:a41 endAngle:a51 clockwise:YES];
         
     }
-    [[UIColor purpleColor] set];
     [bezierPath fill];
     [bezierPath stroke];
     [bezierPath closePath];
     
     CAShapeLayer *lyr = [CAShapeLayer layer];
     lyr.path = bezierPath.CGPath;
-    lyr.fillColor = [UIColor whiteColor].CGColor;
+    lyr.fillColor = fillColor;
     [self.layer addSublayer:lyr];
     
     
@@ -76,8 +82,8 @@
         CGPathCloseSubpath(path);
         
         shapeLayer.path = path;
-        shapeLayer.strokeColor = [UIColor clearColor].CGColor;
-        shapeLayer.fillColor = [UIColor whiteColor].CGColor;
+        shapeLayer.strokeColor = fillColor;
+        shapeLayer.fillColor = fillColor;
         CGPathRelease(path);
         
         [self.layer addSublayer:shapeLayer];
@@ -93,8 +99,8 @@
         CGPathCloseSubpath(path);
         
         shapeLayer.path = path;
-        shapeLayer.strokeColor = [UIColor clearColor].CGColor;
-        shapeLayer.fillColor = [UIColor whiteColor].CGColor;
+        shapeLayer.strokeColor = fillColor;
+        shapeLayer.fillColor = fillColor;
         CGPathRelease(path);
         [self.layer addSublayer:shapeLayer];
     }

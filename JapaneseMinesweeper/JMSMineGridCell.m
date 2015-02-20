@@ -7,13 +7,17 @@
 //
 
 #import "JMSMineGridCell.h"
+#import "JMSMineGridView.h"
 #import "Classes/JMSMineGridCellInfo.h"
 #import "UIColor+ColorFromHexString.h"
+
+@interface JMSMineGridCell()
+
+@end
 
 @implementation JMSMineGridCell
 {
     CAGradientLayer *gradientLayer;
-    CALayer *blurLayer;
 }
 
 - (instancetype) initWithFrame:(CGRect)frame
@@ -44,23 +48,8 @@
     NSLog(@"%s", __FUNCTION__);
     [super drawRect:rect];
     
-    /*
-    if (!blurLayer)
-    {
-        blurLayer = [CALayer layer];
-        blurLayer.frame = rect;
-        CIFilter *blur = [CIFilter filterWithName:@"CIGaussianBlur"];
-        [blur setDefaults];
-        blurLayer.backgroundFilters = [NSArray arrayWithObject:blur];
-        
-        self.layer.mask = blurLayer;
-    }
-    */
-    
     CGRect rectangle = rect;
     CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextSetRGBStrokeColor(context, 0.8, 0.9, 0.9, 0.8);
-    CGContextSetLineWidth(context, 1.0);
     
     self.backgroundColor = [UIColor clearColor];
     
@@ -70,38 +59,52 @@
         {
             CGContextSetRGBFillColor(context, 0.8, 0.8, 0.8, 1);
             CGContextFillRect(context, rectangle);
-            self.alpha = 0.75;
+            if (self.mineGridView.gameFinished && self.mine)
+            {
+                [[UIImage imageNamed:@"mine"] drawInRect:rectangle];
+            }
         }
             break;
         case MineGridCellStateMarked:
         {
-            CGContextSetRGBFillColor(context, 1, 1, 1, 0.75);
+            CGContextClearRect(context, rectangle);
+            CGContextSetRGBFillColor(context, 0.9, 0.9, 0.9, 0.5);
             CGContextFillRect(context, rectangle);
-            self.layer.contents = (__bridge id)([UIImage imageNamed:@"flag"].CGImage);
-            
-            self.alpha = 1;
+            if (!self.mineGridView.gameFinished || self.mine)
+            {
+                [[UIImage imageNamed:@"flag"] drawInRect:rectangle];
+            }
+            else
+            {
+                [[UIImage imageNamed:@"mine"] drawInRect:rectangle];
+                CGFloat padding = 8;
+                    
+                CGContextSetRGBStrokeColor(context, 1, 0.4, 0, 1);
+                CGContextSetLineWidth(context, 12.0);
+                CGContextBeginPath(context);
+                CGContextMoveToPoint(context, padding, padding);
+                CGContextAddLineToPoint(context, rect.size.width - padding, rect.size.height - padding);
+                CGContextMoveToPoint(context, rect.size.width - padding, padding);
+                CGContextAddLineToPoint(context, padding, rect.size.height - padding);
+                CGContextClosePath(context);
+                CGContextDrawPath(context, kCGPathFillStroke);
+            }
         }
             break;
         case MineGridCellStateOpened:
         {
-            self.alpha = 1;
-
             CGContextClearRect(context, rectangle);
             CGContextSetRGBFillColor(context, 0.9, 0.9, 0.9, 0.5);
             CGContextFillRect(context, rectangle);
-
-            UIFont* font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:self.mine ? 90 : 20];
-            UIColor* textColor = [UIColor colorWithRed:0 green:0.7 * 0.6 blue:0.9 * 0.6 alpha:1];
-            
             if (self.mine)
             {
-                [@"*" drawAtPoint:CGPointMake(19.f, 1.f) withAttributes:@{
-                                                                          NSFontAttributeName: font,
-                                                                          NSForegroundColorAttributeName:[UIColor whiteColor]
-                                                                          }];
+                [[UIImage imageNamed:@"currentMine"] drawInRect:rectangle];
             }
             else
             {
+                CGContextSetRGBStrokeColor(context, 0.8, 0.9, 0.9, 0.8);
+                CGContextSetLineWidth(context, 1.0);
+                UIFont* font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:20];
                 CGContextBeginPath(context);
                 CGContextMoveToPoint(context, 0, 0);
                 CGContextAddLineToPoint(context, rect.size.width, rect.size.height);

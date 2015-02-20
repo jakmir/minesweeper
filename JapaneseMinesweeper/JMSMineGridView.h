@@ -29,6 +29,7 @@
 
 - (void)finalizeGame;
 - (void)resetGame;
+- (NSUInteger)markUncoveredMines;
 
 @property (nonatomic, readonly) BOOL gameFinished;
 

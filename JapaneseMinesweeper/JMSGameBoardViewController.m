@@ -255,14 +255,12 @@ const CGFloat baseScore = 175;
         
         if (self.cellsLeftCount == 0)
         {
+            self.cellsMarked += [self.mineGridView markUncoveredMines];
             [soundManager playSoundAction:JMSSoundActionLevelCompleted];
             self.score *= (1 + level / 100.0);
             [self postScore];
             [self finalizeGame];
-            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Congratulations" message:@"You won this round" delegate:self
-                                                      cancelButtonTitle:@"Play again" otherButtonTitles:nil];
-            [alertView show];
-
+            [self showVictoryScreen];
         }
     }
 }
@@ -358,6 +356,15 @@ const CGFloat baseScore = 175;
             NSLog(@"Reported score successfully");
         }
     }];
+}
+
+#pragma mark - Dialogs and alerts
+
+- (void)showVictoryScreen
+{
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Congratulations" message:@"You won this round" delegate:self
+                                              cancelButtonTitle:@"Play again" otherButtonTitles:nil];
+    [alertView show];
 }
 
 @end

@@ -6,16 +6,16 @@
 //  Copyright (c) 2014 Jakmir. All rights reserved.
 //
 
-#import "MainViewController.h"
+#import "JMSMainViewController.h"
 #import "JMSGameBoardViewController.h"
 #import "UIColor+ColorFromHexString.h"
 #import "Helpers/JMSGameKitHelper.h"
 
-@interface MainViewController ()
+@interface JMSMainViewController ()
 
 @end
 
-@implementation MainViewController
+@implementation JMSMainViewController
 
 - (void)viewDidLoad
 {
@@ -47,8 +47,8 @@
                                              selector:@selector(showAuthenticationViewController)
                                                  name:kPresentAuthenticationViewController
                                                object:nil];
-    
     [[JMSGameKitHelper instance] authenticateLocalPlayer];
+   
 }
 
 - (void)viewDidDisappear:(BOOL)animated

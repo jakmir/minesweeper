@@ -6,17 +6,17 @@
 //  Copyright (c) 2014 Jakmir. All rights reserved.
 //
 
-#import "OptionsViewController.h"
+#import "JMSOptionsViewController.h"
 #import "UIColor+ColorFromHexString.h"
 #import "Enums.h"
 
-@interface OptionsViewController ()
+@interface JMSOptionsViewController ()
 {
     NSInteger level;
 }
 @end
 
-@implementation OptionsViewController
+@implementation JMSOptionsViewController
 
 - (void)initializeFromUserDefaults
 {
@@ -39,7 +39,7 @@
     [super viewDidLoad];
     [self initializeFromUserDefaults];
     [self.gradientSpeedmeter setMinimumValue:16];
-    [self.gradientSpeedmeter setMaximumValue:36];
+    [self.gradientSpeedmeter setMaximumValue:39];
     [self.gradientSpeedmeter setPower:level];
 }
 

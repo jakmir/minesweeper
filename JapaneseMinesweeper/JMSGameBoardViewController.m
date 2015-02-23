@@ -8,24 +8,21 @@
 
 #import "JMSGameBoardViewController.h"
 #import "JMSMineGridCell.h"
-#import "MainViewController.h"
+#import "JMSMainViewController.h"
 #import "Classes/JMSGameSessionInfo.h"
 #import "UIColor+ColorFromHexString.h"
-#import "UIImage+ImageEffects.h"
 #import "JMSAlertViewController.h"
 #import <GameKit/GKLocalPlayer.h>
 #import <GameKit/GKScore.h>
 #import <GameKit/GKGameCenterViewController.h>
 #import "JMSLeaderboardManager.h"
-#import "JMSSoundManager.h"
+#import "Helpers/JMSSoundHelper.h"
 
 @interface JMSGameBoardViewController ()
 {
     BOOL initialTapPerformed;
     NSInteger minesCount;
     NSUInteger level;
-    
-    JMSSoundManager *soundManager;
 }
 
 @property (nonatomic) CGFloat score;
@@ -97,17 +94,15 @@ const CGFloat baseScore = 175;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    soundManager = [[JMSSoundManager alloc] init];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
+
     [self configureUI];
-    [self.mineGridView refreshCells];    
+    [self.mineGridView refreshCells];
     [self addGestureRecognizers];
-   
 }
 
 - (void)removeGestureRecognizers
@@ -145,13 +140,14 @@ const CGFloat baseScore = 175;
 - (void)finalizeGame
 {
     [self.mineGridView finalizeGame];
+   
     [self updateMenu];
 }
 
 - (void) updateMenu
 {
-    [self.btnMainMenu drawGradientWithStartColor:[UIColor colorFromInteger:0x1f9f9f9f]
-                                  andFinishColor:[UIColor colorFromInteger:0xffcfcfcf]];
+    [self.btnMainMenu drawGradientWithStartColor:[UIColor colorFromInteger:0xffe9e9e9]
+                                  andFinishColor:[UIColor colorFromInteger:0xffcccccc]];
     
     UIColor *startColor;
     UIColor *endColor;
@@ -160,15 +156,15 @@ const CGFloat baseScore = 175;
     
     if (self.mineGridView.gameFinished)
     {
-        startColor = [UIColor colorFromInteger:0x1f7f7f7f];
-        endColor =[UIColor colorFromInteger:0xffaaaaaa];
+        startColor = [UIColor colorFromInteger:0xffafafaf];
+        endColor =[UIColor colorFromInteger:0xffcccccc];
         captionColor = [UIColor colorFromInteger:0xffff3300];
         caption = @"PLAY AGAIN";
     }
     else
     {
-        startColor = [UIColor colorFromInteger:0x1f9f9f9f];
-        endColor = [UIColor colorFromInteger:0xffcfcfcf];
+        startColor = [UIColor colorFromInteger:0xffe9e9e9];
+        endColor = [UIColor colorFromInteger:0xffcccccc];
         captionColor = [UIColor colorFromInteger:0xffa818ff];
         caption = @"RESET GAME";
         
@@ -214,6 +210,8 @@ const CGFloat baseScore = 175;
 {
     NSLog(@"%s", __FUNCTION__);
     
+    if (self.mineGridView.gameFinished) return;
+    
     CGPoint coord = [gestureRecognizer locationInView:self.mineGridView];
     
     struct JMSPosition position = [self.mineGridView cellPositionWithCoordinateInside:coord];
@@ -226,50 +224,70 @@ const CGFloat baseScore = 175;
         initialTapPerformed = YES;
     }
     
-    JMSMineGridCellState oldState = [self.mineGridView cellState:position];
-    BOOL mine = [self.mineGridView clickedWithCoordinate:coord];
-    JMSMineGridCellState newState = [self.mineGridView cellState:position];
-    
-    if (mine)
+    if ([self.mineGridView.gameboard mineAtPosition:position])
     {
-        [soundManager playSoundAction:JMSSoundActionGameFailed];
+        [self.mineGridView clickedWithCoordinate:coord];
+        [[JMSSoundHelper instance] playSoundWithAction:JMSSoundActionGameFailed];
         [self postScore];
         [self finalizeGame];
         [self.mainViewController setGameSessionInfo:nil];
+        return;
     }
     else
     {
-        [soundManager playSoundAction:JMSSoundActionCellTap];
+        NSUInteger unmarkedCellsCount;
+        NSUInteger openedCellsCount;
+        BOOL opened = [self.mineGridView.gameboard openInZeroDirectionsFromPosition:position
+                                                                      unmarkedCount:&unmarkedCellsCount
+                                                                        openedCount:&openedCellsCount];
+        if (!opened) return;
+
         self.cellsLeftCount = [self.mineGridView cellsLeftToOpen];
-        
-        //just opened the cell, not possible to do that twice.
-        if (oldState != MineGridCellStateOpened && newState == MineGridCellStateOpened)
+        self.score += [self scoreToAddFromPosition:position];
+        self.score += [self vanillaScore] * (openedCellsCount - 1);
+        self.cellsMarked -= unmarkedCellsCount;
+           
+        if (self.cellsLeftCount > 0)
         {
-            if (oldState == MineGridCellStateMarked)
-            {
-                self.cellsMarked--;
-            }
-
-            self.score += baseScore * pow(1 + level / 100.0, 3) * pow(1 + [self.mineGridView bonus:position], 3);
+            [[JMSSoundHelper instance] playSoundWithAction:JMSSoundActionCellTap];
         }
-        
-        if (self.cellsLeftCount == 0)
+        else
         {
-            [soundManager playSoundAction:JMSSoundActionLevelCompleted];
-            self.score *= (1 + level / 100.0);
+            [[JMSSoundHelper instance] playSoundWithAction:JMSSoundActionLevelCompleted];
+            self.score *= [self levelModifier];
             [self postScore];
+            self.cellsMarked += [self.mineGridView markMines];
             [self finalizeGame];
-            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Congratulations" message:@"You won this round" delegate:self
-                                                      cancelButtonTitle:@"Play again" otherButtonTitles:nil];
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Congratulations"
+                                                                message:@"You won this round"
+                                                                delegate:self
+                                                       cancelButtonTitle:@"Play again"
+                                                       otherButtonTitles:nil];
             [alertView show];
-
         }
     }
+}
+
+- (CGFloat)levelModifier
+{
+    return 1 + level / 100.0;
+}
+
+- (CGFloat)vanillaScore
+{
+    return baseScore * pow([self levelModifier], 4);
+}
+
+- (CGFloat)scoreToAddFromPosition:(struct JMSPosition)position
+{
+    return [self vanillaScore] * pow(1 + [self.mineGridView bonus:position], 3);
 }
 
 - (void) longTap: (UIGestureRecognizer *)gestureRecognizer
 {
     NSLog(@"%s", __FUNCTION__);
+    if (self.mineGridView.gameFinished) return;
+    
     if (gestureRecognizer.state == UIGestureRecognizerStateBegan)
     {
         CGPoint coord = [gestureRecognizer locationInView:self.mineGridView];
@@ -278,16 +296,19 @@ const CGFloat baseScore = 175;
         if (position.row == NSNotFound || position.column == NSNotFound) return;
         
         JMSMineGridCellState oldState = [self.mineGridView cellState:position];
+
         [self.mineGridView longTappedWithCoordinate:coord];
         JMSMineGridCellState newState = [self.mineGridView cellState:position];
         
         if (oldState == MineGridCellStateMarked && newState == MineGridCellStateClosed)
         {
             self.cellsMarked--;
+            [[JMSSoundHelper instance] playSoundWithAction:JMSSoundActionPutFlag];
         }
         if (oldState == MineGridCellStateClosed && newState == MineGridCellStateMarked)
         {
             self.cellsMarked++;
+            [[JMSSoundHelper instance] playSoundWithAction:JMSSoundActionPutFlag];
         }
     }
 }
@@ -335,7 +356,7 @@ const CGFloat baseScore = 175;
 }
 - (void)postScoreLocally
 {
-    CGFloat progress = (100.0-level-self.cellsLeftCount) / (100-level);
+    CGFloat progress = (100.0 - level - self.cellsLeftCount) / (100-level);
     [[[JMSLeaderboardManager alloc] init] postGameScore:lroundf(self.score)
                                                   level:level
                                                progress:progress];

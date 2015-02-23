@@ -12,7 +12,7 @@
 
 + (UIColor *)colorFromHexString: (NSString *)hexString
 {
-    NSUInteger result = 0;
+    uint result = 0;
     NSScanner *scanner = [NSScanner scannerWithString:hexString];
     
     [scanner scanHexInt:&result];
@@ -20,7 +20,7 @@
     return [UIColor colorFromInteger:result];
 }
 
-+ (UIColor *) colorFromInteger:(NSUInteger)integer
++ (UIColor *) colorFromInteger:(UInt32)integer
 {
     return [UIColor colorWithRed:((integer >> 16) & 0xFF) / 255.0
                            green:((integer >> 8) & 0xFF) / 255.0

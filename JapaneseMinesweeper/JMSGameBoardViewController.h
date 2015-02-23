@@ -11,7 +11,7 @@
 #import "JMSGradientView.h"
 #import "JMSGradientButton.h"
 
-@class MainViewController;
+@class JMSMainViewController;
 
 @interface JMSGameBoardViewController : UIViewController<UIAlertViewDelegate>
 
@@ -30,7 +30,7 @@
 @property (weak, nonatomic) IBOutlet JMSGradientButton *btnMainMenu;
 @property (weak, nonatomic) IBOutlet JMSGradientButton *btnResetGame;
 
-@property (weak, nonatomic) MainViewController *mainViewController;
+@property (weak, nonatomic) JMSMainViewController *mainViewController;
 
 - (IBAction)backToMainMenu;
 - (IBAction)resetGame;

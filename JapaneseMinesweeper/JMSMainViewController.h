@@ -12,7 +12,7 @@
 
 @class JMSGameSessionInfo;
 
-@interface MainViewController : UIViewController
+@interface JMSMainViewController : UIViewController
 
 @property (weak, nonatomic) IBOutlet JMSGradientButton *btnStart;
 @property (weak, nonatomic) IBOutlet JMSGradientButton *btnComplexityLevel;

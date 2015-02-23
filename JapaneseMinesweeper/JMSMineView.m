@@ -13,7 +13,7 @@
 {
     CAGradientLayer *layer;
     
-}
+}/*
 - (void)drawRect:(CGRect)rect
 {
     NSLog(@"%s", __FUNCTION__);
@@ -116,8 +116,12 @@
     }
     
 
-}
+}*/
 
+- (void)drawRect:(CGRect)rect
+{
+    
+}
 - (void) drawGradientWithStartColor:(UIColor *)startColor andFinishColor:(UIColor *)finishColor;
 {
     NSLog(@"%s", __FUNCTION__);

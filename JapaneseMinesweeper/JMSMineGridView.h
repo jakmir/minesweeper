@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "Structs.h"
 #import "Enums.h"
+#import "JMSMineGrid.h"
 
 @class JMSGameSessionInfo;
 
@@ -29,7 +30,9 @@
 
 - (void)finalizeGame;
 - (void)resetGame;
+- (NSInteger)markMines;
 
 @property (nonatomic, readonly) BOOL gameFinished;
+@property (nonatomic, readonly) JMSMineGrid *gameboard;
 
 @end

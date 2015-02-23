@@ -10,7 +10,7 @@
 #import "JMSGradientView.h"
 #import "JMSGradientButton.h"
 #import "JMSGradientSpeedmeterView.h"
-@interface OptionsViewController : UIViewController
+@interface JMSOptionsViewController : UIViewController
 
 @property (weak, nonatomic) IBOutlet UIView *difficultyLevel;
 @property (weak, nonatomic) IBOutlet UIView *generalSettings;

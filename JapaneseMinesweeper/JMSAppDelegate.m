@@ -7,6 +7,7 @@
 //
 
 #import "JMSAppDelegate.h"
+#import "Helpers/JMSSoundHelper.h"
 
 @interface JMSAppDelegate ()
 
@@ -22,6 +23,8 @@
         NSTimeInterval timeInterval = [NSDate timeIntervalSinceReferenceDate];
         srand(timeInterval);
     });
+    
+    [[JMSSoundHelper instance] preparePlayers];
     
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     if (![userDefaults boolForKey:@"userDefaultsInitialized"])

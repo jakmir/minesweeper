@@ -381,4 +381,13 @@ const CGFloat baseScore = 175;
     }];
 }
 
+#pragma mark - Dialogs and alerts
+
+- (void)showVictoryScreen
+{
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Congratulations" message:@"You won this round" delegate:self
+                                              cancelButtonTitle:@"Play again" otherButtonTitles:nil];
+    [alertView show];
+}
+
 @end

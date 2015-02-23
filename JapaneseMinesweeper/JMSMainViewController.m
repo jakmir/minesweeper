@@ -20,14 +20,15 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"wallpaper"]];
+
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     
+    UIImage *wallpaperImage = [UIImage imageNamed:@"wallpaper"];
+    self.view.backgroundColor = [UIColor colorWithPatternImage:wallpaperImage];
     [self updateButtons];
 }
 

@@ -204,6 +204,23 @@ const NSInteger spacing = 1;
     [self refreshAllCells];
 }
 
+- (NSUInteger) markUncoveredMines
+{
+    NSUInteger count = 0;
+    for (NSArray *column in map)
+    {
+        for (JMSMineGridCell *cell in column)
+        {
+            if (cell.mine && cell.state == MineGridCellStateClosed)
+            {
+                [cell setState:MineGridCellStateMarked];
+                count++;
+            }
+        }
+    }
+    return count;
+}
+
 - (void) longTappedWithCoordinate:(CGPoint)point
 {
     if (self.gameFinished) return;

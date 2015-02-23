@@ -207,7 +207,7 @@ const NSInteger spacing = 1;
 - (NSUInteger) markUncoveredMines
 {
     NSUInteger count = 0;
-    for (NSArray *column in map)
+    for (NSArray *column in self.gameboard.map)
     {
         for (JMSMineGridCell *cell in column)
         {

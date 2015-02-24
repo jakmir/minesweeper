@@ -46,7 +46,9 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "188"
-            endingLineNumber = "188">
+            endingLineNumber = "188"
+            landmarkName = "-setCellsLeftCount:"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -108,7 +110,9 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "199"
-            endingLineNumber = "199">
+            endingLineNumber = "199"
+            landmarkName = "-setCellsMarked:"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -150,11 +154,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JapaneseMinesweeper/JMSGameBoardViewController.m"
-            timestampString = "446351825.132655"
+            timestampString = "446467643.569603"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "328"
-            endingLineNumber = "328">
+            startingLineNumber = "369"
+            endingLineNumber = "369"
+            landmarkName = "-backToMainMenu"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -168,7 +174,9 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "56"
-            endingLineNumber = "56">
+            endingLineNumber = "56"
+            landmarkName = "-importFromGameSession"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -338,11 +346,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JapaneseMinesweeper/JMSGameBoardViewController.h"
-            timestampString = "445736319.388794"
+            timestampString = "446430722.834468"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "16"
-            endingLineNumber = "16"
+            startingLineNumber = "17"
+            endingLineNumber = "17"
             landmarkName = "@interface JMSGameBoardViewController"
             landmarkType = "2">
          </BreakpointContent>
@@ -354,11 +362,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JapaneseMinesweeper/JMSGameBoardViewController.m"
-            timestampString = "446351825.132655"
+            timestampString = "446467643.569603"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "367"
-            endingLineNumber = "367">
+            startingLineNumber = "408"
+            endingLineNumber = "408"
+            landmarkName = "-postScoreToGameCenter"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -558,11 +568,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JapaneseMinesweeper/JMSGameBoardViewController.m"
-            timestampString = "446351825.132655"
+            timestampString = "446436742.293681"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "231"
-            endingLineNumber = "231">
+            endingLineNumber = "231"
+            landmarkName = "-singleTap:"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -572,11 +584,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JapaneseMinesweeper/JMSGameBoardViewController.m"
-            timestampString = "446351825.132655"
+            timestampString = "446436742.293681"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "227"
-            endingLineNumber = "227">
+            endingLineNumber = "227"
+            landmarkName = "-singleTap:"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -593,20 +607,6 @@
             endingLineNumber = "76"
             landmarkName = "-updateButtons"
             landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "JapaneseMinesweeper/JMSGameBoardViewController.m"
-            timestampString = "446351825.132655"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "230"
-            endingLineNumber = "230">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -636,7 +636,9 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "223"
-            endingLineNumber = "223">
+            endingLineNumber = "223"
+            landmarkName = "-singleTap:"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -710,11 +712,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JapaneseMinesweeper/JMSGameBoardViewController.m"
-            timestampString = "446351825.132655"
+            timestampString = "446436742.293681"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "240"
-            endingLineNumber = "240">
+            endingLineNumber = "240"
+            landmarkName = "-singleTap:"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1048,7 +1052,9 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "148"
-            endingLineNumber = "148">
+            endingLineNumber = "148"
+            landmarkName = "-updateMenu"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

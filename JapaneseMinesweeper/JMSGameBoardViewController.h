@@ -10,10 +10,11 @@
 #import "JMSMineGridView.h"
 #import "JMSGradientView.h"
 #import "JMSGradientButton.h"
+#import "JMSMessageBoxView.h"
 
 @class JMSMainViewController;
 
-@interface JMSGameBoardViewController : UIViewController<UIAlertViewDelegate>
+@interface JMSGameBoardViewController : UIViewController<UIAlertViewDelegate, JMSMessageBoxViewDelegate>
 
 @property (weak, nonatomic) IBOutlet JMSMineGridView *mineGridView;
 

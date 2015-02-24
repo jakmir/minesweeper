@@ -226,8 +226,8 @@ const CGFloat baseScore = 175;
     
     if ([self.mineGridView.gameboard mineAtPosition:position])
     {
-        [self.mineGridView clickedWithCoordinate:coord];
         [[JMSSoundHelper instance] playSoundWithAction:JMSSoundActionGameFailed];
+        [self.mineGridView clickedWithCoordinate:coord];
         [self postScore];
         [self finalizeGame];
         [self.mainViewController setGameSessionInfo:nil];
@@ -258,12 +258,7 @@ const CGFloat baseScore = 175;
             [self postScore];
             self.cellsMarked += [self.mineGridView markMines];
             [self finalizeGame];
-            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Congratulations"
-                                                                message:@"You won this round"
-                                                                delegate:self
-                                                       cancelButtonTitle:@"Play again"
-                                                       otherButtonTitles:nil];
-            [alertView show];
+            [self showMessageBox];
         }
     }
 }
@@ -313,12 +308,58 @@ const CGFloat baseScore = 175;
     }
 }
 
-#pragma mark - alerts
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+- (void)showMessageBox
 {
+    JMSMessageBoxView *alertView = [[JMSMessageBoxView alloc] init];
+    
+    // Add some custom content to the alert view
+    [alertView setContainerView:[self messageBoxContentView]];
+    
+    // Modify the parameters
+    [alertView setButtonTitles:@[@"Ok"]];
+    [alertView setDelegate:self];
+    
+    // You may use a Block, rather than a delegate.
+    [alertView setOnButtonTouchUpInside:^(JMSMessageBoxView *alertView, int buttonIndex) {
+        NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertView tag]);
+        [alertView close];
+    }];
+    
+    [alertView setUseMotionEffects:true];
+    
+    // And launch the dialog
+    [alertView show];
+}
 
-    [self dismissViewControllerAnimated:NO completion:nil];
+- (UIView *)messageBoxContentView
+{
+    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 200)];
+    UILabel *lbCaption = [[UILabel alloc] initWithFrame:CGRectMake(0, 20, 320, 30)];
+    lbCaption.textAlignment = NSTextAlignmentCenter;
+    lbCaption.attributedText = [[NSAttributedString alloc] initWithString:@"You won this game"
+                                                               attributes:@{
+                                                                            NSForegroundColorAttributeName:
+                                                                                [UIColor colorFromInteger:0xffff6600],
+                                                                            NSFontAttributeName:
+                                                                                [UIFont fontWithName:@"HelveticaNeue-Light"
+                                                                                                size:28]
+                                                                            }];
+    
+    UILabel *lbText = [[UILabel alloc] initWithFrame:CGRectMake(20, 50, 280, 150)];
+    lbText.numberOfLines = 0;
+    lbText.textAlignment = NSTextAlignmentCenter;
+    lbText.attributedText = [[NSAttributedString alloc] initWithString:@"You have managed to uncover all mines, this is a great result\nClick play again to start new game."
+                                                            attributes:@{
+                                                                         NSForegroundColorAttributeName:
+                                                                             [UIColor colorFromInteger:0xffaaaaaa],
+                                                                         NSFontAttributeName:
+                                                                             [UIFont fontWithName:@"HelveticaNeue-Light"
+                                                                                             size:17]
+                                                                         }];
+    [contentView addSubview:lbCaption];
+    [contentView addSubview:lbText];
+   
+    return contentView;
 }
 
 #pragma mark - Upper Menu Actions

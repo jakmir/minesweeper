@@ -8,26 +8,18 @@
 
 #import <UIKit/UIKit.h>
 
-@protocol JMSMessageBoxViewDelegate
+@interface JMSMessageBoxView : UIView
 
-- (void)messageBoxButtonTouchUpInside:(id)alertView clickedButtonAtIndex:(NSInteger)buttonIndex;
+@property (nonatomic, strong) UIView *dialogView;
+@property (nonatomic, strong) UIView *containerView;
 
-@end
+@property (nonatomic, strong) NSString *buttonTitle;
+@property (nonatomic) BOOL useMotionEffects;
 
-@interface JMSMessageBoxView : UIView<JMSMessageBoxViewDelegate>
+@property (copy) void (^onButtonTouchUpInside)(void);
 
-@property (nonatomic, retain) UIView *parentView;
-@property (nonatomic, retain) UIView *dialogView;
-@property (nonatomic, retain) UIView *containerView;
-
-@property (nonatomic, assign) id<JMSMessageBoxViewDelegate> delegate;
-@property (nonatomic, retain) NSArray *buttonTitles;
-@property (nonatomic, assign) BOOL useMotionEffects;
-
-@property (copy) void (^onButtonTouchUpInside)(JMSMessageBoxView *alertView, int buttonIndex);
-
+- (instancetype)initWithButtonTitle:(NSString *)title actionHandler:(void (^)(void))onButtonTouchUpInsideHandler;
 - (void)show;
 - (void)close;
-- (void)setOnButtonTouchUpInside:(void (^)(JMSMessageBoxView *alertView, int buttonIndex))onButtonTouchUpInside;
 
 @end

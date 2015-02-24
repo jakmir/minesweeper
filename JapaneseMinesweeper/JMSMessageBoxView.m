@@ -11,31 +11,28 @@
 #import "JMSGradientButton.h"
 #import "UIColor+ColorFromHexString.h"
 
-const static CGFloat kCustomIOS7AlertViewDefaultButtonHeight       = 50;
-const static CGFloat kCustomIOS7AlertViewDefaultButtonSpacerHeight = 1;
-const static CGFloat kCustomIOS7AlertViewCornerRadius              = 12;
-const static CGFloat kCustomIOS7MotionEffectExtent                 = 10.0;
+const static CGFloat kMessageBoxDefaultButtonHeight = 50;
+const static CGFloat kMessageBoxCornerRadius = 12;
+const static CGFloat kMessageBoxMotionEffectExtent = 10.0;
 
 @implementation JMSMessageBoxView
 
 CGFloat buttonHeight = 0;
-CGFloat buttonSpacerHeight = 0;
 
-@synthesize parentView, containerView, dialogView, onButtonTouchUpInside;
-@synthesize delegate;
-@synthesize buttonTitles;
+@synthesize containerView, dialogView, onButtonTouchUpInside;
+@synthesize buttonTitle;
 @synthesize useMotionEffects;
 
-- (id)init
+- (instancetype)initWithButtonTitle:(NSString *)title actionHandler:(void (^)(void))onButtonTouchUpInsideHandler
 {
     self = [super init];
     if (self)
     {
         self.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
-        
-        delegate = self;
+
         useMotionEffects = false;
-        buttonTitles = @[@"Close"];
+        buttonTitle = title;
+        onButtonTouchUpInside = onButtonTouchUpInsideHandler;
     }
     return self;
 }
@@ -65,15 +62,8 @@ CGFloat buttonSpacerHeight = 0;
     
     [self addSubview:dialogView];
     
-    if (parentView != NULL)
-    {
-        [parentView addSubview:self];
-    }
-    else
-    {
-        [self setFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
-        [[[[UIApplication sharedApplication] windows] firstObject] addSubview:self];
-    }
+    [self setFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
+    [[[[UIApplication sharedApplication] windows] firstObject] addSubview:self];
     
     [UIView animateWithDuration:1.0f delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
                      animations:^{
@@ -85,23 +75,11 @@ CGFloat buttonSpacerHeight = 0;
      ];
 }
 
-/*
-- (IBAction)touch:(id)sender
-{
-    if (delegate != NULL) {
-        [delegate touch];
-    }
-    
-    if (onButtonTouchUpInside != NULL) {
-        onButtonTouchUpInside(self, (int)[sender tag]);
-    }
-}*/
-
-
-
 // Dialog close animation then cleaning and removing the view from the parent
 - (void)close
 {
+    onButtonTouchUpInside();
+    
     CATransform3D currentTransform = dialogView.layer.transform;
     
     CGFloat startRotation = [[dialogView valueForKeyPath:@"layer.transform.rotation.z"] floatValue];
@@ -139,13 +117,13 @@ CGFloat buttonSpacerHeight = 0;
     CGSize screenSize = [self countScreenSize];
     CGSize dialogSize = [self countDialogSize];
     
-    // For the black background
     [self setFrame:CGRectMake(0, 0, screenSize.width, screenSize.height)];
     
-    // This is the dialog's container; we attach the custom content and the buttons to this one
-    UIView *dialogContainer = [[UIView alloc] initWithFrame:CGRectMake((screenSize.width - dialogSize.width) / 2, (screenSize.height - dialogSize.height) / 2, dialogSize.width, dialogSize.height)];
+    UIView *dialogContainer = [[UIView alloc] initWithFrame:CGRectMake((screenSize.width - dialogSize.width) / 2,
+                                                                       (screenSize.height - dialogSize.height) / 2,
+                                                                       dialogSize.width,
+                                                                       dialogSize.height)];
     
-    // First, we style the dialog to match the iOS7 UIAlertView >>>
     CAGradientLayer *gradient = [CAGradientLayer layer];
     gradient.frame = dialogContainer.bounds;
     gradient.colors = @[
@@ -154,7 +132,7 @@ CGFloat buttonSpacerHeight = 0;
                        (id)[[UIColor colorFromInteger:0xf0dfdfdf] CGColor]
                        ];
     
-    CGFloat cornerRadius = kCustomIOS7AlertViewCornerRadius;
+    CGFloat cornerRadius = kMessageBoxCornerRadius;
     gradient.cornerRadius = cornerRadius;
     [dialogContainer.layer insertSublayer:gradient atIndex:0];
     
@@ -175,38 +153,32 @@ CGFloat buttonSpacerHeight = 0;
 
 - (void)addButtonsToView: (UIView *)container
 {
-    if (buttonTitles==NULL) { return; }
+    CGFloat buttonWidthModifier = 0.8;
+    CGFloat buttonWidth = container.bounds.size.width * buttonWidthModifier;
     
-    CGFloat buttonWidth = (container.bounds.size.width / [buttonTitles count]) * 0.8;
+    UIButton *closeButton = [[UIButton alloc] initWithFrame:CGRectMake(container.bounds.size.width * (1 - buttonWidthModifier) / 2,
+                                                                      container.bounds.size.height - buttonHeight - 16,
+                                                                      buttonWidth,
+                                                                      buttonHeight)];
+
+    [closeButton addTarget:self action:@selector(close) forControlEvents:UIControlEventTouchUpInside];
     
-    for (int i=0; i<[buttonTitles count]; i++)
-    {
-        UIButton *closeButton = [[UIButton alloc] initWithFrame:CGRectMake(i * buttonWidth + 32,
-                                                                           container.bounds.size.height - buttonHeight - 16,
-                                                                           buttonWidth,
-                                                                           buttonHeight)];
-
-        [closeButton addTarget:self action:@selector(close) forControlEvents:UIControlEventTouchUpInside];
-        [closeButton setTag:i];
-        
-        [closeButton setTitle:[buttonTitles objectAtIndex:i] forState:UIControlStateNormal];
-        [closeButton setTitleColor:[UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:1.0f] forState:UIControlStateNormal];
-        [closeButton setTitleColor:[UIColor colorWithRed:0.2f green:0.2f blue:0.2f alpha:0.5f] forState:UIControlStateHighlighted];
-        [closeButton.titleLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Medium" size:19]];
-        [closeButton setBackgroundColor:[UIColor colorFromInteger:0xffff7f00]];
-        [closeButton.layer setBorderColor:[UIColor colorFromInteger:0xffff6600].CGColor];
-        [closeButton.layer setBorderWidth:1.0f];
-        [closeButton.layer setCornerRadius:kCustomIOS7AlertViewCornerRadius];
-        [closeButton.layer masksToBounds];
-        [container addSubview:closeButton];
-
-    }
+    [closeButton setTitle:buttonTitle ?: @"Ok" forState:UIControlStateNormal];
+    [closeButton setTitleColor:[UIColor colorFromInteger:0xffffffff] forState:UIControlStateNormal];
+    [closeButton setTitleColor:[UIColor colorFromInteger:0x7f494949] forState:UIControlStateHighlighted];
+    [closeButton.titleLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Medium" size:19]];
+    [closeButton setBackgroundColor:[UIColor colorFromInteger:0xffff7f00]];
+    [closeButton.layer setBorderColor:[UIColor colorFromInteger:0xffff6600].CGColor];
+    [closeButton.layer setBorderWidth:1.0f];
+    [closeButton.layer setCornerRadius:kMessageBoxCornerRadius];
+    [closeButton.layer masksToBounds];
+    [container addSubview:closeButton];
 }
 
 - (CGSize)countDialogSize
 {
     CGFloat dialogWidth = containerView.frame.size.width;
-    CGFloat dialogHeight = containerView.frame.size.height + buttonHeight + buttonSpacerHeight;
+    CGFloat dialogHeight = containerView.frame.size.height + buttonHeight;
     
     return CGSizeMake(dialogWidth, dialogHeight);
 }
@@ -214,25 +186,9 @@ CGFloat buttonSpacerHeight = 0;
 
 - (CGSize)countScreenSize
 {
-    if (buttonTitles!=NULL && [buttonTitles count] > 0) {
-        buttonHeight       = kCustomIOS7AlertViewDefaultButtonHeight;
-        buttonSpacerHeight = kCustomIOS7AlertViewDefaultButtonSpacerHeight;
-    } else {
-        buttonHeight = 0;
-        buttonSpacerHeight = 0;
-    }
-    
-    CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
-    CGFloat screenHeight = [UIScreen mainScreen].bounds.size.height;
-    
-    UIInterfaceOrientation interfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
-    if (UIInterfaceOrientationIsLandscape(interfaceOrientation)) {
-        CGFloat tmp = screenWidth;
-        screenWidth = screenHeight;
-        screenHeight = tmp;
-    }
-    
-    return CGSizeMake(screenWidth, screenHeight);
+    buttonHeight = kMessageBoxDefaultButtonHeight;
+
+    return [UIScreen mainScreen].bounds.size;
 }
 
 #if (defined(__IPHONE_7_0))
@@ -240,13 +196,13 @@ CGFloat buttonSpacerHeight = 0;
 {
     UIInterpolatingMotionEffect *horizontalEffect = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"center.x"
                                                                                                     type:UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis];
-    horizontalEffect.minimumRelativeValue = @(-kCustomIOS7MotionEffectExtent);
-    horizontalEffect.maximumRelativeValue = @( kCustomIOS7MotionEffectExtent);
+    horizontalEffect.minimumRelativeValue = @(-kMessageBoxMotionEffectExtent);
+    horizontalEffect.maximumRelativeValue = @( kMessageBoxMotionEffectExtent);
     
     UIInterpolatingMotionEffect *verticalEffect = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"center.y"
                                                                                                   type:UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis];
-    verticalEffect.minimumRelativeValue = @(-kCustomIOS7MotionEffectExtent);
-    verticalEffect.maximumRelativeValue = @( kCustomIOS7MotionEffectExtent);
+    verticalEffect.minimumRelativeValue = @(-kMessageBoxMotionEffectExtent);
+    verticalEffect.maximumRelativeValue = @( kMessageBoxMotionEffectExtent);
     
     UIMotionEffectGroup *motionEffectGroup = [[UIMotionEffectGroup alloc] init];
     motionEffectGroup.motionEffects = @[horizontalEffect, verticalEffect];

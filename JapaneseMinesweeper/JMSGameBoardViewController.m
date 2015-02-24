@@ -310,33 +310,21 @@ const CGFloat baseScore = 175;
 
 - (void)showMessageBox
 {
-    JMSMessageBoxView *alertView = [[JMSMessageBoxView alloc] init];
-    
-    // Add some custom content to the alert view
+    JMSMessageBoxView *alertView = [[JMSMessageBoxView alloc] initWithButtonTitle:@"Play again"
+                                                                    actionHandler:^{
+                                                                        [self resetGame];
+                                                                    }];
     [alertView setContainerView:[self messageBoxContentView]];
-    
-    // Modify the parameters
-    [alertView setButtonTitles:@[@"Ok"]];
-    [alertView setDelegate:self];
-    
-    // You may use a Block, rather than a delegate.
-    [alertView setOnButtonTouchUpInside:^(JMSMessageBoxView *alertView, int buttonIndex) {
-        NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertView tag]);
-        [alertView close];
-    }];
-    
     [alertView setUseMotionEffects:true];
-    
-    // And launch the dialog
     [alertView show];
 }
 
 - (UIView *)messageBoxContentView
 {
     UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 200)];
-    UILabel *lbCaption = [[UILabel alloc] initWithFrame:CGRectMake(0, 20, 320, 30)];
+    UILabel *lbCaption = [[UILabel alloc] initWithFrame:CGRectMake(0, 18, 320, 32)];
     lbCaption.textAlignment = NSTextAlignmentCenter;
-    lbCaption.attributedText = [[NSAttributedString alloc] initWithString:@"You won this game"
+    lbCaption.attributedText = [[NSAttributedString alloc] initWithString:@"You won this round"
                                                                attributes:@{
                                                                             NSForegroundColorAttributeName:
                                                                                 [UIColor colorFromInteger:0xffff6600],
@@ -348,13 +336,12 @@ const CGFloat baseScore = 175;
     UILabel *lbText = [[UILabel alloc] initWithFrame:CGRectMake(20, 50, 280, 150)];
     lbText.numberOfLines = 0;
     lbText.textAlignment = NSTextAlignmentCenter;
-    lbText.attributedText = [[NSAttributedString alloc] initWithString:@"You have managed to uncover all mines, this is a great result\nClick play again to start new game."
+    lbText.attributedText = [[NSAttributedString alloc] initWithString:@"Congratulations!\n\nYou managed to discover all mines"
                                                             attributes:@{
                                                                          NSForegroundColorAttributeName:
                                                                              [UIColor colorFromInteger:0xffaaaaaa],
                                                                          NSFontAttributeName:
-                                                                             [UIFont fontWithName:@"HelveticaNeue-Light"
-                                                                                             size:17]
+                                                                             [UIFont systemFontOfSize:17]
                                                                          }];
     [contentView addSubview:lbCaption];
     [contentView addSubview:lbText];
@@ -377,15 +364,40 @@ const CGFloat baseScore = 175;
     [self dismissViewControllerAnimated:NO completion:nil];
 }
 
-- (IBAction)resetGame
+- (IBAction)resetGameClicked
+{
+    if (self.mineGridView.gameFinished)
+    {
+        [self resetGame];
+        return;
+    }
+    UIAlertController *resetGameController = [UIAlertController alertControllerWithTitle:nil
+                                                                                 message:nil
+                                                                          preferredStyle:UIAlertControllerStyleActionSheet];
+    UIAlertAction *alertActionYes = [UIAlertAction actionWithTitle:@"Reset" style:UIAlertActionStyleDestructive
+                                                           handler:^(UIAlertAction *action) {
+                                                               [self resetGame];
+                                                           }];
+    UIAlertAction *alertActionNo = [UIAlertAction actionWithTitle:@"Back to game" style:UIAlertActionStyleDefault handler:nil];
+    [resetGameController addAction:alertActionYes];
+    [resetGameController addAction:alertActionNo];
+    [resetGameController setModalPresentationStyle:UIModalPresentationPopover];
+    
+    UIPopoverPresentationController *popPresenter = [resetGameController popoverPresentationController];
+    popPresenter.sourceView = self.btnResetGame;
+    popPresenter.sourceRect = self.btnResetGame.bounds;
+    [self presentViewController:resetGameController animated:YES completion:nil];
+
+}
+
+- (void)resetGame
 {
     [self.mineGridView resetGame];
     [self.mainViewController setGameSessionInfo:nil];
     [self createNewGame];
-    [self updateMenu];    
+    [self updateMenu];
 }
-
-#pragma mark - Submit results 
+#pragma mark - Submit results
 
 - (void)postScore
 {
@@ -422,13 +434,5 @@ const CGFloat baseScore = 175;
     }];
 }
 
-#pragma mark - Dialogs and alerts
-
-- (void)showVictoryScreen
-{
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Congratulations" message:@"You won this round" delegate:self
-                                              cancelButtonTitle:@"Play again" otherButtonTitles:nil];
-    [alertView show];
-}
 
 @end

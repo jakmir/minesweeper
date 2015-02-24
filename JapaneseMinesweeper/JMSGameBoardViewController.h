@@ -14,7 +14,7 @@
 
 @class JMSMainViewController;
 
-@interface JMSGameBoardViewController : UIViewController<UIAlertViewDelegate, JMSMessageBoxViewDelegate>
+@interface JMSGameBoardViewController : UIViewController<UIAlertViewDelegate>
 
 @property (weak, nonatomic) IBOutlet JMSMineGridView *mineGridView;
 
@@ -34,6 +34,6 @@
 @property (weak, nonatomic) JMSMainViewController *mainViewController;
 
 - (IBAction)backToMainMenu;
-- (IBAction)resetGame;
+- (IBAction)resetGameClicked;
 
 @end

@@ -26,13 +26,11 @@
     
     dataSource = [[[JMSLeaderboardManager alloc] init] highScoreList];
     self.lbEmptyRemark.hidden = dataSource.count > 0;
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
     
-    [self drawGradients];
+    [self.btnBackToMainMenu.layer setCornerRadius:10];
+    [self.btnShowGameCenterScreen.layer setCornerRadius:10];
+    [self.btnBackToMainMenu.layer setMasksToBounds:YES];
+    [self.btnShowGameCenterScreen.layer setMasksToBounds:YES];
 }
 
 - (BOOL) prefersStatusBarHidden
@@ -140,13 +138,4 @@
     [gameCenterViewController dismissViewControllerAnimated:NO completion:nil];
 }
 
-#pragma mark - UI improvement methods
-
-- (void)drawGradients
-{
-    [self.btnBackToMainMenu drawGradientWithStartColor:[UIColor colorFromInteger:0xffe9e9e9]
-                                        andFinishColor:[UIColor colorFromInteger:0xffcccccc]];
-    [self.btnShowGameCenterScreen drawGradientWithStartColor:[UIColor colorFromInteger:0xffe9e9e9]
-                                              andFinishColor:[UIColor colorFromInteger:0xffcccccc]];
-}
 @end

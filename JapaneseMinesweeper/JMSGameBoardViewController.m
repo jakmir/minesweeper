@@ -11,18 +11,20 @@
 #import "JMSMainViewController.h"
 #import "Classes/JMSGameSessionInfo.h"
 #import "UIColor+ColorFromHexString.h"
-#import "JMSAlertViewController.h"
 #import <GameKit/GKLocalPlayer.h>
 #import <GameKit/GKScore.h>
 #import <GameKit/GKGameCenterViewController.h>
 #import "JMSLeaderboardManager.h"
 #import "Helpers/JMSSoundHelper.h"
+#import "JMSPopoverPresentationController.h"
 
 @interface JMSGameBoardViewController ()
 {
     BOOL initialTapPerformed;
     NSInteger minesCount;
     NSUInteger level;
+    
+    BOOL popoverAlreadyDismissed;
 }
 
 @property (nonatomic) CGFloat score;
@@ -88,20 +90,23 @@ const CGFloat baseScore = 175;
     {
         [self createNewGame];
     }
-
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    [self.view bringSubviewToFront:self.ivSnapshot];
+    [self.ivSnapshot setImage:self.mainViewController.mineGridSnapshot];
+    [self.ivSnapshot setHidden:NO];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-
-    [self configureUI];
     [self.mineGridView refreshCells];
+    [self.ivSnapshot setHidden:YES];
+    [self configureUI];
     [self addGestureRecognizers];
 }
 
@@ -146,34 +151,29 @@ const CGFloat baseScore = 175;
 
 - (void) updateMenu
 {
-    [self.btnMainMenu drawGradientWithStartColor:[UIColor colorFromInteger:0xffe9e9e9]
-                                  andFinishColor:[UIColor colorFromInteger:0xffcccccc]];
-    
-    UIColor *startColor;
-    UIColor *endColor;
     NSString *caption;
     UIColor *captionColor;
     
     if (self.mineGridView.gameFinished)
     {
-        startColor = [UIColor colorFromInteger:0xffafafaf];
-        endColor =[UIColor colorFromInteger:0xffcccccc];
         captionColor = [UIColor colorFromInteger:0xffff3300];
         caption = @"PLAY AGAIN";
     }
     else
     {
-        startColor = [UIColor colorFromInteger:0xffe9e9e9];
-        endColor = [UIColor colorFromInteger:0xffcccccc];
         captionColor = [UIColor colorFromInteger:0xffa818ff];
         caption = @"RESET GAME";
-        
     }
-    [self.btnResetGame drawGradientWithStartColor:startColor
-                                   andFinishColor:endColor];
+
     [self.btnResetGame setTitleColor:captionColor forState:UIControlStateNormal];
     [self.btnResetGame setTitle:caption forState:UIControlStateNormal];
+    
+    [self.btnMainMenu.layer setCornerRadius:10];
+    [self.btnResetGame.layer setCornerRadius:10];
+    [self.btnMainMenu.layer setMasksToBounds:YES];
+    [self.btnResetGame.layer setMasksToBounds:YES];
 }
+
 #pragma mark - synchronize labels with real values
 
 - (void) setScore:(CGFloat)score
@@ -231,6 +231,7 @@ const CGFloat baseScore = 175;
         [self postScore];
         [self finalizeGame];
         [self.mainViewController setGameSessionInfo:nil];
+        [self.mainViewController setMineGridSnapshot:nil];
         return;
     }
     else
@@ -322,7 +323,7 @@ const CGFloat baseScore = 175;
 - (UIView *)messageBoxContentView
 {
     UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 200)];
-    UILabel *lbCaption = [[UILabel alloc] initWithFrame:CGRectMake(0, 18, 320, 32)];
+    UILabel *lbCaption = [[UILabel alloc] initWithFrame:CGRectMake(0, 20, 320, 32)];
     lbCaption.textAlignment = NSTextAlignmentCenter;
     lbCaption.attributedText = [[NSAttributedString alloc] initWithString:@"You won this round"
                                                                attributes:@{
@@ -333,10 +334,11 @@ const CGFloat baseScore = 175;
                                                                                                 size:28]
                                                                             }];
     
-    UILabel *lbText = [[UILabel alloc] initWithFrame:CGRectMake(20, 50, 280, 150)];
+    UILabel *lbText = [[UILabel alloc] initWithFrame:CGRectMake(20, 40, 280, 150)];
     lbText.numberOfLines = 0;
     lbText.textAlignment = NSTextAlignmentCenter;
-    lbText.attributedText = [[NSAttributedString alloc] initWithString:@"Congratulations!\n\nYou managed to discover all mines"
+
+    lbText.attributedText = [[NSAttributedString alloc] initWithString:@"Congratulations!\n\nAll mines were discovered"
                                                             attributes:@{
                                                                          NSForegroundColorAttributeName:
                                                                              [UIColor colorFromInteger:0xffaaaaaa],
@@ -360,40 +362,89 @@ const CGFloat baseScore = 175;
         gameSessionInfo.score = self.score;
         gameSessionInfo.level = level;
         self.mainViewController.gameSessionInfo = gameSessionInfo;
+        self.mainViewController.mineGridSnapshot = [self snapshot:self.mineGridView];
     }
     [self dismissViewControllerAnimated:NO completion:nil];
 }
 
+- (UIImage *)snapshot:(UIView *)view
+{
+    UIGraphicsBeginImageContextWithOptions(view.bounds.size, YES, 0);
+    [view drawViewHierarchyInRect:view.bounds afterScreenUpdates:YES];
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
+}
+
+- (BOOL)iOS8OrAbove
+{
+    NSComparisonResult order = [[UIDevice currentDevice].systemVersion compare:@"8.0"
+                                                                       options:NSNumericSearch];
+    return (order == NSOrderedSame || order == NSOrderedDescending);
+}
+
+- (void)popoverPresentationControllerDidDismissPopover:(UIPopoverPresentationController *)popoverPresentationController
+{
+}
+
+- (BOOL)popoverPresentationControllerShouldDismissPopover:(UIPopoverPresentationController *)popoverPresentationController
+{
+    return YES;
+}
+
 - (IBAction)resetGameClicked
 {
+    if (!initialTapPerformed)
+    {
+        return;
+    }
     if (self.mineGridView.gameFinished)
     {
         [self resetGame];
         return;
     }
-    UIAlertController *resetGameController = [UIAlertController alertControllerWithTitle:nil
-                                                                                 message:nil
-                                                                          preferredStyle:UIAlertControllerStyleActionSheet];
-    UIAlertAction *alertActionYes = [UIAlertAction actionWithTitle:@"Reset" style:UIAlertActionStyleDestructive
-                                                           handler:^(UIAlertAction *action) {
-                                                               [self resetGame];
-                                                           }];
-    UIAlertAction *alertActionNo = [UIAlertAction actionWithTitle:@"Back to game" style:UIAlertActionStyleDefault handler:nil];
-    [resetGameController addAction:alertActionYes];
-    [resetGameController addAction:alertActionNo];
-    [resetGameController setModalPresentationStyle:UIModalPresentationPopover];
+    if ([self iOS8OrAbove])
+    {
+        
+        UIAlertController *resetGameController = [UIAlertController alertControllerWithTitle:nil
+                                                                                     message:nil
+                                                                              preferredStyle:UIAlertControllerStyleActionSheet];
+        UIAlertAction *alertActionYes = [UIAlertAction actionWithTitle:@"Confirm reset" style:UIAlertActionStyleDestructive
+                                                               handler:^(UIAlertAction *action) {
+                                                                   [self resetGame];
+                                                               }];
+        [resetGameController addAction:alertActionYes];
+        [resetGameController setModalPresentationStyle:UIModalPresentationPopover];
     
-    UIPopoverPresentationController *popPresenter = [resetGameController popoverPresentationController];
-    popPresenter.sourceView = self.btnResetGame;
-    popPresenter.sourceRect = self.btnResetGame.bounds;
-    [self presentViewController:resetGameController animated:YES completion:nil];
+        UIPopoverPresentationController *popPresenter = [resetGameController popoverPresentationController];
+        popPresenter.sourceView = self.btnResetGame;
+        popPresenter.sourceRect = self.btnResetGame.bounds;
+        popPresenter.delegate = self;
+        [self presentViewController:resetGameController animated:YES completion:nil];
+    }
+    else
+    {
+        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self
+                                                        cancelButtonTitle:@"" destructiveButtonTitle:@"Confirm reset"
+                                                        otherButtonTitles:nil];
+        [actionSheet showFromRect:self.btnResetGame.frame inView:self.view animated:NO];
+        
+    }
+}
 
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 0)
+    {
+        [self resetGame];
+    }
 }
 
 - (void)resetGame
 {
     [self.mineGridView resetGame];
     [self.mainViewController setGameSessionInfo:nil];
+    [self.mainViewController setMineGridSnapshot:nil];
     [self createNewGame];
     [self updateMenu];
 }

@@ -49,6 +49,7 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(valueChanged:)
                                                  name:@"SpeedmeterValueChanged" object:nil];
+
 }
 
 
@@ -64,10 +65,13 @@
 {
     [super viewDidAppear:animated];
     
+    [self.btnSave setNeedsDisplay];
+    [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate date]];
+    
     [self.btnSave drawGradientWithStartColor:[UIColor colorFromInteger:0xff00cfff]
                               andFinishColor:[UIColor colorFromInteger:0xff007fff]];
-    
-  
+    [self.btnSave.layer setCornerRadius:16];
+    [self.btnSave.layer setMasksToBounds:YES];
     self.generalSettings.center = CGPointMake(CGRectGetMidX(self.view.frame),
                                               (CGRectGetMaxY(self.difficultyLevel.frame) + CGRectGetMinY(self.btnSave.frame)) / 2);
 }

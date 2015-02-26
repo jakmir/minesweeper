@@ -82,13 +82,9 @@ CGFloat buttonHeight = 0;
     
     CATransform3D currentTransform = dialogView.layer.transform;
     
-    CGFloat startRotation = [[dialogView valueForKeyPath:@"layer.transform.rotation.z"] floatValue];
-    CATransform3D rotation = CATransform3DMakeRotation(-startRotation + M_PI * 270.0 / 180.0, 0.0f, 0.0f, 0.0f);
-    
-    dialogView.layer.transform = CATransform3DConcat(rotation, CATransform3DMakeScale(1, 1, 1));
     dialogView.layer.opacity = 1.0f;
     
-    [UIView animateWithDuration:1.0f delay:0.0 options:UIViewAnimationOptionTransitionNone
+    [UIView animateWithDuration:0.5f delay:0.0 options:UIViewAnimationOptionTransitionNone
                      animations:^{
                          self.backgroundColor = [UIColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:0.0f];
                          dialogView.layer.transform = CATransform3DConcat(currentTransform, CATransform3DMakeScale(0.6f, 0.6f, 1.0));

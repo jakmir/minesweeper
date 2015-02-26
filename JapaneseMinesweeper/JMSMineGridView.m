@@ -34,7 +34,7 @@ const NSInteger spacing = 1;
 - (void)refreshCells
 {
     NSLog(@"%s", __FUNCTION__);
-    
+    [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate date]];
     for (int col = 0; col < count; col++)
     {
         for (int row = 0; row < count; row++)
@@ -43,10 +43,10 @@ const NSInteger spacing = 1;
             if (cell.state != MineGridCellStateClosed)
             {
                 [cell setNeedsDisplay];
-                [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate date]];
             }
         }
     }
+    [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate date]];
 }
 
 - (void)refreshAllCells

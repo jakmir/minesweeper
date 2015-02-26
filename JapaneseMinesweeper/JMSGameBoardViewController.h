@@ -14,8 +14,9 @@
 
 @class JMSMainViewController;
 
-@interface JMSGameBoardViewController : UIViewController<UIAlertViewDelegate>
+@interface JMSGameBoardViewController : UIViewController<UIActionSheetDelegate, UIPopoverPresentationControllerDelegate>
 
+@property (weak, nonatomic) IBOutlet UIImageView *ivSnapshot;
 @property (weak, nonatomic) IBOutlet JMSMineGridView *mineGridView;
 
 @property (weak, nonatomic) IBOutlet UILabel *lbScore;
@@ -28,8 +29,8 @@
 @property (weak, nonatomic) IBOutlet UIView *resultsView;
 @property (weak, nonatomic) IBOutlet UIView *buttonsPanelView;
 
-@property (weak, nonatomic) IBOutlet JMSGradientButton *btnMainMenu;
-@property (weak, nonatomic) IBOutlet JMSGradientButton *btnResetGame;
+@property (weak, nonatomic) IBOutlet UIButton *btnMainMenu;
+@property (weak, nonatomic) IBOutlet UIButton *btnResetGame;
 
 @property (weak, nonatomic) JMSMainViewController *mainViewController;
 

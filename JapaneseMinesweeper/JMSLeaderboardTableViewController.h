@@ -15,8 +15,8 @@
 - (IBAction)back;
 - (IBAction)openGameboardScreen;
 
-@property (weak, nonatomic) IBOutlet JMSGradientButton *btnShowGameCenterScreen;
-@property (weak, nonatomic) IBOutlet JMSGradientButton *btnBackToMainMenu;
+@property (weak, nonatomic) IBOutlet UIButton *btnShowGameCenterScreen;
+@property (weak, nonatomic) IBOutlet UIButton *btnBackToMainMenu;
 @property (weak, nonatomic) IBOutlet UILabel *lbEmptyRemark;
 
 @end

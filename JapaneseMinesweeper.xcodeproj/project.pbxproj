@@ -27,9 +27,9 @@
 		F7ABEFB81A9AA49F0069FDA2 /* JMSSoundHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = F7ABEFB71A9AA49F0069FDA2 /* JMSSoundHelper.m */; };
 		F7ABEFB91A9AA49F0069FDA2 /* JMSSoundHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = F7ABEFB71A9AA49F0069FDA2 /* JMSSoundHelper.m */; };
 		F7ABEFC11A9BFCBC0069FDA2 /* JMSMessageBoxView.m in Sources */ = {isa = PBXBuildFile; fileRef = F7ABEFC01A9BFCBC0069FDA2 /* JMSMessageBoxView.m */; };
+		F7ABEFC41A9D616B0069FDA2 /* JMSPopoverPresentationController.m in Sources */ = {isa = PBXBuildFile; fileRef = F7ABEFC31A9D616B0069FDA2 /* JMSPopoverPresentationController.m */; };
 		F7ADBED91A8FE9A4003BAAF2 /* JMSMineGridCellInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = F7ADBED81A8FE9A4003BAAF2 /* JMSMineGridCellInfo.m */; };
 		F7ADBEDC1A8FF53B003BAAF2 /* JMSGameSessionInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = F7ADBEDB1A8FF53B003BAAF2 /* JMSGameSessionInfo.m */; };
-		F7ADBEE11A911DDC003BAAF2 /* JMSAlertViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F7ADBEE01A911DDC003BAAF2 /* JMSAlertViewController.m */; };
 		F7ADBEEA1A913EC5003BAAF2 /* JMSGameKitHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = F7ADBEE91A913EC5003BAAF2 /* JMSGameKitHelper.m */; };
 		F7ADBEED1A9151FE003BAAF2 /* JMSScoreTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F7ADBEEC1A9151FE003BAAF2 /* JMSScoreTableViewCell.m */; };
 		F7ADBEF01A9152F4003BAAF2 /* JMSLeaderboardTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F7ADBEEF1A9152F4003BAAF2 /* JMSLeaderboardTableViewController.m */; };
@@ -88,12 +88,12 @@
 		F7ABEFB71A9AA49F0069FDA2 /* JMSSoundHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMSSoundHelper.m; sourceTree = "<group>"; };
 		F7ABEFBF1A9BFCBC0069FDA2 /* JMSMessageBoxView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMSMessageBoxView.h; sourceTree = "<group>"; };
 		F7ABEFC01A9BFCBC0069FDA2 /* JMSMessageBoxView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMSMessageBoxView.m; sourceTree = "<group>"; };
+		F7ABEFC21A9D616B0069FDA2 /* JMSPopoverPresentationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JMSPopoverPresentationController.h; path = JapaneseMinesweeper/JMSPopoverPresentationController.h; sourceTree = SOURCE_ROOT; };
+		F7ABEFC31A9D616B0069FDA2 /* JMSPopoverPresentationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JMSPopoverPresentationController.m; path = JapaneseMinesweeper/JMSPopoverPresentationController.m; sourceTree = SOURCE_ROOT; };
 		F7ADBED71A8FE9A4003BAAF2 /* JMSMineGridCellInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMSMineGridCellInfo.h; sourceTree = "<group>"; };
 		F7ADBED81A8FE9A4003BAAF2 /* JMSMineGridCellInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMSMineGridCellInfo.m; sourceTree = "<group>"; };
 		F7ADBEDA1A8FF53B003BAAF2 /* JMSGameSessionInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMSGameSessionInfo.h; sourceTree = "<group>"; };
 		F7ADBEDB1A8FF53B003BAAF2 /* JMSGameSessionInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMSGameSessionInfo.m; sourceTree = "<group>"; };
-		F7ADBEDF1A911DDC003BAAF2 /* JMSAlertViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMSAlertViewController.h; sourceTree = "<group>"; };
-		F7ADBEE01A911DDC003BAAF2 /* JMSAlertViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMSAlertViewController.m; sourceTree = "<group>"; };
 		F7ADBEE81A913EC5003BAAF2 /* JMSGameKitHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMSGameKitHelper.h; sourceTree = "<group>"; };
 		F7ADBEE91A913EC5003BAAF2 /* JMSGameKitHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMSGameKitHelper.m; sourceTree = "<group>"; };
 		F7ADBEEB1A9151FE003BAAF2 /* JMSScoreTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMSScoreTableViewCell.h; sourceTree = "<group>"; };
@@ -254,8 +254,8 @@
 		F7ADBEDE1A911DC5003BAAF2 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				F7ADBEDF1A911DDC003BAAF2 /* JMSAlertViewController.h */,
-				F7ADBEE01A911DDC003BAAF2 /* JMSAlertViewController.m */,
+				F7ABEFC21A9D616B0069FDA2 /* JMSPopoverPresentationController.h */,
+				F7ABEFC31A9D616B0069FDA2 /* JMSPopoverPresentationController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -437,8 +437,8 @@
 				F707112319E1EF6000D3BBD2 /* JMSGradientView.m in Sources */,
 				F7ABEFAE1A9922370069FDA2 /* JMSMineGrid.m in Sources */,
 				F707112B19E20F5600D3BBD2 /* JMSGradientButton.m in Sources */,
+				F7ABEFC41A9D616B0069FDA2 /* JMSPopoverPresentationController.m in Sources */,
 				F7ADBF031A940291003BAAF2 /* JMSMineView.m in Sources */,
-				F7ADBEE11A911DDC003BAAF2 /* JMSAlertViewController.m in Sources */,
 				F73BD86519C395EF00CD51B9 /* main.m in Sources */,
 				F7B88BF019C46FDF00F6585E /* JMSMineGridCell.m in Sources */,
 				F7ADBEED1A9151FE003BAAF2 /* JMSScoreTableViewCell.m in Sources */,

@@ -10,6 +10,7 @@
 #import "JMSGameBoardViewController.h"
 #import "UIColor+ColorFromHexString.h"
 #import "Helpers/JMSGameKitHelper.h"
+#import "JMSAboutViewController.h"
 
 @interface JMSMainViewController ()
 
@@ -27,7 +28,7 @@
 {
     [super viewWillAppear:animated];
     
-    UIImage *wallpaperImage = [UIImage imageNamed:@"wallpaper"];
+    UIImage *wallpaperImage = [UIImage imageNamed:@"xv"];
     self.view.backgroundColor = [UIColor colorWithPatternImage:wallpaperImage];
     [self updateButtons];
 }
@@ -100,14 +101,6 @@
     [self updateButtons];
 }
 
-- (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    if ([segue.identifier isEqualToString:@"toGame"])
-    {
-        JMSGameBoardViewController *destinationController = (JMSGameBoardViewController *)segue.destinationViewController;
-        destinationController.mainViewController = self;
-    }
-}
 
 #pragma mark - GameKit methods
 
@@ -118,5 +111,25 @@
     [self presentViewController:gameKitHelper.authenticationViewController
                        animated:YES
                      completion:nil];
+}
+
+#pragma mark - screen transition methods
+
+- (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:@"toGame"])
+    {
+        JMSGameBoardViewController *destinationController = (JMSGameBoardViewController *)segue.destinationViewController;
+        destinationController.mainViewController = self;
+    }
+}
+
+- (IBAction)showAboutScreen:(UIButton *)sender
+{
+    JMSAboutViewController *aboutViewController = [[JMSAboutViewController alloc] initWithNibName:@"JMSAboutViewController" bundle:nil];
+
+    [self addChildViewController:aboutViewController];
+    [aboutViewController.view setCenter:CGPointMake(768/2, 1024+100)];
+    [self.view addSubview:aboutViewController.view];
 }
 @end

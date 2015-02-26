@@ -23,5 +23,7 @@
 
 @property (nonatomic, strong) JMSGameSessionInfo *gameSessionInfo;
 
+- (IBAction)showAboutScreen:(UIButton *)sender;
+
 @end
 

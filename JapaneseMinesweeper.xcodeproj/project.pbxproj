@@ -45,6 +45,8 @@
 		F7B88BE819C3A87900F6585E /* JMSGameBoardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F7B88BE719C3A87900F6585E /* JMSGameBoardViewController.m */; };
 		F7B88BEC19C3AB2A00F6585E /* JMSMineGridView.m in Sources */ = {isa = PBXBuildFile; fileRef = F7B88BEB19C3AB2A00F6585E /* JMSMineGridView.m */; };
 		F7B88BF019C46FDF00F6585E /* JMSMineGridCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F7B88BEF19C46FDF00F6585E /* JMSMineGridCell.m */; };
+		FDE1E55C1A9F977900DB589B /* JMSAboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FDE1E55A1A9F977900DB589B /* JMSAboutViewController.m */; };
+		FDE1E55D1A9F977900DB589B /* JMSAboutViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FDE1E55B1A9F977900DB589B /* JMSAboutViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -122,6 +124,9 @@
 		F7B88BEF19C46FDF00F6585E /* JMSMineGridCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMSMineGridCell.m; sourceTree = "<group>"; };
 		FD98C96819DEFCD00035125E /* Enums.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Enums.h; sourceTree = "<group>"; };
 		FD98C96919DEFD490035125E /* Structs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Structs.h; sourceTree = "<group>"; };
+		FDE1E5591A9F977900DB589B /* JMSAboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMSAboutViewController.h; sourceTree = SOURCE_ROOT; };
+		FDE1E55A1A9F977900DB589B /* JMSAboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMSAboutViewController.m; sourceTree = SOURCE_ROOT; };
+		FDE1E55B1A9F977900DB589B /* JMSAboutViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JMSAboutViewController.xib; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -256,6 +261,9 @@
 			children = (
 				F7ABEFC21A9D616B0069FDA2 /* JMSPopoverPresentationController.h */,
 				F7ABEFC31A9D616B0069FDA2 /* JMSPopoverPresentationController.m */,
+				FDE1E5591A9F977900DB589B /* JMSAboutViewController.h */,
+				FDE1E55A1A9F977900DB589B /* JMSAboutViewController.m */,
+				FDE1E55B1A9F977900DB589B /* JMSAboutViewController.xib */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -412,6 +420,7 @@
 				F7ADBF141A973977003BAAF2 /* game_over.wav in Resources */,
 				F7ADBF161A973977003BAAF2 /* ui_feedback.wav in Resources */,
 				F7ADBF151A973977003BAAF2 /* level_completed.wav in Resources */,
+				FDE1E55D1A9F977900DB589B /* JMSAboutViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -451,6 +460,7 @@
 				F7ADBEFD1A9155C6003BAAF2 /* JMSLeaderboardManager.m in Sources */,
 				F7B88BEC19C3AB2A00F6585E /* JMSMineGridView.m in Sources */,
 				F707112819E1F23A00D3BBD2 /* UIColor+ColorFromHexString.m in Sources */,
+				FDE1E55C1A9F977900DB589B /* JMSAboutViewController.m in Sources */,
 				F77BA48F19F0867600DDE946 /* JMSOptionsViewController.m in Sources */,
 				F7ABEFC11A9BFCBC0069FDA2 /* JMSMessageBoxView.m in Sources */,
 				F7ADBEF01A9152F4003BAAF2 /* JMSLeaderboardTableViewController.m in Sources */,

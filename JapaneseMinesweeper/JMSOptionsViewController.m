@@ -9,6 +9,7 @@
 #import "JMSOptionsViewController.h"
 #import "UIColor+ColorFromHexString.h"
 #import "Enums.h"
+#import "Helpers/JMSSoundHelper.h"
 
 @interface JMSOptionsViewController ()
 {
@@ -23,7 +24,7 @@
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     level = [userDefaults integerForKey:@"level"];
     self.swSoundEnabled.on = [userDefaults boolForKey:@"soundEnabled"];
-    self.swGameCenterSubmit.on = [userDefaults boolForKey:@"shouldSubmitToGameCenter"];
+    self.swOpenSafeCells.on = [userDefaults boolForKey:@"shouldOpenSafeCells"];
     CGFloat holdDuration = [userDefaults floatForKey:@"holdDuration"];
     self.slHoldDuration.value = holdDuration;
     [self sliderValueChanged:self.slHoldDuration];
@@ -89,9 +90,10 @@
     [userDefaults setInteger:level forKey:@"level"];
     [userDefaults setBool:self.swSoundEnabled.on forKey:@"soundEnabled"];
     [userDefaults setFloat:self.slHoldDuration.value forKey:@"holdDuration"];
-    [userDefaults setBool:self.swGameCenterSubmit.on forKey:@"shouldSubmitToGameCenter"];
+    [userDefaults setBool:self.swOpenSafeCells.on forKey:@"shouldOpenSafeCells"];
     [userDefaults synchronize];
     
+    [[JMSSoundHelper instance] mute:!self.swSoundEnabled.on];
     [self dismissViewControllerAnimated:NO completion:nil];
 }
 

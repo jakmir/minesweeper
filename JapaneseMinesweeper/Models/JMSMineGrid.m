@@ -284,6 +284,7 @@
 - (BOOL)openInZeroDirectionsFromPosition:(struct JMSPosition)position
                            unmarkedCount:(NSUInteger *)unmarkedCount
                              openedCount:(NSUInteger *)openedCount
+                     shouldOpenSafeCells:(BOOL)shouldOpenSafeCells
 {
     NSUInteger unmarkedCells = 0;
     NSUInteger openedCells = 0;
@@ -361,45 +362,49 @@
         }
     };
     
-    for (NSUInteger loopsCount = 0; loopsCount < 10; loopsCount++)
+    if (shouldOpenSafeCells)
     {
-    for (NSInteger col = 0; col < self.colCount; col++)
-        for (NSInteger row = 0; row < self.rowCount; row++)
+        for (NSUInteger loopsCount = 0; loopsCount < 10; loopsCount++)
         {
-            struct JMSPosition p;
-            p.row = row;
-            p.column = col;
-            checkRightCell(p);
-            checkLowerCell(p);
-        }
-    for (NSInteger col = self.colCount - 1; col >= 0; col--)
-        for (NSInteger row = 0; row < self.rowCount; row++)
-        {
-            struct JMSPosition p;
-            p.row = row;
-            p.column = col;
-            checkLeftCell(p);
-            checkLowerCell(p);
-        }
-    for (NSInteger col = self.colCount - 1; col >= 0; col--)
-        for (NSInteger row = self.rowCount - 1; row >= 0; row--)
-        {
-            struct JMSPosition p;
-            p.row = row;
-            p.column = col;
-            checkLeftCell(p);
-            checkUpperCell(p);
-        }
-    for (NSInteger col = 0; col <= self.colCount - 1; col++)
-        for (NSInteger row = self.rowCount - 1; row >= 0; row--)
-        {
-            struct JMSPosition p;
-            p.row = row;
-            p.column = col;
-            checkRightCell(p);
-            checkUpperCell(p);
+            for (NSInteger col = 0; col < self.colCount; col++)
+                for (NSInteger row = 0; row < self.rowCount; row++)
+                {
+                    struct JMSPosition p;
+                    p.row = row;
+                    p.column = col;
+                    checkRightCell(p);
+                    checkLowerCell(p);
+                }
+            for (NSInteger col = self.colCount - 1; col >= 0; col--)
+                for (NSInteger row = 0; row < self.rowCount; row++)
+                {
+                    struct JMSPosition p;
+                    p.row = row;
+                    p.column = col;
+                    checkLeftCell(p);
+                    checkLowerCell(p);
+                }
+            for (NSInteger col = self.colCount - 1; col >= 0; col--)
+                for (NSInteger row = self.rowCount - 1; row >= 0; row--)
+                {
+                    struct JMSPosition p;
+                    p.row = row;
+                    p.column = col;
+                    checkLeftCell(p);
+                    checkUpperCell(p);
+                }
+            for (NSInteger col = 0; col <= self.colCount - 1; col++)
+                for (NSInteger row = self.rowCount - 1; row >= 0; row--)
+                {
+                    struct JMSPosition p;
+                    p.row = row;
+                    p.column = col;
+                    checkRightCell(p);
+                    checkUpperCell(p);
+                }
         }
     }
+    
     for (NSUInteger col = 0; col < self.colCount; col++)
     {
         for (NSUInteger row = 0; row < self.rowCount; row++)

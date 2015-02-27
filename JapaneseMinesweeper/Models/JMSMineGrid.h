@@ -26,6 +26,7 @@
 - (NSInteger)markMines;
 - (BOOL)openInZeroDirectionsFromPosition:(struct JMSPosition)position
                            unmarkedCount:(NSUInteger *)unmarkedCount
-                             openedCount:(NSUInteger *)openedCount;
+                             openedCount:(NSUInteger *)openedCount
+                     shouldOpenSafeCells:(BOOL)shouldOpenSafeCells;
 
 @end

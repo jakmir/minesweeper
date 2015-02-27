@@ -102,8 +102,9 @@
     cell.lbLevel.text = [gameSession.level stringValue];
     
     NSUInteger progress = lroundf(gameSession.progress.floatValue * 100);
-    cell.lbProgress.text = [NSString stringWithFormat:@"%d%%", progress];
+    cell.lbProgress.text = [NSString stringWithFormat:@"%lu%%", (unsigned long)progress];
     cell.lbProgress.textColor = progress == 100 ? [UIColor colorFromInteger:0xff009900] : [UIColor colorFromInteger:0xffff7f00];
+
     return cell;
 }
 

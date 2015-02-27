@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "JMSGradientButton.h"
-
+#import "JMSAboutViewController.h"
 
 @class JMSGameSessionInfo;
 

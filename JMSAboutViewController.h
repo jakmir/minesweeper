@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface JMSAboutViewController : UIViewController
 
+@interface JMSAboutViewController : UIViewController
 
 @end

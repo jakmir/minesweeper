@@ -24,20 +24,19 @@
         srand(timeInterval);
     });
     
-    [[JMSSoundHelper instance] preparePlayers];
-    
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     if (![userDefaults boolForKey:@"userDefaultsInitialized"])
     {
         [userDefaults setBool:YES forKey:@"userDefaultsInitialized"];
         [userDefaults setInteger:25 forKey:@"level"];
         [userDefaults setBool:YES forKey:@"soundEnabled"];
-        [userDefaults setBool:YES forKey:@"shouldSubmitToGameCenter"];
+        [userDefaults setBool:YES forKey:@"shouldOpenSafeCells"];
         [userDefaults setFloat:0.5 forKey:@"holdDuration"];
         
         [userDefaults synchronize];
     }
     
+    [[JMSSoundHelper instance] mute:![userDefaults boolForKey:@"soundEnabled"]];
     return YES;
 }
 

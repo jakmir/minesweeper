@@ -21,7 +21,7 @@ typedef NS_ENUM(NSUInteger, JMSSoundAction)
 @interface JMSSoundHelper : NSObject
 
 + (instancetype)instance;
-- (void)preparePlayers;
 - (void)playSoundWithAction:(JMSSoundAction)soundAction;
+- (void)mute:(BOOL)mute;
 
 @end

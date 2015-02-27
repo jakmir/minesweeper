@@ -23,8 +23,8 @@
     BOOL initialTapPerformed;
     NSInteger minesCount;
     NSUInteger level;
-    
     BOOL popoverAlreadyDismissed;
+    BOOL shouldOpenCellInZeroDirection;
 }
 
 @property (nonatomic) CGFloat score;
@@ -90,6 +90,8 @@ const CGFloat baseScore = 175;
     {
         [self createNewGame];
     }
+    
+    shouldOpenCellInZeroDirection = [[NSUserDefaults standardUserDefaults] boolForKey:@"shouldOpenSafeCells"];
 }
 
 - (void)viewDidLoad
@@ -240,7 +242,8 @@ const CGFloat baseScore = 175;
         NSUInteger openedCellsCount;
         BOOL opened = [self.mineGridView.gameboard openInZeroDirectionsFromPosition:position
                                                                       unmarkedCount:&unmarkedCellsCount
-                                                                        openedCount:&openedCellsCount];
+                                                                        openedCount:&openedCellsCount
+                                                                shouldOpenSafeCells:shouldOpenCellInZeroDirection];
         if (!opened) return;
 
         self.cellsLeftCount = [self.mineGridView cellsLeftToOpen];

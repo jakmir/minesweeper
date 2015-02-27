@@ -160,7 +160,7 @@
     CGPoint centerPoint = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height * 0.95);
     CGFloat width = self.bounds.size.width;
     CGFloat innerRadius = width/(4/0.9), outerRadius = width/(2/0.9);
-    CGFloat distance = hypot(centerPoint.x - touchLocation.x, centerPoint.y - touchLocation.y);
+    CGFloat distance = hypot(centerPoint.x - touchLocation.x, MAX(centerPoint.y - touchLocation.y, 0));
     BOOL inside = distance >= innerRadius && distance <= outerRadius && touchLocation.y < centerPoint.y / 0.95;
     if (!inside) return;
     

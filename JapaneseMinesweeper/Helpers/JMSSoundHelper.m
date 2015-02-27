@@ -11,17 +11,15 @@
 
 @implementation JMSSoundHelper
 {
-    AVAudioPlayer *cellTouchAudioPlayer;
-    AVAudioPlayer *putFlagAudioPlayer;
-    AVAudioPlayer *player;
+    NSMutableArray *_players;
+    BOOL _mute;
 }
 
 - (id)init
 {
     if (self = [super init])
     {
-        cellTouchAudioPlayer = [self createAudioPlayerForSoundAction:JMSSoundActionCellTap];
-        putFlagAudioPlayer = [self createAudioPlayerForSoundAction:JMSSoundActionPutFlag];
+        
     }
     return self;
 }
@@ -36,23 +34,46 @@
     return anInstance;
 }
 
-- (void) preparePlayers
+- (NSMutableArray *) players
 {
-    if (cellTouchAudioPlayer) [cellTouchAudioPlayer prepareToPlay];
-    if (putFlagAudioPlayer) [putFlagAudioPlayer prepareToPlay];
+    if (_players == nil)
+    {
+        _players = [[NSMutableArray alloc] init];
+    }
+    return _players;
 }
 
-- (AVAudioPlayer *)createAudioPlayerForSoundAction:(JMSSoundAction)soundAction
+
+- (AVAudioPlayer *)audioPlayerForSoundAction:(JMSSoundAction)soundAction
 {
-    NSError *error = nil;
-    
     NSURL *soundUrl = [[NSBundle mainBundle] URLForResource:[self soundNameByAction:soundAction] withExtension:@"wav"];
-    AVAudioPlayer *audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:soundUrl error:&error];
-    if (error != nil)
+    
+    NSMutableArray* availablePlayers = [[self players] mutableCopy];
+    
+    NSPredicate *filteringPredicate = [NSPredicate predicateWithBlock:^BOOL(AVAudioPlayer *evaluatedObject, NSDictionary *bindings) {
+        return evaluatedObject.playing == NO && [evaluatedObject.url isEqual:soundUrl];
+    }];
+    
+    [availablePlayers filterUsingPredicate:filteringPredicate];
+    
+    if (availablePlayers.count > 0)
     {
-        NSLog(@"Failed to load the sound: %@", [error localizedDescription]);
+        return [availablePlayers firstObject];
     }
-    return audioPlayer;
+    
+    NSError *error = nil;
+    AVAudioPlayer* newPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:soundUrl error:&error];
+    
+    if (newPlayer == nil)
+    {
+        NSLog(@"Couldn't load %@: %@", soundUrl, error);
+        return nil;
+    }
+    
+    [[self players] addObject:newPlayer];
+    
+    return newPlayer;
+    
 }
 
 - (NSString *)soundNameByAction:(JMSSoundAction)soundAction
@@ -74,34 +95,16 @@
     }
 }
 
+- (void)mute:(BOOL)mute
+{
+    _mute = mute;
+}
+
 - (void)playSoundWithAction:(JMSSoundAction)soundAction
 {
-    switch (soundAction)
-    {
-        case JMSSoundActionGameFailed:
-            player = [self createAudioPlayerForSoundAction:JMSSoundActionGameFailed];
-            break;
-        case JMSSoundActionCellTap:
-            player = cellTouchAudioPlayer;
-            break;
-        case JMSSoundActionLevelCompleted:
-            player = [self createAudioPlayerForSoundAction:JMSSoundActionLevelCompleted];
-            break;
-        case JMSSoundActionMenuButtonClick:
-            player = [self createAudioPlayerForSoundAction:JMSSoundActionMenuButtonClick];
-            break;
-        case JMSSoundActionPutFlag:
-            player = putFlagAudioPlayer;
-            break;
-        default:
-            player = nil;
-    }
-    if (player.isPlaying)
-    {
-        NSLog(@"stopped");
-        [player stop];
-        [player setCurrentTime:0];
-    }
+    if (_mute) return;
+    
+    AVAudioPlayer *player = [self audioPlayerForSoundAction:soundAction];
     [player play];
 }
 

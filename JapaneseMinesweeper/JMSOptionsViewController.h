@@ -20,7 +20,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *lbHoldDuration;
 @property (weak, nonatomic) IBOutlet UISlider *slHoldDuration;
 @property (weak, nonatomic) IBOutlet UISwitch *swSoundEnabled;
-@property (weak, nonatomic) IBOutlet UISwitch *swGameCenterSubmit;
+@property (weak, nonatomic) IBOutlet UISwitch *swOpenSafeCells;
 
 - (IBAction)save;
 - (IBAction)sliderValueChanged:(UISlider *)sender;

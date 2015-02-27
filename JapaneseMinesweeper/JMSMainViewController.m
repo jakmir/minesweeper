@@ -13,7 +13,9 @@
 #import "JMSAboutViewController.h"
 
 @interface JMSMainViewController ()
-
+{
+    JMSAboutViewController *aboutViewController;
+}
 @end
 
 @implementation JMSMainViewController
@@ -22,13 +24,28 @@
 {
     [super viewDidLoad];
 
+    aboutViewController = [[JMSAboutViewController alloc] initWithNibName:@"JMSAboutViewController" bundle:nil];
+    
+    [self addChildViewController:aboutViewController];
+    [self.view addSubview:aboutViewController.view];
+    
+    UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
+
+    [aboutViewController.view addGestureRecognizer:panRecognizer];
+    
+    [self hideAboutView];
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    return YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     
-    UIImage *wallpaperImage = [UIImage imageNamed:@"xv"];
+    UIImage *wallpaperImage = [UIImage imageNamed:@"wallpaper"];
     self.view.backgroundColor = [UIColor colorWithPatternImage:wallpaperImage];
     [self updateButtons];
 }
@@ -117,6 +134,8 @@
 
 - (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
+    [self hideAboutView];
+    
     if ([segue.identifier isEqualToString:@"toGame"])
     {
         JMSGameBoardViewController *destinationController = (JMSGameBoardViewController *)segue.destinationViewController;
@@ -124,12 +143,84 @@
     }
 }
 
+#pragma mark - about screen methods
+
 - (IBAction)showAboutScreen:(UIButton *)sender
 {
-    JMSAboutViewController *aboutViewController = [[JMSAboutViewController alloc] initWithNibName:@"JMSAboutViewController" bundle:nil];
-
-    [self addChildViewController:aboutViewController];
-    [aboutViewController.view setCenter:CGPointMake(768/2, 1024+100)];
-    [self.view addSubview:aboutViewController.view];
+    [self animateShowView];
 }
+
+- (void)animateShowView
+{
+    NSLog(@"%s", __FUNCTION__);
+    [UIView animateWithDuration:1.5 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:0.1
+                        options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                            aboutViewController.view.center = CGPointMake([[UIScreen mainScreen] bounds].size.width / 2,
+                                                                          [[UIScreen mainScreen] bounds].size.height - 100);
+                        } completion:nil];
+}
+
+- (void)animateHideViewWithVelocity:(CGFloat)velocity;
+{
+    NSLog(@"%s", __FUNCTION__);
+    [UIView animateWithDuration:2.25 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:velocity
+                        options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                            aboutViewController.view.center = CGPointMake([[UIScreen mainScreen] bounds].size.width / 2,
+                                                                          [[UIScreen mainScreen] bounds].size.height + aboutViewController.view.frame.size.height);
+                        } completion:nil];
+}
+
+- (void)hideAboutView
+{
+    aboutViewController.view.center = CGPointMake([[UIScreen mainScreen] bounds].size.width / 2,
+                                                  [[UIScreen mainScreen] bounds].size.height + aboutViewController.view.frame.size.height);
+}
+
+- (void)animateJumpBack
+{
+    CGFloat timeMultiplier = -(aboutViewController.view.center.y - [[UIScreen mainScreen] bounds].size.height + 100) /
+                                aboutViewController.view.frame.size.height;
+    [UIView animateWithDuration:1.5 * timeMultiplier
+                          delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:0.25
+                        options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                            aboutViewController.view.center = CGPointMake([[UIScreen mainScreen] bounds].size.width / 2,
+                                                                          [[UIScreen mainScreen] bounds].size.height - 100);
+                        } completion:nil];
+}
+
+- (void)handlePan:(UIPanGestureRecognizer *)gestureRecognizer
+{
+    static CGPoint oldCenter;
+    
+    switch (gestureRecognizer.state)
+    {
+        case UIGestureRecognizerStateBegan:
+            oldCenter = gestureRecognizer.view.center;
+            break;
+        case UIGestureRecognizerStateChanged:
+        {
+            CGPoint translatedPoint = [gestureRecognizer translationInView:self.view];
+            if (translatedPoint.y > 0)
+            {
+                gestureRecognizer.view.center = CGPointMake(oldCenter.x, oldCenter.y + translatedPoint.y);
+            }
+        }
+            break;
+        case UIGestureRecognizerStateEnded:
+        {
+            if (gestureRecognizer.view.center.y - oldCenter.y < CGRectGetHeight(gestureRecognizer.view.frame) / 4)
+            {
+                [self animateJumpBack];
+            }
+            else
+            {
+                [self animateHideViewWithVelocity:[gestureRecognizer velocityInView:self.view].y / 200.0];
+            }
+        }
+            break;
+        default:
+            break;
+    }
+}
+
 @end

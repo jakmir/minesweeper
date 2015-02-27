@@ -29,10 +29,12 @@
     [self addChildViewController:aboutViewController];
     [self.view addSubview:aboutViewController.view];
     
-    UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
-
+    UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self
+                                                                                    action:@selector(handlePan:)];
+    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                                           action:@selector(handleMainScreenTouch:)];
     [aboutViewController.view addGestureRecognizer:panRecognizer];
-    
+    [self.view addGestureRecognizer:tapGestureRecognizer];
     [self hideAboutView];
 }
 
@@ -157,7 +159,9 @@
                         options:UIViewAnimationOptionCurveEaseInOut animations:^{
                             aboutViewController.view.center = CGPointMake([[UIScreen mainScreen] bounds].size.width / 2,
                                                                           [[UIScreen mainScreen] bounds].size.height - 100);
-                        } completion:nil];
+                        } completion:^(BOOL finished) {
+                        }];
+
 }
 
 - (void)animateHideViewWithVelocity:(CGFloat)velocity;
@@ -167,7 +171,8 @@
                         options:UIViewAnimationOptionCurveEaseInOut animations:^{
                             aboutViewController.view.center = CGPointMake([[UIScreen mainScreen] bounds].size.width / 2,
                                                                           [[UIScreen mainScreen] bounds].size.height + aboutViewController.view.frame.size.height);
-                        } completion:nil];
+                        } completion:^(BOOL finished) {
+                        }];
 }
 
 - (void)hideAboutView
@@ -223,4 +228,11 @@
     }
 }
 
+- (void)handleMainScreenTouch:(UITapGestureRecognizer *)gestureRecognizer
+{
+    if (aboutViewController.isInScreen)
+    {
+        [self animateHideViewWithVelocity:1];
+    }
+}
 @end

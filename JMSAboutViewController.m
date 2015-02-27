@@ -32,6 +32,11 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (BOOL)isInScreen
+{
+    CGRect intersection = CGRectIntersection([[UIScreen mainScreen] bounds], self.view.frame);
+    return !CGSizeEqualToSize(intersection.size, CGSizeZero);
 
+}
 
 @end

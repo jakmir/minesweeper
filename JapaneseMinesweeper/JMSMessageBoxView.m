@@ -33,6 +33,8 @@ CGFloat buttonHeight = 0;
         useMotionEffects = false;
         buttonTitle = title;
         onButtonTouchUpInside = onButtonTouchUpInsideHandler;
+        
+        
     }
     return self;
 }
@@ -65,6 +67,9 @@ CGFloat buttonHeight = 0;
     [self setFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
     [[[[UIApplication sharedApplication] windows] firstObject] addSubview:self];
     
+    UIGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(messageBoxTap:)];
+    [self addGestureRecognizer:tapGestureRecognizer];
+    
     [UIView animateWithDuration:1.0f delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
                      animations:^{
                          self.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.25f];
@@ -75,14 +80,15 @@ CGFloat buttonHeight = 0;
      ];
 }
 
-// Dialog close animation then cleaning and removing the view from the parent
-- (void)close
+- (void)dismissMessageBox
 {
-    onButtonTouchUpInside();
-    
     CATransform3D currentTransform = dialogView.layer.transform;
     
     dialogView.layer.opacity = 1.0f;
+    
+    [self.gestureRecognizers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        [self removeGestureRecognizer:(UIGestureRecognizer *)obj];
+    }];
     
     [UIView animateWithDuration:0.5f delay:0.0 options:UIViewAnimationOptionTransitionNone
                      animations:^{
@@ -97,6 +103,22 @@ CGFloat buttonHeight = 0;
                          [self removeFromSuperview];
                      }
      ];
+}
+
+- (void)close
+{
+    onButtonTouchUpInside();
+    
+    [self dismissMessageBox];
+}
+
+- (void)messageBoxTap:(UITapGestureRecognizer *)gestureRecognizer
+{
+    CGPoint touchLocation = [gestureRecognizer locationInView:dialogView];
+    if (!CGRectContainsPoint(dialogView.bounds, touchLocation))
+    {
+        [self dismissMessageBox];
+    }
 }
 
 - (void)setSubView: (UIView *)subView

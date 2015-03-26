@@ -15,6 +15,7 @@
 
 @interface JMSMineGridView : UIView
 
+- (void) fillTutorialMapWithLevel:(NSUInteger)level;
 - (void) fillMapWithLevel:(NSUInteger)level exceptPosition:(struct JMSPosition)position;
 - (struct JMSPosition)cellPositionWithCoordinateInside: (CGPoint)point;
 - (BOOL) clickedWithCoordinate: (CGPoint)point;

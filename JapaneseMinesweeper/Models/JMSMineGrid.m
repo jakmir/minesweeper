@@ -30,6 +30,48 @@
     return cell.mine;
 }
 
+- (void) fillTutorialMapWithLevel:(NSUInteger)level
+{
+    NSInteger rowToExclude = 4, columnToExclude = 5;
+    const NSInteger cellsToFillCount = 8;
+    struct JMSPosition cellsToFill[cellsToFillCount] =
+                                        {
+                                            {.row = rowToExclude, .column = 0},
+                                            {.row = rowToExclude, .column = 2},
+                                            {.row = rowToExclude, .column = 6},
+                                            {.row = 2, .column = columnToExclude},
+                                            {.row = 3, .column = columnToExclude},
+                                            {.row = 6, .column = columnToExclude},
+                                            {.row = 8, .column = columnToExclude},
+                                            {.row = 9, .column = columnToExclude}
+                                        };
+    for (int mineNumber = 0; mineNumber < cellsToFillCount; mineNumber++)
+    {
+        JMSMineGridCell *mineGridCell = self.map[cellsToFill[mineNumber].column][cellsToFill[mineNumber].row];
+        mineGridCell.mine = YES;
+        [mineGridCell setNeedsDisplay];
+    }
+    
+    for (int mineNumber = cellsToFillCount; mineNumber < level; mineNumber++)
+    {
+        BOOL mine;
+        NSInteger r, c;
+        JMSMineGridCell *mineGridCell;
+        do
+        {
+            r = rand() % self.rowCount;
+            c = rand() % self.colCount;
+            mineGridCell = self.map[c][r];
+            mine = mineGridCell.mine;
+        }
+        while (mine || r == rowToExclude || c == columnToExclude);
+        mineGridCell.mine = YES;
+        [mineGridCell setNeedsDisplay];
+    }
+    
+    [self evaluateMapCellInfos];
+}
+
 - (void) fillMapWithLevel:(NSUInteger)level exceptPosition:(struct JMSPosition)position
 {
     for (int mineNumber = 1; mineNumber <= level; mineNumber++)

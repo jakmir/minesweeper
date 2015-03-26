@@ -31,7 +31,7 @@
         [userDefaults setInteger:25 forKey:@"level"];
         [userDefaults setBool:YES forKey:@"soundEnabled"];
         [userDefaults setBool:YES forKey:@"shouldOpenSafeCells"];
-        [userDefaults setFloat:0.5 forKey:@"holdDuration"];
+        [userDefaults setFloat:0.3 forKey:@"holdDuration"];
         
         [userDefaults synchronize];
     }

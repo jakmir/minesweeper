@@ -38,7 +38,7 @@ const CGFloat baseScore = 175;
 @implementation JMSGameBoardViewController
 
 - (void)addGestureRecognizers
-{
+{ 
     UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
                                                                                     action:@selector(singleTap:)];
     [self.mineGridView addGestureRecognizer:tapRecognizer];
@@ -53,6 +53,12 @@ const CGFloat baseScore = 175;
 - (BOOL) prefersStatusBarHidden
 {
     return YES;
+}
+
+- (BOOL) shouldDisplayTutorial
+{
+    return YES;
+   // return [[[JMSLeaderboardManager alloc] init] rowsCount] == 0;
 }
 
 - (void)importFromGameSession
@@ -78,19 +84,39 @@ const CGFloat baseScore = 175;
     [self setCellsMarked:0];
 }
 
+- (void)createTutorialGame
+{
+    initialTapPerformed = YES;
+    [self setScore:0];
+    level = [[NSUserDefaults standardUserDefaults] integerForKey:@"level"];
+    [self setCellsLeftCount:100 - level];
+    minesCount = level;
+    [self setCellsMarked:0];
+    [self.mineGridView fillTutorialMapWithLevel:level];
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
 
-    if (self.mainViewController.gameSessionInfo)
+    if ([self shouldDisplayTutorial])
     {
-        [self importFromGameSession];
+        [self createTutorialGame];
+        
+        [self displayAntsWithFrame:CGRectMake(19 + (72 + 1) * 5 + 1, 19 + (72 + 1) * 4 + 1, 72 - 2, 72 - 2)];
+        [self displayAntsWithFrame:CGRectMake(19 + (72 + 1) * 7 + 1, 19 + (72 + 1) * 6 + 1, 72 - 2, 72 - 2)];
     }
     else
     {
-        [self createNewGame];
+        if (self.mainViewController.gameSessionInfo)
+        {
+            [self importFromGameSession];
+        }
+        else
+        {
+            [self createNewGame];
+        }
     }
-    
     shouldOpenCellInZeroDirection = [[NSUserDefaults standardUserDefaults] boolForKey:@"shouldOpenSafeCells"];
 }
 
@@ -488,5 +514,38 @@ const CGFloat baseScore = 175;
     }];
 }
 
+
+#pragma mark - Tutorial Methods - should be refactored and moved out of this controller
+
+- (void)displayAntsWithFrame:(CGRect)frame
+{
+    CAShapeLayer *shapeLayer = [CAShapeLayer layer];
+    CGRect shapeRect = frame;
+    [shapeLayer setBounds:frame];
+    [shapeLayer setPosition:CGPointMake(CGRectGetMidX(frame), CGRectGetMidY(frame))];
+    [shapeLayer setFillColor:[[UIColor colorFromInteger:0x3f00ceef] CGColor]];
+    [shapeLayer setStrokeColor:[[UIColor blueColor] CGColor]];
+    [shapeLayer setLineWidth:1];
+    [shapeLayer setLineJoin:kCALineJoinRound];
+    [shapeLayer setLineDashPattern:@[@10, @4]];
+
+    CGMutablePathRef path = CGPathCreateMutable();
+    CGPathAddRect(path, NULL, shapeRect);
+    [shapeLayer setPath:path];
+    CGPathRelease(path);
+    
+   
+    [self.mineGridView.layer addSublayer:shapeLayer];
+
+    CABasicAnimation *dashAnimation;
+    dashAnimation = [CABasicAnimation animationWithKeyPath:@"lineDashPhase"];
+    
+    [dashAnimation setFromValue:@0];
+    [dashAnimation setToValue:@14];
+    [dashAnimation setDuration:0.5f];
+    [dashAnimation setRepeatCount:10000];
+    
+    [shapeLayer addAnimation:dashAnimation forKey:@"linePhase"];
+}
 
 @end

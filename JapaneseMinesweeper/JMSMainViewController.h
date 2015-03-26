@@ -17,7 +17,6 @@
 @property (weak, nonatomic) IBOutlet JMSGradientButton *btnStart;
 @property (weak, nonatomic) IBOutlet JMSGradientButton *btnComplexityLevel;
 @property (weak, nonatomic) IBOutlet JMSGradientButton *btnLeaderboard;
-@property (weak, nonatomic) IBOutlet JMSGradientButton *btnTutorial;
 @property (weak, nonatomic) IBOutlet UIView *buttonListContainer;
 @property (strong, nonatomic) UIImage *mineGridSnapshot;
 

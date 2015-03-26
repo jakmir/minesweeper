@@ -80,7 +80,7 @@
 
 - (NSArray *)gradientButtons
 {
-    return @[self.btnStart, self.btnLeaderboard, self.btnComplexityLevel, self.btnTutorial];
+    return @[self.btnStart, self.btnLeaderboard, self.btnComplexityLevel];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -185,7 +185,7 @@
 {
     CGFloat timeMultiplier = -(aboutViewController.view.center.y - [[UIScreen mainScreen] bounds].size.height + 100) /
                                 aboutViewController.view.frame.size.height;
-    [UIView animateWithDuration:1.5 * timeMultiplier
+    [UIView animateWithDuration:2.25 * timeMultiplier
                           delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:0.25
                         options:UIViewAnimationOptionCurveEaseInOut animations:^{
                             aboutViewController.view.center = CGPointMake([[UIScreen mainScreen] bounds].size.width / 2,

@@ -18,6 +18,7 @@
 - (NSInteger) colCount;
 - (NSInteger) cellsLeftToOpen;
 
+- (void) fillTutorialMapWithLevel:(NSUInteger)level;
 - (void) fillMapWithLevel:(NSUInteger)level exceptPosition:(struct JMSPosition)position;
 - (void) evaluateMapCellInfos;
 - (CGFloat)bonus:(struct JMSPosition)position;

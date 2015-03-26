@@ -45,6 +45,7 @@
 		F7B88BE819C3A87900F6585E /* JMSGameBoardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F7B88BE719C3A87900F6585E /* JMSGameBoardViewController.m */; };
 		F7B88BEC19C3AB2A00F6585E /* JMSMineGridView.m in Sources */ = {isa = PBXBuildFile; fileRef = F7B88BEB19C3AB2A00F6585E /* JMSMineGridView.m */; };
 		F7B88BF019C46FDF00F6585E /* JMSMineGridCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F7B88BEF19C46FDF00F6585E /* JMSMineGridCell.m */; };
+		F7F922F11ABE115200407855 /* JMSTutorialManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F7F922F01ABE115200407855 /* JMSTutorialManager.m */; };
 		FDE1E55C1A9F977900DB589B /* JMSAboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FDE1E55A1A9F977900DB589B /* JMSAboutViewController.m */; };
 		FDE1E55D1A9F977900DB589B /* JMSAboutViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FDE1E55B1A9F977900DB589B /* JMSAboutViewController.xib */; };
 /* End PBXBuildFile section */
@@ -122,6 +123,8 @@
 		F7B88BEB19C3AB2A00F6585E /* JMSMineGridView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMSMineGridView.m; sourceTree = "<group>"; };
 		F7B88BEE19C46FDF00F6585E /* JMSMineGridCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMSMineGridCell.h; sourceTree = "<group>"; };
 		F7B88BEF19C46FDF00F6585E /* JMSMineGridCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMSMineGridCell.m; sourceTree = "<group>"; };
+		F7F922EF1ABE115200407855 /* JMSTutorialManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMSTutorialManager.h; sourceTree = "<group>"; };
+		F7F922F01ABE115200407855 /* JMSTutorialManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMSTutorialManager.m; sourceTree = "<group>"; };
 		FD98C96819DEFCD00035125E /* Enums.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Enums.h; sourceTree = "<group>"; };
 		FD98C96919DEFD490035125E /* Structs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Structs.h; sourceTree = "<group>"; };
 		FDE1E5591A9F977900DB589B /* JMSAboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMSAboutViewController.h; sourceTree = SOURCE_ROOT; };
@@ -183,6 +186,7 @@
 		F73BD86119C395EF00CD51B9 /* JapaneseMinesweeper */ = {
 			isa = PBXGroup;
 			children = (
+				F7F922EE1ABE111A00407855 /* Managers */,
 				F7ABEFAB1A9922210069FDA2 /* Models */,
 				F7ADBF101A973977003BAAF2 /* Sounds */,
 				F7ADBEF11A915382003BAAF2 /* DAL */,
@@ -327,6 +331,15 @@
 			name = Controls;
 			sourceTree = "<group>";
 		};
+		F7F922EE1ABE111A00407855 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				F7F922EF1ABE115200407855 /* JMSTutorialManager.h */,
+				F7F922F01ABE115200407855 /* JMSTutorialManager.m */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -454,6 +467,7 @@
 				F73BD86E19C395F000CD51B9 /* JMSMainViewController.m in Sources */,
 				F7ADBEFA1A915549003BAAF2 /* JMSDataManagerBase.m in Sources */,
 				F73BD86B19C395F000CD51B9 /* JapaneseMinesweeper.xcdatamodeld in Sources */,
+				F7F922F11ABE115200407855 /* JMSTutorialManager.m in Sources */,
 				F7ABEFB81A9AA49F0069FDA2 /* JMSSoundHelper.m in Sources */,
 				F7ADBED91A8FE9A4003BAAF2 /* JMSMineGridCellInfo.m in Sources */,
 				F7ADBEDC1A8FF53B003BAAF2 /* JMSGameSessionInfo.m in Sources */,

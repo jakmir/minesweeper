@@ -11,6 +11,25 @@
 
 @implementation JMSLeaderboardManager
 
+- (NSInteger)rowsCount
+{
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"JMSGameSession"
+                                              inManagedObjectContext:self.managedObjectContext];
+    [fetchRequest setEntity:entity];
+    NSError *error;
+    NSInteger count = [self.managedObjectContext countForFetchRequest:fetchRequest error:&error];
+    if (error)
+    {
+        NSLog(@"Could not evaluate rows count. Reason: %@", error.localizedDescription);
+        return 0;
+    }
+    else
+    {
+        return count;
+    }
+}
+
 - (void)postGameScore:(NSUInteger)score level:(NSUInteger)level progress:(CGFloat)progress
 {
     NSManagedObjectContext *context = [self managedObjectContext];

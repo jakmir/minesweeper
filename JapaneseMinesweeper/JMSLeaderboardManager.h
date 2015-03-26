@@ -14,5 +14,6 @@
 
 - (void)postGameScore:(NSUInteger)score level:(NSUInteger)level progress:(CGFloat)progress;
 - (NSArray *)highScoreList;
+- (NSInteger)rowsCount;
 
 @end

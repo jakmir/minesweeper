@@ -118,16 +118,21 @@
     }
     
     CGFloat progressAngle = M_PI * ((CGFloat)(_power - _minimumValue) / (_maximumValue - _minimumValue));
-    CGPoint p1 = CGPointMake(centerPoint.x - cos(progressAngle - M_PI / 60) * (innerRadius * 0.89),
-                             centerPoint.y - sin(progressAngle - M_PI / 60) * (innerRadius * 0.89));
-    CGPoint p2 = CGPointMake(centerPoint.x - cos(progressAngle + M_PI / 60) * (innerRadius * 0.89),
-                             centerPoint.y - sin(progressAngle + M_PI / 60) * (innerRadius * 0.89));
-    CGPoint p3 = CGPointMake(centerPoint.x - cos(progressAngle - M_PI / 52) * (outerRadius * 0.8),
-                             centerPoint.y - sin(progressAngle - M_PI / 52) * (outerRadius * 0.8));
-    CGPoint p4 = CGPointMake(centerPoint.x - cos(progressAngle + M_PI / 52) * (outerRadius * 0.8),
-                             centerPoint.y - sin(progressAngle + M_PI / 52) * (outerRadius * 0.8));
-    CGPoint p5 = CGPointMake(centerPoint.x - cos(progressAngle) * outerRadius * 0.875,
-                             centerPoint.y - sin(progressAngle) * outerRadius * 0.875);
+    CGFloat arrowBaseAngleStart = progressAngle - M_PI / 60, arrowBaseAngleEnd = progressAngle + M_PI / 60;
+    CGFloat arrowPointerAngleStart = progressAngle - M_PI / 52, arrowPointerAngleEnd = progressAngle + M_PI / 52;
+    CGFloat arrowBasePolarDistance = innerRadius * 0.89f;
+    CGFloat arrowPointerPolarDistance = outerRadius * 0.8f;
+    CGFloat arrowNeedlePolarDistance = outerRadius * 0.875f;
+    CGPoint arrowBasePoint1 = CGPointMake(centerPoint.x - cos(arrowBaseAngleStart) * arrowBasePolarDistance,
+                                          centerPoint.y - sin(arrowBaseAngleStart) * arrowBasePolarDistance);
+    CGPoint arrowBasePoint2 = CGPointMake(centerPoint.x - cos(arrowBaseAngleEnd) * arrowBasePolarDistance,
+                                          centerPoint.y - sin(arrowBaseAngleEnd) * arrowBasePolarDistance);
+    CGPoint arrowPointerLeft = CGPointMake(centerPoint.x - cos(arrowPointerAngleStart) * arrowPointerPolarDistance,
+                                           centerPoint.y - sin(arrowPointerAngleStart) * arrowPointerPolarDistance);
+    CGPoint arrowPointerRight = CGPointMake(centerPoint.x - cos(arrowPointerAngleEnd) * arrowPointerPolarDistance,
+                                            centerPoint.y - sin(arrowPointerAngleEnd) * arrowPointerPolarDistance);
+    CGPoint needlePoint = CGPointMake(centerPoint.x - cos(progressAngle) * arrowNeedlePolarDistance,
+                                      centerPoint.y - sin(progressAngle) * arrowNeedlePolarDistance);
     if (shapeLayer != nil)
     {
         [shapeLayer removeFromSuperlayer];
@@ -137,11 +142,11 @@
     CGMutablePathRef path = CGPathCreateMutable();
     
 
-    CGPathMoveToPoint(path, nil, p1.x, p1.y);
-    CGPathAddLineToPoint(path, nil, p2.x, p2.y);
-    CGPathAddLineToPoint(path, nil, p4.x, p4.y);
-    CGPathAddLineToPoint(path, nil, p5.x, p5.y);
-    CGPathAddLineToPoint(path, nil, p3.x, p3.y);
+    CGPathMoveToPoint(path, nil, arrowBasePoint1.x, arrowBasePoint1.y);
+    CGPathAddLineToPoint(path, nil, arrowBasePoint2.x, arrowBasePoint2.y);
+    CGPathAddLineToPoint(path, nil, arrowPointerRight.x, arrowPointerRight.y);
+    CGPathAddLineToPoint(path, nil, needlePoint.x, needlePoint.y);
+    CGPathAddLineToPoint(path, nil, arrowPointerLeft.x, arrowPointerLeft.y);
     CGPathCloseSubpath(path);
     
     shapeLayer.path = path;

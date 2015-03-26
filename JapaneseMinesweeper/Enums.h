@@ -25,4 +25,10 @@ typedef NS_ENUM(NSUInteger, JMSGameDifficulty) {
     JMSGameDifficultyHard,
 };
 
+typedef NS_ENUM(NSUInteger, JMSAllowedAction) {
+    JMSAllowedActionsNone = 0,
+    JMSAllowedActionsClick = 1 << 0,
+    JMSAllowedActionsMark = 1 << 1,
+    JMSAllowedActionsAll = JMSAllowedActionsClick | JMSAllowedActionsMark
+};
 #endif

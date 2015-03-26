@@ -17,6 +17,7 @@
 #import "JMSLeaderboardManager.h"
 #import "Helpers/JMSSoundHelper.h"
 #import "JMSPopoverPresentationController.h"
+#import "JMSTutorialManager.h"
 
 @interface JMSGameBoardViewController ()
 {
@@ -25,6 +26,7 @@
     NSUInteger level;
     BOOL popoverAlreadyDismissed;
     BOOL shouldOpenCellInZeroDirection;
+    JMSTutorialManager *tutorialManager;
 }
 
 @property (nonatomic) CGFloat score;
@@ -102,9 +104,7 @@ const CGFloat baseScore = 175;
     if ([self shouldDisplayTutorial])
     {
         [self createTutorialGame];
-        
-        [self displayAntsWithFrame:CGRectMake(19 + (72 + 1) * 5 + 1, 19 + (72 + 1) * 4 + 1, 72 - 2, 72 - 2)];
-        [self displayAntsWithFrame:CGRectMake(19 + (72 + 1) * 7 + 1, 19 + (72 + 1) * 6 + 1, 72 - 2, 72 - 2)];
+        tutorialManager = [[JMSTutorialManager alloc] initWithGameboardController:self];
     }
     else
     {
@@ -136,6 +136,12 @@ const CGFloat baseScore = 175;
     [self.ivSnapshot setHidden:YES];
     [self configureUI];
     [self addGestureRecognizers];
+    
+    if ([self shouldDisplayTutorial] && tutorialManager)
+    {
+        [tutorialManager moveToNextStep];
+    }
+    
 }
 
 - (void)removeGestureRecognizers
@@ -244,7 +250,9 @@ const CGFloat baseScore = 175;
     
     struct JMSPosition position = [self.mineGridView cellPositionWithCoordinateInside:coord];
     
-    if (position.row == NSNotFound || position.column == NSNotFound) return;
+    if (position.row == NSNotFound || position.column == NSNotFound ||
+        ([self shouldDisplayTutorial] && !tutorialManager.isFinished && ![tutorialManager isAllowedWithAction:JMSAllowedActionsClick
+                                                                                                     position:position])) return;
     
     if (!initialTapPerformed)
     {
@@ -266,12 +274,23 @@ const CGFloat baseScore = 175;
     {
         NSUInteger unmarkedCellsCount;
         NSUInteger openedCellsCount;
+        BOOL shouldOpenSafeCells = (![self shouldDisplayTutorial] && shouldOpenCellInZeroDirection) ||
+                                    ([self shouldDisplayTutorial] && tutorialManager.currentStep >= JMSTutorialStepLastCellClick);
         BOOL opened = [self.mineGridView.gameboard openInZeroDirectionsFromPosition:position
                                                                       unmarkedCount:&unmarkedCellsCount
                                                                         openedCount:&openedCellsCount
-                                                                shouldOpenSafeCells:shouldOpenCellInZeroDirection];
-        if (!opened) return;
-
+                                                                shouldOpenSafeCells:shouldOpenSafeCells];
+        if (opened)
+        {
+            if ([self shouldDisplayTutorial] && !tutorialManager.isFinished)
+            {
+                [tutorialManager completeTaskWithPosition:position];
+            }
+        }
+        else
+        {
+            return;
+        }
         self.cellsLeftCount = [self.mineGridView cellsLeftToOpen];
         self.score += [self scoreToAddFromPosition:position];
         self.score += [self vanillaScore] * (openedCellsCount - 1);
@@ -318,10 +337,18 @@ const CGFloat baseScore = 175;
         CGPoint coord = [gestureRecognizer locationInView:self.mineGridView];
         struct JMSPosition position = [self.mineGridView cellPositionWithCoordinateInside:coord];
         
-        if (position.row == NSNotFound || position.column == NSNotFound) return;
+        if (position.row == NSNotFound || position.column == NSNotFound ||
+            ([self shouldDisplayTutorial] && !tutorialManager.isFinished && ![tutorialManager isAllowedWithAction:JMSAllowedActionsMark
+                                                                                                         position:position])) return;
         
+        if ([self shouldDisplayTutorial])
+        {
+            if ([tutorialManager taskCompletedWithPosition:position])
+                return;
+            else
+                [tutorialManager completeTaskWithPosition:position];
+        }
         JMSMineGridCellState oldState = [self.mineGridView cellState:position];
-
         [self.mineGridView longTappedWithCoordinate:coord];
         JMSMineGridCellState newState = [self.mineGridView cellState:position];
         
@@ -515,37 +542,6 @@ const CGFloat baseScore = 175;
 }
 
 
-#pragma mark - Tutorial Methods - should be refactored and moved out of this controller
 
-- (void)displayAntsWithFrame:(CGRect)frame
-{
-    CAShapeLayer *shapeLayer = [CAShapeLayer layer];
-    CGRect shapeRect = frame;
-    [shapeLayer setBounds:frame];
-    [shapeLayer setPosition:CGPointMake(CGRectGetMidX(frame), CGRectGetMidY(frame))];
-    [shapeLayer setFillColor:[[UIColor colorFromInteger:0x3f00ceef] CGColor]];
-    [shapeLayer setStrokeColor:[[UIColor blueColor] CGColor]];
-    [shapeLayer setLineWidth:1];
-    [shapeLayer setLineJoin:kCALineJoinRound];
-    [shapeLayer setLineDashPattern:@[@10, @4]];
-
-    CGMutablePathRef path = CGPathCreateMutable();
-    CGPathAddRect(path, NULL, shapeRect);
-    [shapeLayer setPath:path];
-    CGPathRelease(path);
-    
-   
-    [self.mineGridView.layer addSublayer:shapeLayer];
-
-    CABasicAnimation *dashAnimation;
-    dashAnimation = [CABasicAnimation animationWithKeyPath:@"lineDashPhase"];
-    
-    [dashAnimation setFromValue:@0];
-    [dashAnimation setToValue:@14];
-    [dashAnimation setDuration:0.5f];
-    [dashAnimation setRepeatCount:10000];
-    
-    [shapeLayer addAnimation:dashAnimation forKey:@"linePhase"];
-}
 
 @end

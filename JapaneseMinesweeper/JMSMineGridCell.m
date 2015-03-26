@@ -18,6 +18,7 @@
 @implementation JMSMineGridCell
 {
     CAGradientLayer *gradientLayer;
+    CAShapeLayer *antLayer;
 }
 
 - (instancetype) initWithFrame:(CGRect)frame
@@ -168,4 +169,8 @@
     _cellInfo = mineGridCellInfo.cellInfo;
     _state = mineGridCellInfo.state;
 }
+
+
+
+
 @end

@@ -36,4 +36,7 @@
 @property (nonatomic, readonly) BOOL gameFinished;
 @property (nonatomic, readonly) JMSMineGrid *gameboard;
 
+- (void)highlightCellWithPosition:(struct JMSPosition)position;
+- (void)removeHighlights;
+
 @end

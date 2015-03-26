@@ -7,15 +7,18 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Structs.h"
+#import "Enums.h"
 
 @class JMSGameBoardViewController;
 
 typedef NS_ENUM(NSUInteger, JMSTutorialStep)
 {
+    JMSTutorialStepNotStarted,
     JMSTutorialStepFirstCellClick,
     JMSTutorialStepSecondCellClick,
-    JMSTutorialStepPutFlags,
     JMSTutorialStepThirdCellClick,
+    JMSTutorialStepPutFlags,
     JMSTutorialStepLastCellClick,
     JMSTutorialStepCompleted
 };
@@ -23,7 +26,10 @@ typedef NS_ENUM(NSUInteger, JMSTutorialStep)
 @interface JMSTutorialManager : NSObject
 
 - (instancetype)initWithGameboardController:(JMSGameBoardViewController *)gameboardController;
-
-
-
+- (void)moveToNextStep;
+- (BOOL)isAllowedWithAction:(JMSAllowedAction)action position:(struct JMSPosition)position;
+- (void)completeTaskWithPosition:(struct JMSPosition)position;
+- (BOOL)taskCompletedWithPosition:(struct JMSPosition)position;
+- (BOOL)isFinished;
+- (JMSTutorialStep)currentStep;
 @end

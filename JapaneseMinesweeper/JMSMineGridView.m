@@ -19,6 +19,7 @@ const NSInteger spacing = 1;
 @implementation JMSMineGridView
 {
     CALayer *layer;
+    NSMutableArray *highlightedAreas;
 }
 
 - (instancetype) initWithCoder:(NSCoder *)aDecoder
@@ -27,6 +28,7 @@ const NSInteger spacing = 1;
     {
         [self prepareCells];
         [self prepareBackground];
+        highlightedAreas = [NSMutableArray array];
     }
     return self;
 }
@@ -285,6 +287,51 @@ const NSInteger spacing = 1;
             [cell import:cellInfo];
         }
     }
+}
+
+#pragma mark - Higlight/Unhighlight methods
+
+- (void)highlightCellWithPosition:(struct JMSPosition)position
+{
+    JMSMineGridCell *cell = self.gameboard.map[position.column][position.row];
+
+    CAShapeLayer *antLayer = [CAShapeLayer layer];
+    [antLayer setBounds:cell.frame];
+    [antLayer setPosition:CGPointMake(CGRectGetMidX(cell.frame), CGRectGetMidY(cell.frame))];
+    [antLayer setFillColor:[[UIColor colorFromInteger:0x3f00ceef] CGColor]];
+    [antLayer setStrokeColor:[[UIColor blueColor] CGColor]];
+    [antLayer setLineWidth:1];
+    [antLayer setLineJoin:kCALineJoinRound];
+    [antLayer setLineDashPattern:@[@10, @4]];
+        
+    CGMutablePathRef path = CGPathCreateMutable();
+    CGPathAddRect(path, NULL, cell.frame);
+    [antLayer setPath:path];
+    CGPathRelease(path);
+        
+    [self.layer addSublayer:antLayer];
+    
+    CABasicAnimation *dashAnimation;
+    dashAnimation = [CABasicAnimation animationWithKeyPath:@"lineDashPhase"];
+        
+    [dashAnimation setFromValue:@0];
+    [dashAnimation setToValue:@14];
+    [dashAnimation setDuration:0.5f];
+    [dashAnimation setRepeatCount:10000];
+    
+    [antLayer addAnimation:dashAnimation forKey:@"linePhase"];
+    
+    [highlightedAreas addObject:antLayer];
+}
+
+- (void)removeHighlights
+{
+    [highlightedAreas enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        CAShapeLayer *lyr = obj;
+        [lyr removeFromSuperlayer];
+    }];
+    
+    [highlightedAreas removeAllObjects];
 }
 
 @end

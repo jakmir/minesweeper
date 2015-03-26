@@ -48,6 +48,7 @@
 		F7F922F11ABE115200407855 /* JMSTutorialManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F7F922F01ABE115200407855 /* JMSTutorialManager.m */; };
 		FDE1E55C1A9F977900DB589B /* JMSAboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FDE1E55A1A9F977900DB589B /* JMSAboutViewController.m */; };
 		FDE1E55D1A9F977900DB589B /* JMSAboutViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FDE1E55B1A9F977900DB589B /* JMSAboutViewController.xib */; };
+		FDE612711AC45FF000122F3E /* JMSTutorialTask.m in Sources */ = {isa = PBXBuildFile; fileRef = FDE612701AC45FF000122F3E /* JMSTutorialTask.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -130,6 +131,8 @@
 		FDE1E5591A9F977900DB589B /* JMSAboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMSAboutViewController.h; sourceTree = SOURCE_ROOT; };
 		FDE1E55A1A9F977900DB589B /* JMSAboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMSAboutViewController.m; sourceTree = SOURCE_ROOT; };
 		FDE1E55B1A9F977900DB589B /* JMSAboutViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JMSAboutViewController.xib; sourceTree = SOURCE_ROOT; };
+		FDE6126F1AC45FF000122F3E /* JMSTutorialTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMSTutorialTask.h; sourceTree = "<group>"; };
+		FDE612701AC45FF000122F3E /* JMSTutorialTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMSTutorialTask.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -256,6 +259,8 @@
 				F7ADBED81A8FE9A4003BAAF2 /* JMSMineGridCellInfo.m */,
 				F7ADBEDA1A8FF53B003BAAF2 /* JMSGameSessionInfo.h */,
 				F7ADBEDB1A8FF53B003BAAF2 /* JMSGameSessionInfo.m */,
+				FDE6126F1AC45FF000122F3E /* JMSTutorialTask.h */,
+				FDE612701AC45FF000122F3E /* JMSTutorialTask.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -453,6 +458,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F73BD86819C395F000CD51B9 /* JMSAppDelegate.m in Sources */,
+				FDE612711AC45FF000122F3E /* JMSTutorialTask.m in Sources */,
 				F7B88BE819C3A87900F6585E /* JMSGameBoardViewController.m in Sources */,
 				F7ADBEEA1A913EC5003BAAF2 /* JMSGameKitHelper.m in Sources */,
 				F7ADBF001A929782003BAAF2 /* JMSGradientSpeedmeterView.m in Sources */,

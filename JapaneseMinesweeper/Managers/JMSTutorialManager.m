@@ -9,8 +9,11 @@
 #import "JMSTutorialManager.h"
 #import "JMSGameBoardViewController.h"
 #import "Enums.h"
+#import "Structs.h"
 #import "JMSTutorialTask.h"
 #import "UIColor+ColorFromHexString.h"
+#import "JMSMineGridCell.h"
+
 @implementation JMSTutorialManager
 {
     JMSTutorialStep _tutorialStep;
@@ -229,10 +232,19 @@
         }
         case JMSTutorialStepSecondCellClick:
         {
-            UILabel *description = [[UILabel alloc] initWithFrame:tutorialStepView.bounds];
-            description.text = @"Great. Tap highlighted cell again";
+            struct JMSPosition position = {.column = 5, .row = 4};
+            struct JMSMineGridCellNeighboursSummary cellSummary = [_gameboardController.mineGridView cellSummary:position];
+
+
+            NSDictionary *attributesDescription = @{
+                                                    NSForegroundColorAttributeName: [UIColor whiteColor],
+                                                    NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue" size:18]
+                                                    };
+            UILabel *description = [[UILabel alloc] initWithFrame:CGRectInset(tutorialStepView.bounds, 16, 8)];
+            description.numberOfLines = 0;
+            description.attributedText = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"Short explanation about numbers:\nThere are %d mines above the opened cell in its column, %d mines - below.\nAnd %d to the left in the row, %d to the right.", cellSummary.minesTopDirection, cellSummary.minesBottomDirection, cellSummary.minesLeftDirection, cellSummary.minesRightDirection] attributes:attributesDescription];
             [tutorialStepView addSubview:description];
-        
+            
             break;
         }
         case JMSTutorialStepPutFlags:
@@ -286,6 +298,11 @@
             lbDescription.textAlignment = NSTextAlignmentCenter;
             [tutorialStepView addSubview:lbDescription];
             
+            [UIView animateWithDuration:3 delay:5 options:UIViewAnimationOptionCurveEaseOut animations:^{
+                if (tutorialStepView) tutorialStepView.alpha = 0;
+            } completion:^(BOOL finished) {
+                if (tutorialStepView) [tutorialStepView removeFromSuperview];
+            }];
             break;
         }
         default:
@@ -293,6 +310,7 @@
     }
     return tutorialStepView;
 }
+
 
 - (BOOL)taskCompletedWithPosition:(struct JMSPosition)position
 {

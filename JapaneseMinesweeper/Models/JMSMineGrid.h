@@ -24,6 +24,7 @@
 - (CGFloat)bonus:(struct JMSPosition)position;
 - (BOOL) mineAtPosition:(struct JMSPosition)position;
 - (JMSMineGridCellState) cellState:(struct JMSPosition)position;
+- (struct JMSMineGridCellNeighboursSummary) cellSummary:(struct JMSPosition)position;
 - (NSInteger)markMines;
 - (BOOL)openInZeroDirectionsFromPosition:(struct JMSPosition)position
                            unmarkedCount:(NSUInteger *)unmarkedCount

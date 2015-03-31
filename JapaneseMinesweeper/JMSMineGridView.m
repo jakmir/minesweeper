@@ -167,7 +167,8 @@ const NSInteger spacing = 1;
     CGPoint relativePoint = CGPointMake(point.x - offset.dx, point.y - offset.dy);
     int col = (int)relativePoint.x / (dimensionSize + spacing);
     int row = (int)relativePoint.y / (dimensionSize + spacing);
-    BOOL clickedInField = CGRectContainsPoint(CGRectMake(0, 0, (dimensionSize + spacing) * count, (dimensionSize + spacing) * count), relativePoint);
+    BOOL clickedInField = CGRectContainsPoint(CGRectMake(0, 0, (dimensionSize + spacing) * count, (dimensionSize + spacing) * count),
+                                              relativePoint);
     BOOL clickedInCell = (int)relativePoint.x % (dimensionSize + spacing) < dimensionSize &&
     (int)relativePoint.y % (dimensionSize + spacing) < dimensionSize;
     
@@ -188,6 +189,11 @@ const NSInteger spacing = 1;
 - (JMSMineGridCellState) cellState:(struct JMSPosition)position
 {
     return [self.gameboard cellState:position];
+}
+
+- (struct JMSMineGridCellNeighboursSummary)cellSummary:(struct JMSPosition)position
+{
+    return [self.gameboard cellSummary:position];
 }
 
 - (BOOL) clickedWithCoordinate: (CGPoint)point

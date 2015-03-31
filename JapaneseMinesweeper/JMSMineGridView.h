@@ -22,7 +22,8 @@
 - (void) longTappedWithCoordinate: (CGPoint)point;
 - (NSInteger) cellsLeftToOpen;
 - (CGFloat) bonus: (struct JMSPosition)position;
-- (JMSMineGridCellState) cellState: (struct JMSPosition)position;
+- (JMSMineGridCellState) cellState:(struct JMSPosition)position;
+- (struct JMSMineGridCellNeighboursSummary) cellSummary:(struct JMSPosition)position;
 - (NSInteger) cellsCount;
 
 - (NSArray *)exportMap;

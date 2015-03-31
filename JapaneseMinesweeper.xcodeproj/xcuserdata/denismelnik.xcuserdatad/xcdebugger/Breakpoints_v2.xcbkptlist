@@ -728,11 +728,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JapaneseMinesweeper/Models/JMSMineGrid.m"
-            timestampString = "446955069.644733"
+            timestampString = "449344177.790008"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "330"
-            endingLineNumber = "330"
+            startingLineNumber = "344"
+            endingLineNumber = "344"
             landmarkName = "-openInZeroDirectionsFromPosition:unmarkedCount:openedCount:shouldOpenSafeCells:"
             landmarkType = "5">
          </BreakpointContent>
@@ -744,11 +744,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JapaneseMinesweeper/Models/JMSMineGrid.m"
-            timestampString = "446955069.644733"
+            timestampString = "449344177.790008"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "467"
-            endingLineNumber = "467"
+            startingLineNumber = "481"
+            endingLineNumber = "481"
             landmarkName = "-openInZeroDirectionsFromPosition:unmarkedCount:openedCount:shouldOpenSafeCells:"
             landmarkType = "5">
          </BreakpointContent>
@@ -760,11 +760,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JapaneseMinesweeper/Models/JMSMineGrid.m"
-            timestampString = "446955069.644733"
+            timestampString = "449344177.790008"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "355"
-            endingLineNumber = "355"
+            startingLineNumber = "369"
+            endingLineNumber = "369"
             landmarkName = "-openInZeroDirectionsFromPosition:unmarkedCount:openedCount:shouldOpenSafeCells:"
             landmarkType = "5">
          </BreakpointContent>
@@ -776,11 +776,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JapaneseMinesweeper/Models/JMSMineGrid.m"
-            timestampString = "446955069.644733"
+            timestampString = "449344177.790008"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "368"
-            endingLineNumber = "368"
+            startingLineNumber = "382"
+            endingLineNumber = "382"
             landmarkName = "-openInZeroDirectionsFromPosition:unmarkedCount:openedCount:shouldOpenSafeCells:"
             landmarkType = "5">
          </BreakpointContent>
@@ -792,11 +792,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JapaneseMinesweeper/Models/JMSMineGrid.m"
-            timestampString = "446955069.644733"
+            timestampString = "449344177.790008"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "381"
-            endingLineNumber = "381"
+            startingLineNumber = "395"
+            endingLineNumber = "395"
             landmarkName = "-openInZeroDirectionsFromPosition:unmarkedCount:openedCount:shouldOpenSafeCells:"
             landmarkType = "5">
          </BreakpointContent>
@@ -808,11 +808,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JapaneseMinesweeper/Models/JMSMineGrid.m"
-            timestampString = "446955069.644733"
+            timestampString = "449344177.790008"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "394"
-            endingLineNumber = "394"
+            startingLineNumber = "408"
+            endingLineNumber = "408"
             landmarkName = "-openInZeroDirectionsFromPosition:unmarkedCount:openedCount:shouldOpenSafeCells:"
             landmarkType = "5">
          </BreakpointContent>
@@ -824,11 +824,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JapaneseMinesweeper/Models/JMSMineGrid.m"
-            timestampString = "446955069.644733"
+            timestampString = "449344177.790008"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "359"
-            endingLineNumber = "359"
+            startingLineNumber = "373"
+            endingLineNumber = "373"
             landmarkName = "-openInZeroDirectionsFromPosition:unmarkedCount:openedCount:shouldOpenSafeCells:"
             landmarkType = "5">
          </BreakpointContent>
@@ -840,11 +840,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JapaneseMinesweeper/Models/JMSMineGrid.m"
-            timestampString = "446955069.644733"
+            timestampString = "449344177.790008"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "372"
-            endingLineNumber = "372"
+            startingLineNumber = "386"
+            endingLineNumber = "386"
             landmarkName = "-openInZeroDirectionsFromPosition:unmarkedCount:openedCount:shouldOpenSafeCells:"
             landmarkType = "5">
          </BreakpointContent>
@@ -856,11 +856,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JapaneseMinesweeper/Models/JMSMineGrid.m"
-            timestampString = "446955069.644733"
+            timestampString = "449344177.790008"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "385"
-            endingLineNumber = "385"
+            startingLineNumber = "399"
+            endingLineNumber = "399"
             landmarkName = "-openInZeroDirectionsFromPosition:unmarkedCount:openedCount:shouldOpenSafeCells:"
             landmarkType = "5">
          </BreakpointContent>
@@ -872,11 +872,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JapaneseMinesweeper/Models/JMSMineGrid.m"
-            timestampString = "446955069.644733"
+            timestampString = "449344177.790008"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "398"
-            endingLineNumber = "398"
+            startingLineNumber = "412"
+            endingLineNumber = "412"
             landmarkName = "-openInZeroDirectionsFromPosition:unmarkedCount:openedCount:shouldOpenSafeCells:"
             landmarkType = "5">
          </BreakpointContent>
@@ -888,11 +888,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JapaneseMinesweeper/Models/JMSMineGrid.m"
-            timestampString = "446955069.644733"
+            timestampString = "449344177.790008"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "455"
-            endingLineNumber = "455"
+            startingLineNumber = "469"
+            endingLineNumber = "469"
             landmarkName = "-openInZeroDirectionsFromPosition:unmarkedCount:openedCount:shouldOpenSafeCells:"
             landmarkType = "5">
          </BreakpointContent>

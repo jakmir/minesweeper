@@ -306,6 +306,20 @@
     return MineGridCellStateClosed;
 }
 
+- (struct JMSMineGridCellNeighboursSummary) cellSummary:(struct JMSPosition)position
+{
+    JMSMineGridCell *cell = self.map[position.column][position.row];
+    if (cell)
+    {
+        return cell.cellInfo;
+    }
+    struct JMSMineGridCellNeighboursSummary summary = {
+                                                        .minesLeftDirection = 0, .minesRightDirection = 0,
+                                                        .minesTopDirection = 0, .minesBottomDirection = 0
+                                                      };
+    return summary;
+}
+
 - (NSInteger)markMines
 {
     NSInteger markedCellsCount = 0;

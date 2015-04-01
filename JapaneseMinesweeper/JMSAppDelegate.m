@@ -32,7 +32,7 @@
         [userDefaults setBool:YES forKey:@"soundEnabled"];
         [userDefaults setBool:YES forKey:@"shouldOpenSafeCells"];
         [userDefaults setFloat:0.3 forKey:@"holdDuration"];
-        
+        [userDefaults setBool:YES forKey:@"shouldLaunchTutorial"];
         [userDefaults synchronize];
     }
     

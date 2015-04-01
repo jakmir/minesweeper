@@ -301,9 +301,10 @@ const NSInteger spacing = 1;
 {
     JMSMineGridCell *cell = self.gameboard.map[position.column][position.row];
 
+    CGRect rect = CGRectInset(cell.frame, 1, 1);
     CAShapeLayer *antLayer = [CAShapeLayer layer];
-    [antLayer setBounds:cell.frame];
-    [antLayer setPosition:CGPointMake(CGRectGetMidX(cell.frame), CGRectGetMidY(cell.frame))];
+    [antLayer setBounds:rect];
+    [antLayer setPosition:CGPointMake(CGRectGetMidX(rect), CGRectGetMidY(rect))];
     [antLayer setFillColor:[[UIColor colorFromInteger:0x3f00ceef] CGColor]];
     [antLayer setStrokeColor:[[UIColor blueColor] CGColor]];
     [antLayer setLineWidth:1];
@@ -311,7 +312,7 @@ const NSInteger spacing = 1;
     [antLayer setLineDashPattern:@[@10, @4]];
         
     CGMutablePathRef path = CGPathCreateMutable();
-    CGPathAddRect(path, NULL, cell.frame);
+    CGPathAddRect(path, NULL, rect);
     [antLayer setPath:path];
     CGPathRelease(path);
         

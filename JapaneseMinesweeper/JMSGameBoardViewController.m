@@ -59,8 +59,7 @@ const CGFloat baseScore = 175;
 
 - (BOOL) shouldDisplayTutorial
 {
-    return YES;
-   // return [[[JMSLeaderboardManager alloc] init] rowsCount] == 0;
+    return [[NSUserDefaults standardUserDefaults] boolForKey:@"shouldLaunchTutorial"];
 }
 
 - (void)importFromGameSession
@@ -201,11 +200,17 @@ const CGFloat baseScore = 175;
 
     [self.btnResetGame setTitleColor:captionColor forState:UIControlStateNormal];
     [self.btnResetGame setTitle:caption forState:UIControlStateNormal];
+    [self.btnResetGame setTitleColor:[UIColor lightGrayColor] forState:UIControlStateDisabled];
     
     [self.btnMainMenu.layer setCornerRadius:10];
     [self.btnResetGame.layer setCornerRadius:10];
     [self.btnMainMenu.layer setMasksToBounds:YES];
     [self.btnResetGame.layer setMasksToBounds:YES];
+    
+    if (tutorialManager)
+    {
+        [self.btnResetGame setEnabled:tutorialManager.isFinished];
+    }
 }
 
 #pragma mark - synchronize labels with real values
@@ -541,7 +546,12 @@ const CGFloat baseScore = 175;
     }];
 }
 
+#pragma mark - Tutorial Actions
 
+- (void)didTutorialCompleted
+{
+    [self updateMenu];
+}
 
 
 @end

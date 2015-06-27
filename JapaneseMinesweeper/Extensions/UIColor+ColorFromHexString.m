@@ -16,8 +16,9 @@
     NSScanner *scanner = [NSScanner scannerWithString:hexString];
     
     [scanner scanHexInt:&result];
-    
+
     return [UIColor colorFromInteger:result];
+
 }
 
 + (UIColor *) colorFromInteger:(UInt32)integer

@@ -14,6 +14,6 @@
 
 @property (nonatomic) JMSMineGridCellState state;
 @property (nonatomic) BOOL mine;
-@property (nonatomic) struct JMSMineGridCellNeighboursSummary cellInfo;
+@property (nonatomic) JMSMineGridCellNeighboursSummary cellInfo;
 
 @end

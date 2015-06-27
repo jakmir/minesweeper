@@ -16,14 +16,14 @@
 @interface JMSMineGridView : UIView
 
 - (void) fillTutorialMapWithLevel:(NSUInteger)level;
-- (void) fillMapWithLevel:(NSUInteger)level exceptPosition:(struct JMSPosition)position;
-- (struct JMSPosition)cellPositionWithCoordinateInside: (CGPoint)point;
+- (void) fillMapWithLevel:(NSUInteger)level exceptPosition:(JMSPosition)position;
+- (JMSPosition)cellPositionWithCoordinateInside: (CGPoint)point;
 - (BOOL) clickedWithCoordinate: (CGPoint)point;
 - (void) longTappedWithCoordinate: (CGPoint)point;
 - (NSInteger) cellsLeftToOpen;
-- (CGFloat) bonus: (struct JMSPosition)position;
-- (JMSMineGridCellState) cellState:(struct JMSPosition)position;
-- (struct JMSMineGridCellNeighboursSummary) cellSummary:(struct JMSPosition)position;
+- (CGFloat) bonus:(JMSPosition)position;
+- (JMSMineGridCellState) cellState:(JMSPosition)position;
+- (JMSMineGridCellNeighboursSummary) cellSummaryWithPosition:(JMSPosition)position;
 - (NSInteger) cellsCount;
 
 - (NSArray *)exportMap;
@@ -37,7 +37,7 @@
 @property (nonatomic, readonly) BOOL gameFinished;
 @property (nonatomic, readonly) JMSMineGrid *gameboard;
 
-- (void)highlightCellWithPosition:(struct JMSPosition)position;
+- (void)highlightCellWithPosition:(JMSPosition)position;
 - (void)removeHighlights;
 
 @end

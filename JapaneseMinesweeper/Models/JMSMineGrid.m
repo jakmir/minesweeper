@@ -24,7 +24,7 @@
     return self.map.count;
 }
 
-- (BOOL)mineAtPosition:(struct JMSPosition)position
+- (BOOL)mineAtPosition:(JMSPosition)position
 {
     JMSMineGridCell *cell = self.map[position.column][position.row];
     return cell.mine;
@@ -34,7 +34,7 @@
 {
     NSInteger rowToExclude = 4, columnToExclude = 5;
     const NSInteger cellsToFillCount = 8;
-    struct JMSPosition cellsToFill[cellsToFillCount] =
+    JMSPosition cellsToFill[cellsToFillCount] =
                                         {
                                             {.row = rowToExclude, .column = 0},
                                             {.row = rowToExclude, .column = 2},
@@ -72,7 +72,7 @@
     [self evaluateMapCellInfos];
 }
 
-- (void) fillMapWithLevel:(NSUInteger)level exceptPosition:(struct JMSPosition)position
+- (void)fillMapWithLevel:(NSUInteger)level exceptPosition:(JMSPosition)position
 {
     for (int mineNumber = 1; mineNumber <= level; mineNumber++)
     {
@@ -133,11 +133,10 @@
                         }
                     }
                 }
-                struct JMSMineGridCellNeighboursSummary cellInfo;
-                cellInfo.minesTopDirection = up;
-                cellInfo.minesBottomDirection = down;
-                cellInfo.minesLeftDirection = left;
-                cellInfo.minesRightDirection = right;
+                JMSMineGridCellNeighboursSummary cellInfo = {
+                                                                .minesTopDirection = up, .minesBottomDirection = down,
+                                                                .minesLeftDirection = left, .minesRightDirection = right
+                                                            };
                 
                 cell.cellInfo = cellInfo;
             }
@@ -160,7 +159,7 @@
     return count;
 }
 
-- (CGFloat)bonus:(struct JMSPosition)position
+- (CGFloat)bonus:(JMSPosition)position
 {
     NSInteger leftBound = position.column, rightBound = position.column;
     NSInteger topBound = position.row, bottomBound = position.row;
@@ -209,8 +208,8 @@
     }
     while (isNotOpened(cell));
     
-    NSLog(@"horizontal: %d <-> %d", leftBound, rightBound);
-    NSLog(@"vertical  : %d <-> %d", topBound, bottomBound);
+    NSLog(@"horizontal: %ld <-> %ld", (long)leftBound, (long)rightBound);
+    NSLog(@"vertical  : %ld <-> %ld", (long)topBound, (long)bottomBound);
     
     CGFloat a = SLIGHTLY_BIG_VALUEF;
     CGFloat b = SLIGHTLY_BIG_VALUEF;
@@ -293,10 +292,11 @@
             bonus = 1/b;
         }
     }
-    return fabsf(bonus) < 1e-4 ? 0 : bonus;
+
+    return fabs(bonus) < 1e-4 ? 0 : bonus;
 }
 
-- (JMSMineGridCellState) cellState:(struct JMSPosition)position
+- (JMSMineGridCellState) cellState:(JMSPosition)position
 {
     JMSMineGridCell *cell = self.map[position.column][position.row];
     if (cell)
@@ -306,17 +306,17 @@
     return MineGridCellStateClosed;
 }
 
-- (struct JMSMineGridCellNeighboursSummary) cellSummary:(struct JMSPosition)position
+- (JMSMineGridCellNeighboursSummary) cellSummary:(JMSPosition)position
 {
     JMSMineGridCell *cell = self.map[position.column][position.row];
     if (cell)
     {
         return cell.cellInfo;
     }
-    struct JMSMineGridCellNeighboursSummary summary = {
-                                                        .minesLeftDirection = 0, .minesRightDirection = 0,
-                                                        .minesTopDirection = 0, .minesBottomDirection = 0
-                                                      };
+    JMSMineGridCellNeighboursSummary summary = {
+                                                    .minesLeftDirection = 0, .minesRightDirection = 0,
+                                                    .minesTopDirection = 0, .minesBottomDirection = 0
+                                                };
     return summary;
 }
 
@@ -337,7 +337,7 @@
     return markedCellsCount;
 }
 
-- (BOOL)openInZeroDirectionsFromPosition:(struct JMSPosition)position
+- (BOOL)openInZeroDirectionsFromPosition:(JMSPosition)position
                            unmarkedCount:(NSUInteger *)unmarkedCount
                              openedCount:(NSUInteger *)openedCount
                      shouldOpenSafeCells:(BOOL)shouldOpenSafeCells
@@ -365,7 +365,7 @@
     
     floodMap[position.column][position.row] = @(0);
     
-    void (^checkLeftCell)(struct JMSPosition) = ^(struct JMSPosition pos)
+    void (^checkLeftCell)(JMSPosition) = ^(JMSPosition pos)
     {
         JMSMineGridCell *thisCell = self.map[pos.column][pos.row];
         NSUInteger thisValue = [floodMap[pos.column][pos.row] integerValue];
@@ -378,7 +378,7 @@
             }
         }
     };
-    void (^checkRightCell)(struct JMSPosition) = ^(struct JMSPosition pos)
+    void (^checkRightCell)(JMSPosition) = ^(JMSPosition pos)
     {
         JMSMineGridCell *thisCell = self.map[pos.column][pos.row];
         NSUInteger thisValue = [floodMap[pos.column][pos.row] integerValue];
@@ -391,7 +391,7 @@
             }
         }
     };
-    void (^checkUpperCell)(struct JMSPosition) = ^(struct JMSPosition pos)
+    void (^checkUpperCell)(JMSPosition) = ^(JMSPosition pos)
     {
         JMSMineGridCell *thisCell = self.map[pos.column][pos.row];
         NSUInteger thisValue = [floodMap[pos.column][pos.row] integerValue];
@@ -404,7 +404,7 @@
             }
         }
     };
-    void (^checkLowerCell)(struct JMSPosition) = ^(struct JMSPosition pos)
+    void (^checkLowerCell)(JMSPosition) = ^(JMSPosition pos)
     {
         JMSMineGridCell *thisCell = self.map[pos.column][pos.row];
         NSUInteger thisValue = [floodMap[pos.column][pos.row] integerValue];
@@ -425,7 +425,7 @@
             for (NSInteger col = 0; col < self.colCount; col++)
                 for (NSInteger row = 0; row < self.rowCount; row++)
                 {
-                    struct JMSPosition p;
+                    JMSPosition p;
                     p.row = row;
                     p.column = col;
                     checkRightCell(p);
@@ -434,7 +434,7 @@
             for (NSInteger col = self.colCount - 1; col >= 0; col--)
                 for (NSInteger row = 0; row < self.rowCount; row++)
                 {
-                    struct JMSPosition p;
+                    JMSPosition p;
                     p.row = row;
                     p.column = col;
                     checkLeftCell(p);
@@ -443,7 +443,7 @@
             for (NSInteger col = self.colCount - 1; col >= 0; col--)
                 for (NSInteger row = self.rowCount - 1; row >= 0; row--)
                 {
-                    struct JMSPosition p;
+                    JMSPosition p;
                     p.row = row;
                     p.column = col;
                     checkLeftCell(p);
@@ -452,7 +452,7 @@
             for (NSInteger col = 0; col <= self.colCount - 1; col++)
                 for (NSInteger row = self.rowCount - 1; row >= 0; row--)
                 {
-                    struct JMSPosition p;
+                    JMSPosition p;
                     p.row = row;
                     p.column = col;
                     checkRightCell(p);

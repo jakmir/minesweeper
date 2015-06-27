@@ -19,14 +19,14 @@
 - (NSInteger) cellsLeftToOpen;
 
 - (void) fillTutorialMapWithLevel:(NSUInteger)level;
-- (void) fillMapWithLevel:(NSUInteger)level exceptPosition:(struct JMSPosition)position;
+- (void) fillMapWithLevel:(NSUInteger)level exceptPosition:(JMSPosition)position;
 - (void) evaluateMapCellInfos;
-- (CGFloat)bonus:(struct JMSPosition)position;
-- (BOOL) mineAtPosition:(struct JMSPosition)position;
-- (JMSMineGridCellState) cellState:(struct JMSPosition)position;
-- (struct JMSMineGridCellNeighboursSummary) cellSummary:(struct JMSPosition)position;
+- (CGFloat)bonus:(JMSPosition)position;
+- (BOOL) mineAtPosition:(JMSPosition)position;
+- (JMSMineGridCellState) cellState:(JMSPosition)position;
+- (JMSMineGridCellNeighboursSummary) cellSummary:(JMSPosition)position;
 - (NSInteger)markMines;
-- (BOOL)openInZeroDirectionsFromPosition:(struct JMSPosition)position
+- (BOOL)openInZeroDirectionsFromPosition:(JMSPosition)position
                            unmarkedCount:(NSUInteger *)unmarkedCount
                              openedCount:(NSUInteger *)openedCount
                      shouldOpenSafeCells:(BOOL)shouldOpenSafeCells;

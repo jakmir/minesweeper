@@ -27,8 +27,9 @@
     dataSource = [[[JMSLeaderboardManager alloc] init] highScoreList];
     self.lbEmptyRemark.hidden = dataSource.count > 0;
     
-    [self.btnBackToMainMenu.layer setCornerRadius:10];
-    [self.btnShowGameCenterScreen.layer setCornerRadius:10];
+    CGFloat cornerRadius = [[JMSKeyValueSettingsHelper instance] buttonCornerRadius];
+    [self.btnBackToMainMenu.layer setCornerRadius:cornerRadius];
+    [self.btnShowGameCenterScreen.layer setCornerRadius:cornerRadius];
     [self.btnBackToMainMenu.layer setMasksToBounds:YES];
     [self.btnShowGameCenterScreen.layer setMasksToBounds:YES];
 }
@@ -42,6 +43,10 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (CGFloat)headerHeight {
+    return 22.0;
 }
 
 #pragma mark - Table view data source
@@ -58,36 +63,29 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    CGFloat height = 22;
+    CGFloat height = [self headerHeight];
     CGFloat width = CGRectGetWidth(tableView.frame);
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, width, height)];
     view.backgroundColor = [UIColor whiteColor];
-    UILabel *lbLevelCaption = [[UILabel alloc] initWithFrame:CGRectMake(width * 0.04, 0, width * 0.3, height)];
+    
+    float waypoints[] = {0.04, 0.34, 0.68, 0.93};
+    UILabel *lbLevelCaption = [[UILabel alloc] initWithFrame:CGRectMake(width * waypoints[0], 0, width * (waypoints[1] - waypoints[0]), height)];
+    NSDictionary *attrs = @{
+                            NSForegroundColorAttributeName:
+                                [UIColor darkGrayColor],
+                            NSFontAttributeName:
+                                [UIFont systemFontOfSize:17]
+                            };
     lbLevelCaption.attributedText = [[NSAttributedString alloc] initWithString:@"Level"
-                                                                    attributes:@{
-                                                                                 NSForegroundColorAttributeName:
-                                                                                     [UIColor darkGrayColor],
-                                                                                 NSFontAttributeName:
-                                                                                     [UIFont systemFontOfSize:17]
-                                                                                 }];
-    UILabel *lbProgressCaption = [[UILabel alloc] initWithFrame:CGRectMake(width * 0.34, 0, width * 0.34, height)];
+                                                                    attributes:attrs];
+    UILabel *lbProgressCaption = [[UILabel alloc] initWithFrame:CGRectMake(width * waypoints[1], 0, width * (waypoints[2] - waypoints[1]), height)];
     lbProgressCaption.attributedText = [[NSAttributedString alloc] initWithString:@"Progress"
-                                                                       attributes:@{
-                                                                                 NSForegroundColorAttributeName:
-                                                                                     [UIColor darkGrayColor],
-                                                                                 NSFontAttributeName:
-                                                                                     [UIFont systemFontOfSize:17]
-                                                                                 }];
+                                                                       attributes:attrs];
 
-    UILabel *lbScoreCaption = [[UILabel alloc] initWithFrame:CGRectMake(width * 0.68, 0, width * 0.25, height)];
+    UILabel *lbScoreCaption = [[UILabel alloc] initWithFrame:CGRectMake(width * waypoints[2], 0, width * (waypoints[3] - waypoints[2]), height)];
     lbScoreCaption.textAlignment = NSTextAlignmentRight;
     lbScoreCaption.attributedText = [[NSAttributedString alloc] initWithString:@"Score"
-                                                                    attributes:@{
-                                                                                 NSForegroundColorAttributeName:
-                                                                                     [UIColor darkGrayColor],
-                                                                                 NSFontAttributeName:
-                                                                                     [UIFont systemFontOfSize:17]
-                                                                                 }];
+                                                                    attributes:attrs];
     [view addSubview:lbScoreCaption];
     [view addSubview:lbLevelCaption];
     [view addSubview:lbProgressCaption];
@@ -98,13 +96,9 @@
 {
     JMSScoreTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ScoreCell" forIndexPath:indexPath];
     JMSGameSession *gameSession = dataSource[indexPath.row];
-    cell.lbScore.text = [gameSession.score stringValue];
-    cell.lbLevel.text = [gameSession.level stringValue];
-    
-    NSUInteger progress = lroundf(gameSession.progress.floatValue * 100);
-    cell.lbProgress.text = [NSString stringWithFormat:@"%lu%%", (unsigned long)progress];
-    cell.lbProgress.textColor = progress == 100 ? [UIColor colorFromInteger:0xff009900] : [UIColor colorFromInteger:0xffff7f00];
-
+    [cell assignScore:[gameSession.score intValue]
+             progress:lroundf(gameSession.progress.floatValue * 100)
+                level:[gameSession.level intValue]];
     return cell;
 }
 

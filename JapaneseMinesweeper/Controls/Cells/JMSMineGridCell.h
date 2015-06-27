@@ -20,7 +20,7 @@
 @property (nonatomic) BOOL mine;
 
 @property (nonatomic, weak) JMSMineGridView *mineGridView;
-@property (nonatomic) struct JMSMineGridCellNeighboursSummary cellInfo;
+@property (nonatomic) JMSMineGridCellNeighboursSummary cellInfo;
 
 - (JMSMineGridCellInfo *)exportCell;
 - (void)import:(JMSMineGridCellInfo *)mineGridCellInfo;

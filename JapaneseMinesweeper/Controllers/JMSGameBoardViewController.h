@@ -37,6 +37,6 @@
 - (IBAction)backToMainMenu;
 - (IBAction)resetGameClicked;
 
-- (void)didTutorialCompleted;
+- (void)finishTutorial;
 
 @end

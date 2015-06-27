@@ -8,7 +8,7 @@
 
 #import "JMSMineGridCell.h"
 #import "JMSMineGridView.h"
-#import "Classes/JMSMineGridCellInfo.h"
+#import "JMSMineGridCellInfo.h"
 #import "UIColor+ColorFromHexString.h"
 
 @interface JMSMineGridCell()

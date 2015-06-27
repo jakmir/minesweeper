@@ -14,4 +14,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *lbProgress;
 @property (weak, nonatomic) IBOutlet UILabel *lbLevel;
 
+- (void)assignScore:(NSUInteger)score progress:(NSUInteger)progress level:(NSUInteger)level;
+
 @end

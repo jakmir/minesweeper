@@ -151,7 +151,7 @@
     
     shapeLayer.path = path;
     shapeLayer.strokeColor = [UIColor whiteColor].CGColor;
-    shapeLayer.fillColor = [UIColor colorFromInteger:0x3fffffff].CGColor;
+    shapeLayer.fillColor = [UIColor needleColor].CGColor;
     shapeLayer.lineWidth = 2;
     CGPathRelease(path);
     [self.layer addSublayer:shapeLayer];

@@ -9,8 +9,8 @@
 #import "JMSMineGridView.h"
 #import "JMSMineGridCell.h"
 #import "UIColor+ColorFromHexString.h"
-#import "Classes/JMSMineGridCellInfo.h"
-#import "Classes/JMSGameSessionInfo.h"
+#import "JMSMineGridCellInfo.h"
+#import "JMSGameSessionInfo.h"
 
 const NSInteger count = 10;
 const NSInteger padding = 19;
@@ -123,7 +123,7 @@ const NSInteger spacing = 1;
     _gameboard.map = columns;
 }
 
-- (void) fillMapWithLevel:(NSUInteger)level exceptPosition:(struct JMSPosition)position
+- (void) fillMapWithLevel:(NSUInteger)level exceptPosition:(JMSPosition)position
 {
     [self.gameboard fillMapWithLevel:level exceptPosition:position];
 }
@@ -133,7 +133,7 @@ const NSInteger spacing = 1;
     [self.gameboard fillTutorialMapWithLevel:level];
 }
 
-- (CGFloat)bonus:(struct JMSPosition)position
+- (CGFloat)bonus:(JMSPosition)position
 {
     return [self.gameboard bonus:position];
 }
@@ -151,7 +151,7 @@ const NSInteger spacing = 1;
 - (JMSMineGridCell *)cellWithCoordinateInside: (CGPoint)point
 {
     JMSMineGridCell *cell = nil;
-    struct JMSPosition position = [self cellPositionWithCoordinateInside:point];
+    JMSPosition position = [self cellPositionWithCoordinateInside:point];
     if (position.row != NSNotFound && position.column != NSNotFound)
     {
         cell = self.gameboard.map[position.column][position.row];
@@ -160,7 +160,7 @@ const NSInteger spacing = 1;
     return cell;
 }
 
-- (struct JMSPosition)cellPositionWithCoordinateInside: (CGPoint)point
+- (JMSPosition)cellPositionWithCoordinateInside: (CGPoint)point
 {
     CGVector offset = CGVectorMake(padding, padding);
     NSInteger dimensionSize = (self.frame.size.width - 2 * padding - (count - 1) * spacing) / count;
@@ -172,9 +172,7 @@ const NSInteger spacing = 1;
     BOOL clickedInCell = (int)relativePoint.x % (dimensionSize + spacing) < dimensionSize &&
     (int)relativePoint.y % (dimensionSize + spacing) < dimensionSize;
     
-    struct JMSPosition position;
-    position.row = NSNotFound;
-    position.column = NSNotFound;
+    JMSPosition position = {.row = NSNotFound, .column = NSNotFound};
     
     if (clickedInField && clickedInCell)
     {
@@ -186,12 +184,12 @@ const NSInteger spacing = 1;
 }
 
 
-- (JMSMineGridCellState) cellState:(struct JMSPosition)position
+- (JMSMineGridCellState) cellState:(JMSPosition)position
 {
     return [self.gameboard cellState:position];
 }
 
-- (struct JMSMineGridCellNeighboursSummary)cellSummary:(struct JMSPosition)position
+- (JMSMineGridCellNeighboursSummary)cellSummaryWithPosition:(JMSPosition)position
 {
     return [self.gameboard cellSummary:position];
 }
@@ -297,7 +295,7 @@ const NSInteger spacing = 1;
 
 #pragma mark - Higlight/Unhighlight methods
 
-- (void)highlightCellWithPosition:(struct JMSPosition)position
+- (void)highlightCellWithPosition:(JMSPosition)position
 {
     JMSMineGridCell *cell = self.gameboard.map[position.column][position.row];
 

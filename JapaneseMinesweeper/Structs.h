@@ -11,17 +11,17 @@
 
 #import <UIKit/UIKit.h>
 
-struct JMSPosition
+typedef struct
 {
     NSInteger row;
     NSInteger column;
-};
+} JMSPosition;
 
-struct JMSMineGridCellNeighboursSummary {
+typedef struct {
     NSInteger minesLeftDirection;
     NSInteger minesRightDirection;
     NSInteger minesTopDirection;
     NSInteger minesBottomDirection;
-};
+} JMSMineGridCellNeighboursSummary;
 
 #endif

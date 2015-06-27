@@ -16,7 +16,7 @@
 @property (nonatomic, strong) NSString *buttonTitle;
 @property (nonatomic) BOOL useMotionEffects;
 
-@property (copy) void (^onButtonTouchUpInside)(void);
+@property (nonatomic, strong) void (^onButtonTouchUpInside)(void);
 
 - (instancetype)initWithButtonTitle:(NSString *)title actionHandler:(void (^)(void))onButtonTouchUpInsideHandler;
 - (void)show;

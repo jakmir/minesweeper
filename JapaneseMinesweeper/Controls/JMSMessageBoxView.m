@@ -86,9 +86,9 @@ CGFloat buttonHeight = 0;
     
     dialogView.layer.opacity = 1.0f;
     
-    [self.gestureRecognizers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        [self removeGestureRecognizer:(UIGestureRecognizer *)obj];
-    }];
+    for (UIGestureRecognizer *gestureRecognizer in self.gestureRecognizers) {
+        [self removeGestureRecognizer:gestureRecognizer];
+    }
     
     [UIView animateWithDuration:0.5f delay:0.0 options:UIViewAnimationOptionTransitionNone
                      animations:^{

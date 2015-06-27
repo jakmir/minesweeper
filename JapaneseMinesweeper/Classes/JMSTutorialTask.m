@@ -10,7 +10,7 @@
 
 @implementation JMSTutorialTask
 
-- (instancetype)initWithPosition:(struct JMSPosition)position action:(JMSAllowedAction)action
+- (instancetype)initWithPosition:(JMSPosition)position action:(JMSAllowedAction)action
 {
     if (self = [super init])
     {

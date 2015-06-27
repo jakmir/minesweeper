@@ -27,9 +27,9 @@ typedef NS_ENUM(NSUInteger, JMSTutorialStep)
 
 - (instancetype)initWithGameboardController:(JMSGameBoardViewController *)gameboardController;
 - (void)moveToNextStep;
-- (BOOL)isAllowedWithAction:(JMSAllowedAction)action position:(struct JMSPosition)position;
-- (void)completeTaskWithPosition:(struct JMSPosition)position;
-- (BOOL)taskCompletedWithPosition:(struct JMSPosition)position;
+- (BOOL)isAllowedWithAction:(JMSAllowedAction)action position:(JMSPosition)position;
+- (void)completeTaskWithPosition:(JMSPosition)position;
+- (BOOL)taskCompletedWithPosition:(JMSPosition)position;
 - (BOOL)isFinished;
 - (JMSTutorialStep)currentStep;
 @end

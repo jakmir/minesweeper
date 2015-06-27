@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>buttonCornerRadius</key>
+	<integer>10</integer>
+	<key>menuButtonCornerRadius</key>
+	<integer>16</integer>
+	<key>gradientFinishColor</key>
+	<real>4278222847</real>
+	<key>gradientStartColor</key>
+	<integer>4278243327</integer>
+	<key>completedPercentageLabelColor</key>
+	<integer>4278229248</integer>
+	<key>progressPercentageLabelColor</key>
+	<integer>4294930176</integer>
+</dict>
+</plist>

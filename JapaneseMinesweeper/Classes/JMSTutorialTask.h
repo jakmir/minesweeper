@@ -12,10 +12,10 @@
 
 @interface JMSTutorialTask : NSObject
 
-@property (nonatomic) struct JMSPosition position;
+@property (nonatomic) JMSPosition position;
 @property (nonatomic) JMSAllowedAction action;
 @property (nonatomic) BOOL done;
 
-- (instancetype)initWithPosition:(struct JMSPosition)position action:(JMSAllowedAction)action;
+- (instancetype)initWithPosition:(JMSPosition)position action:(JMSAllowedAction)action;
 
 @end

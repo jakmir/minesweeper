@@ -35,6 +35,11 @@
     return self;
 }
 
+- (NSUInteger)fieldDimension
+{
+    return 10;
+}
+
 - (void)moveToNextStep
 {
     if (_tutorialStep < JMSTutorialStepCompleted)
@@ -47,7 +52,7 @@
         NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
         [userDefaults setBool:NO forKey:@"shouldLaunchTutorial"];
         [userDefaults synchronize];
-        [_gameboardController didTutorialCompleted];
+        [_gameboardController finishTutorial];
     }
 }
 
@@ -88,10 +93,10 @@
     if (!_allowedActionsMap)
     {
         _allowedActionsMap = [NSMutableArray array];
-        for (NSUInteger col = 0; col < 10; col++)
+        for (NSUInteger col = 0; col < [self fieldDimension]; col++)
         {
             NSMutableArray *vector = [NSMutableArray array];
-            for (NSUInteger row = 0; row < 10; row++)
+            for (NSUInteger row = 0; row < [self fieldDimension]; row++)
             {
                 [vector addObject:@(JMSAllowedActionsNone)];
             }
@@ -99,10 +104,10 @@
         }
     }
 
-    for (NSUInteger col = 0; col < 10; col++)
+    for (NSUInteger col = 0; col < [self fieldDimension]; col++)
     {
         NSMutableArray *vector = _allowedActionsMap[col];
-        for (NSUInteger row = 0; row < 10; row++)
+        for (NSUInteger row = 0; row < [self fieldDimension]; row++)
         {
             vector[row] = @(JMSAllowedActionsNone);
         }
@@ -113,35 +118,37 @@
 
 - (void)updateHighlightedCells
 {
-    for (NSUInteger col = 0; col < 10; col++)
+    for (NSUInteger col = 0; col < [self fieldDimension]; col++)
     {
         NSMutableArray *vector = _allowedActionsMap[col];
-        for (NSUInteger row = 0; row < 10; row++)
+        for (NSUInteger row = 0; row < [self fieldDimension]; row++)
         {
             if ([vector[row] integerValue] != JMSAllowedActionsNone)
             {
-                struct JMSPosition position = {.column = col, .row = row};
+                JMSPosition position = {.column = col, .row = row};
                 [_gameboardController.mineGridView highlightCellWithPosition:position];
             }
         }
     }
 }
 
-- (BOOL)isAllowedWithAction:(JMSAllowedAction)action position:(struct JMSPosition)position
+- (BOOL)isAllowedWithAction:(JMSAllowedAction)action position:(JMSPosition)position
 {
     return ([_allowedActionsMap[position.column][position.row] integerValue] & action ) == action;
 }
 
-- (void)putAllowedAction:(JMSAllowedAction)allowedAction position:(struct JMSPosition)position
+- (void)putAllowedAction:(JMSAllowedAction)allowedAction position:(JMSPosition)position
 {
-    if (position.row < 0 || position.column < 0 || position.row >= 10 || position.column >= 10) return;
+    if (position.row < 0 || position.column < 0 || position.row >= [self fieldDimension] || position.column >= [self fieldDimension])
+        return;
     
     _allowedActionsMap[position.column][position.row] = @(allowedAction);
 }
 
-- (JMSAllowedAction)allowedActionForPosition:(struct JMSPosition)position
+- (JMSAllowedAction)allowedActionForPosition:(JMSPosition)position
 {
-    if (position.row < 0 || position.column < 0 || position.row >= 10 || position.column >= 10) return JMSAllowedActionsNone;
+    if (position.row < 0 || position.column < 0 || position.row >= [self fieldDimension] || position.column >= [self fieldDimension])
+        return JMSAllowedActionsNone;
     
     return [_allowedActionsMap[position.column][position.row] integerValue];
 }
@@ -155,7 +162,7 @@
     {
         case JMSTutorialStepFirstCellClick:
         {
-            struct JMSPosition position = {.column = 5, .row = 4};
+            JMSPosition position = {.column = 5, .row = 4};
             JMSAllowedAction action = JMSAllowedActionsClick;
             [self putAllowedAction:action position:position];
             [_tasks addObject:[[JMSTutorialTask alloc] initWithPosition:position action:action]];
@@ -163,7 +170,7 @@
         }
         case JMSTutorialStepSecondCellClick:
         {
-            struct JMSPosition position = {.column = 5, .row = 1};
+            JMSPosition position = {.column = 5, .row = 1};
             JMSAllowedAction action = JMSAllowedActionsClick;
             [self putAllowedAction:action position:position];
             [_tasks addObject:[[JMSTutorialTask alloc] initWithPosition:position action:action]];            
@@ -171,8 +178,8 @@
         }
         case JMSTutorialStepPutFlags:
         {
-            struct JMSPosition position1 = {.column = 5, .row = 2};
-            struct JMSPosition position2 = {.column = 5, .row = 3};
+            JMSPosition position1 = {.column = 5, .row = 2};
+            JMSPosition position2 = {.column = 5, .row = 3};
             [self putAllowedAction:JMSAllowedActionsMark position:position1];
             [self putAllowedAction:JMSAllowedActionsMark position:position2];
             [_tasks addObject:[[JMSTutorialTask alloc] initWithPosition:position1 action:JMSAllowedActionsMark]];
@@ -181,7 +188,7 @@
         }
         case JMSTutorialStepThirdCellClick:
         {
-            struct JMSPosition position = {.column = 5, .row = 0};
+            JMSPosition position = {.column = 5, .row = 0};
             JMSAllowedAction action = JMSAllowedActionsClick;
             [self putAllowedAction:action position:position];
             [_tasks addObject:[[JMSTutorialTask alloc] initWithPosition:position action:action]];
@@ -189,7 +196,7 @@
         }
         case JMSTutorialStepLastCellClick:
         {
-            struct JMSPosition position = {.column = 8, .row = 4};
+            JMSPosition position = {.column = 8, .row = 4};
             JMSAllowedAction action = JMSAllowedActionsClick;
             [self putAllowedAction:action position:position];
             [_tasks addObject:[[JMSTutorialTask alloc] initWithPosition:position action:action]];
@@ -250,8 +257,8 @@
             lbHeader.textAlignment = NSTextAlignmentCenter;
             [tutorialStepView addSubview:lbHeader];
             
-            struct JMSPosition position = {.column = 5, .row = 4};
-            struct JMSMineGridCellNeighboursSummary cellSummary = [_gameboardController.mineGridView cellSummary:position];
+            JMSPosition position = {.column = 5, .row = 4};
+            JMSMineGridCellNeighboursSummary cellSummary = [_gameboardController.mineGridView cellSummaryWithPosition:position];
 
 
             UILabel *description = [[UILabel alloc] initWithFrame:CGRectMake(padding,
@@ -259,7 +266,7 @@
                                                                              tutorialStepView.bounds.size.width - padding * 2,
                                                                              tutorialStepView.bounds.size.height * 0.30)];
             description.numberOfLines = 0;
-            description.attributedText = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"There are %d mines above the opened cell in its column, %d mines - below.\nAnd %d to the left in the row, %d to the right (between opened cell and wall).", cellSummary.minesTopDirection, cellSummary.minesBottomDirection, cellSummary.minesLeftDirection, cellSummary.minesRightDirection] attributes:attributesDescription];
+            description.attributedText = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"There are %ld mines above the opened cell in its column, %ld mines - below.\nAnd %ld to the left in the row, %ld to the right (between opened cell and wall).", (long)cellSummary.minesTopDirection, (long)cellSummary.minesBottomDirection, (long)cellSummary.minesLeftDirection, (long)cellSummary.minesRightDirection] attributes:attributesDescription];
             description.textAlignment = NSTextAlignmentCenter;
             [tutorialStepView addSubview:description];
             
@@ -386,7 +393,7 @@
 }
 
 
-- (BOOL)taskCompletedWithPosition:(struct JMSPosition)position
+- (BOOL)taskCompletedWithPosition:(JMSPosition)position
 {
     __block BOOL result = NO;
     [_tasks enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
@@ -399,7 +406,7 @@
     }];
     return result;
 }
-- (void)completeTaskWithPosition:(struct JMSPosition)position
+- (void)completeTaskWithPosition:(JMSPosition)position
 {
     [_tasks enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         JMSTutorialTask *task = obj;

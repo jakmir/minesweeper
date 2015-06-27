@@ -19,11 +19,13 @@
     [super viewDidLoad];
     
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"xv"]];
-    self.view.layer.shadowColor = [UIColor blackColor].CGColor;
-    self.view.layer.shadowOpacity = 0.5;
-    self.view.layer.shadowOffset = CGSizeZero;
-    self.view.layer.shadowRadius = 6;
-    self.view.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:self.view.bounds cornerRadius:0].CGPath;
+
+    CALayer *layer = self.view.layer;
+    layer.shadowColor = [UIColor blackColor].CGColor;
+    layer.shadowOpacity = 0.5;
+    layer.shadowOffset = CGSizeZero;
+    layer.shadowRadius = 6;
+    layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:self.view.bounds cornerRadius:0].CGPath;
     
 }
 

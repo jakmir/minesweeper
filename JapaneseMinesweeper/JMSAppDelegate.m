@@ -8,6 +8,7 @@
 
 #import "JMSAppDelegate.h"
 #import "Helpers/JMSSoundHelper.h"
+#import <AVFoundation/AVFoundation.h>
 
 @interface JMSAppDelegate ()
 
@@ -37,6 +38,7 @@
     }
     
     [[JMSSoundHelper instance] mute:![userDefaults boolForKey:@"soundEnabled"]];
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:nil];
     return YES;
 }
 

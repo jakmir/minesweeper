@@ -19,7 +19,6 @@
 {
     if (self = [super init])
     {
-        
     }
     return self;
 }
@@ -48,14 +47,14 @@
 {
     NSURL *soundUrl = [[NSBundle mainBundle] URLForResource:[self soundNameByAction:soundAction] withExtension:@"wav"];
     
-    NSMutableArray* availablePlayers = [[self players] mutableCopy];
+    NSMutableArray *availablePlayers = [[self players] mutableCopy];
     
     NSPredicate *filteringPredicate = [NSPredicate predicateWithBlock:^BOOL(AVAudioPlayer *evaluatedObject, NSDictionary *bindings) {
-        return evaluatedObject.playing == NO && [evaluatedObject.url isEqual:soundUrl];
+        return !evaluatedObject.playing && [evaluatedObject.url isEqual:soundUrl];
     }];
-    
+
     [availablePlayers filterUsingPredicate:filteringPredicate];
-    
+
     if (availablePlayers.count > 0)
     {
         return [availablePlayers firstObject];
@@ -71,7 +70,7 @@
     }
     
     [[self players] addObject:newPlayer];
-    
+
     return newPlayer;
     
 }
@@ -103,9 +102,13 @@
 - (void)playSoundWithAction:(JMSSoundAction)soundAction
 {
     if (_mute) return;
-    
-    AVAudioPlayer *player = [self audioPlayerForSoundAction:soundAction];
-    [player play];
+
+    NSLock *lock = [[NSLock alloc] init];
+    if ([lock tryLock]) {
+        AVAudioPlayer *player = [self audioPlayerForSoundAction:soundAction];
+        [player play];
+        [lock unlock];
+    }
 }
 
 

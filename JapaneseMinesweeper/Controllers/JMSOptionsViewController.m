@@ -9,7 +9,7 @@
 #import "JMSOptionsViewController.h"
 #import "UIColor+ColorFromHexString.h"
 #import "Enums.h"
-#import "Helpers/JMSSoundHelper.h"
+#import "JMSSoundHelper.h"
 
 @interface JMSOptionsViewController ()
 {
@@ -69,9 +69,9 @@
     [self.btnSave setNeedsDisplay];
     [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate date]];
     
-    [self.btnSave drawGradientWithStartColor:[UIColor colorFromInteger:0xff00cfff]
-                              andFinishColor:[UIColor colorFromInteger:0xff007fff]];
-    [self.btnSave.layer setCornerRadius:16];
+    [self.btnSave drawGradientWithStartColor:[[JMSKeyValueSettingsHelper instance] gradientStartColor]
+                              andFinishColor:[[JMSKeyValueSettingsHelper instance] gradientFinishColor]];
+    [self.btnSave.layer setCornerRadius:[[JMSKeyValueSettingsHelper instance] menuButtonCornerRadius]];
     [self.btnSave.layer setMasksToBounds:YES];
     self.generalSettings.center = CGPointMake(CGRectGetMidX(self.view.frame),
                                               (CGRectGetMaxY(self.difficultyLevel.frame) + CGRectGetMinY(self.btnSave.frame)) / 2);

@@ -9,8 +9,9 @@
 #import "JMSMainViewController.h"
 #import "JMSGameBoardViewController.h"
 #import "UIColor+ColorFromHexString.h"
-#import "Helpers/JMSGameKitHelper.h"
+#import "JMSGameKitHelper.h"
 #import "JMSAboutViewController.h"
+
 
 @interface JMSMainViewController ()
 {
@@ -49,7 +50,9 @@
     
     UIImage *wallpaperImage = [UIImage imageNamed:@"wallpaper"];
     self.view.backgroundColor = [UIColor colorWithPatternImage:wallpaperImage];
+    
     [self updateButtons];
+
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -58,12 +61,13 @@
     
     for (JMSGradientButton *gradientButton in self.gradientButtons)
     {
-        [gradientButton drawGradientWithStartColor:[UIColor colorFromInteger:0xff00cfff]
-                                    andFinishColor:[UIColor colorFromInteger:0xff007fff]];
-        [gradientButton.layer setCornerRadius:16];
+        [gradientButton drawGradientWithStartColor:[UIColor gradientStartColor]
+                                    andFinishColor:[UIColor gradientFinishColor]];
+        [gradientButton.layer setCornerRadius:[[JMSKeyValueSettingsHelper instance] menuButtonCornerRadius]];
         [gradientButton.layer setMasksToBounds:YES];
     }
     
+
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(showAuthenticationViewController)
                                                  name:kPresentAuthenticationViewController
@@ -80,7 +84,7 @@
 
 - (NSArray *)gradientButtons
 {
-    return @[self.btnStart, self.btnLeaderboard, self.btnComplexityLevel];
+    return @[_btnStart, _btnLeaderboard, _btnComplexityLevel];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -152,44 +156,48 @@
     [self animateShowView];
 }
 
+- (CGFloat)extraOffset
+{
+    return 100;
+}
 - (void)animateShowView
 {
     NSLog(@"%s", __FUNCTION__);
     [UIView animateWithDuration:1.5 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:0.1
                         options:UIViewAnimationOptionCurveEaseInOut animations:^{
                             aboutViewController.view.center = CGPointMake([[UIScreen mainScreen] bounds].size.width / 2,
-                                                                          [[UIScreen mainScreen] bounds].size.height - 100);
-                        } completion:^(BOOL finished) {
-                        }];
+                                                                          [[UIScreen mainScreen] bounds].size.height - [self extraOffset]);
+                        } completion:nil];
 
 }
 
 - (void)animateHideViewWithVelocity:(CGFloat)velocity;
 {
     NSLog(@"%s", __FUNCTION__);
+    CGRect bounds = [[UIScreen mainScreen] bounds];
     [UIView animateWithDuration:2.25 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:velocity
                         options:UIViewAnimationOptionCurveEaseInOut animations:^{
-                            aboutViewController.view.center = CGPointMake([[UIScreen mainScreen] bounds].size.width / 2,
-                                                                          [[UIScreen mainScreen] bounds].size.height + aboutViewController.view.frame.size.height);
-                        } completion:^(BOOL finished) {
-                        }];
+                            aboutViewController.view.center = CGPointMake(bounds.size.width / 2,
+                                                                          bounds.size.height + aboutViewController.view.frame.size.height);
+                        } completion:nil];
 }
 
 - (void)hideAboutView
 {
-    aboutViewController.view.center = CGPointMake([[UIScreen mainScreen] bounds].size.width / 2,
-                                                  [[UIScreen mainScreen] bounds].size.height + aboutViewController.view.frame.size.height);
+    CGRect bounds = [[UIScreen mainScreen] bounds];
+    aboutViewController.view.center = CGPointMake(CGRectGetMidX(bounds),
+                                                  CGRectGetHeight(bounds) + CGRectGetHeight(aboutViewController.view.frame));
 }
 
 - (void)animateJumpBack
 {
-    CGFloat timeMultiplier = -(aboutViewController.view.center.y - [[UIScreen mainScreen] bounds].size.height + 100) /
+    CGFloat timeMultiplier = -(aboutViewController.view.center.y - [[UIScreen mainScreen] bounds].size.height + [self extraOffset]) /
                                 aboutViewController.view.frame.size.height;
     [UIView animateWithDuration:2.25 * timeMultiplier
                           delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:0.25
                         options:UIViewAnimationOptionCurveEaseInOut animations:^{
                             aboutViewController.view.center = CGPointMake([[UIScreen mainScreen] bounds].size.width / 2,
-                                                                          [[UIScreen mainScreen] bounds].size.height - 100);
+                                                                          [[UIScreen mainScreen] bounds].size.height - [self extraOffset]);
                         } completion:nil];
 }
 

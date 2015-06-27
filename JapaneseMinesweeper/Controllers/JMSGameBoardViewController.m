@@ -9,13 +9,13 @@
 #import "JMSGameBoardViewController.h"
 #import "JMSMineGridCell.h"
 #import "JMSMainViewController.h"
-#import "Classes/JMSGameSessionInfo.h"
+#import "JMSGameSessionInfo.h"
 #import "UIColor+ColorFromHexString.h"
 #import <GameKit/GKLocalPlayer.h>
 #import <GameKit/GKScore.h>
 #import <GameKit/GKGameCenterViewController.h>
 #import "JMSLeaderboardManager.h"
-#import "Helpers/JMSSoundHelper.h"
+#import "JMSSoundHelper.h"
 #import "JMSPopoverPresentationController.h"
 #import "JMSTutorialManager.h"
 
@@ -32,12 +32,16 @@
 @property (nonatomic) CGFloat score;
 @property (nonatomic) NSInteger cellsLeftCount;
 @property (nonatomic) NSInteger cellsMarked;
+@property (nonatomic, getter=baseScore) CGFloat baseScore;
 
 @end
 
-const CGFloat baseScore = 175;
-
 @implementation JMSGameBoardViewController
+
+- (CGFloat)baseScore
+{
+    return 175.0;
+}
 
 - (void)addGestureRecognizers
 { 
@@ -145,10 +149,9 @@ const CGFloat baseScore = 175;
 
 - (void)removeGestureRecognizers
 {
-    [self.mineGridView.gestureRecognizers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        UIGestureRecognizer *gr = obj;
-        [self.mineGridView removeGestureRecognizer:gr];
-    }];
+    for (UIGestureRecognizer *gestureRecognizer in self.mineGridView.gestureRecognizers) {
+        [self.mineGridView removeGestureRecognizer:gestureRecognizer];
+    }
 }
 
 - (void) configureUI
@@ -189,12 +192,12 @@ const CGFloat baseScore = 175;
     
     if (self.mineGridView.gameFinished)
     {
-        captionColor = [UIColor colorFromInteger:0xffff3300];
+        captionColor = [UIColor brightOrangeColor];
         caption = @"PLAY AGAIN";
     }
     else
     {
-        captionColor = [UIColor colorFromInteger:0xffa818ff];
+        captionColor = [UIColor brightPurpleColor];
         caption = @"RESET GAME";
     }
 
@@ -202,8 +205,9 @@ const CGFloat baseScore = 175;
     [self.btnResetGame setTitle:caption forState:UIControlStateNormal];
     [self.btnResetGame setTitleColor:[UIColor lightGrayColor] forState:UIControlStateDisabled];
     
-    [self.btnMainMenu.layer setCornerRadius:10];
-    [self.btnResetGame.layer setCornerRadius:10];
+    CGFloat cornerRadius = [[JMSKeyValueSettingsHelper instance] buttonCornerRadius];
+    [self.btnMainMenu.layer setCornerRadius:cornerRadius];
+    [self.btnResetGame.layer setCornerRadius:cornerRadius];
     [self.btnMainMenu.layer setMasksToBounds:YES];
     [self.btnResetGame.layer setMasksToBounds:YES];
     
@@ -253,7 +257,7 @@ const CGFloat baseScore = 175;
     
     CGPoint coord = [gestureRecognizer locationInView:self.mineGridView];
     
-    struct JMSPosition position = [self.mineGridView cellPositionWithCoordinateInside:coord];
+    JMSPosition position = [self.mineGridView cellPositionWithCoordinateInside:coord];
     
     if (position.row == NSNotFound || position.column == NSNotFound ||
         ([self shouldDisplayTutorial] && !tutorialManager.isFinished && ![tutorialManager isAllowedWithAction:JMSAllowedActionsClick
@@ -298,7 +302,7 @@ const CGFloat baseScore = 175;
         }
         self.cellsLeftCount = [self.mineGridView cellsLeftToOpen];
         self.score += [self scoreToAddFromPosition:position];
-        self.score += [self vanillaScore] * (openedCellsCount - 1);
+        self.score += [self cellBasedScore] * (openedCellsCount - 1);
         self.cellsMarked -= unmarkedCellsCount;
            
         if (self.cellsLeftCount > 0)
@@ -322,14 +326,14 @@ const CGFloat baseScore = 175;
     return 1 + level / 100.0;
 }
 
-- (CGFloat)vanillaScore
+- (CGFloat)cellBasedScore
 {
-    return baseScore * pow([self levelModifier], 4);
+    return self.baseScore * pow([self levelModifier], 4);
 }
 
-- (CGFloat)scoreToAddFromPosition:(struct JMSPosition)position
+- (CGFloat)scoreToAddFromPosition:(JMSPosition)position
 {
-    return [self vanillaScore] * pow(1 + [self.mineGridView bonus:position], 3);
+    return [self cellBasedScore] * pow(1 + [self.mineGridView bonus:position], 3);
 }
 
 - (void) longTap: (UIGestureRecognizer *)gestureRecognizer
@@ -340,7 +344,7 @@ const CGFloat baseScore = 175;
     if (gestureRecognizer.state == UIGestureRecognizerStateBegan)
     {
         CGPoint coord = [gestureRecognizer locationInView:self.mineGridView];
-        struct JMSPosition position = [self.mineGridView cellPositionWithCoordinateInside:coord];
+        JMSPosition position = [self.mineGridView cellPositionWithCoordinateInside:coord];
         
         if (position.row == NSNotFound || position.column == NSNotFound ||
             ([self shouldDisplayTutorial] && !tutorialManager.isFinished && ![tutorialManager isAllowedWithAction:JMSAllowedActionsMark
@@ -389,7 +393,7 @@ const CGFloat baseScore = 175;
     lbCaption.attributedText = [[NSAttributedString alloc] initWithString:@"You won this round"
                                                                attributes:@{
                                                                             NSForegroundColorAttributeName:
-                                                                                [UIColor colorFromInteger:0xffff6600],
+                                                                                [UIColor juicyOrangeColor],
                                                                             NSFontAttributeName:
                                                                                 [UIFont fontWithName:@"HelveticaNeue-Light"
                                                                                                 size:28]
@@ -402,7 +406,7 @@ const CGFloat baseScore = 175;
     lbText.attributedText = [[NSAttributedString alloc] initWithString:@"Congratulations!\n\nAll mines were discovered"
                                                             attributes:@{
                                                                          NSForegroundColorAttributeName:
-                                                                             [UIColor colorFromInteger:0xffaaaaaa],
+                                                                             [UIColor lightGrayColor],
                                                                          NSFontAttributeName:
                                                                              [UIFont systemFontOfSize:17]
                                                                          }];
@@ -521,7 +525,7 @@ const CGFloat baseScore = 175;
 }
 - (void)postScoreLocally
 {
-    CGFloat progress = (100.0 - level - self.cellsLeftCount) / (100-level);
+    CGFloat progress = (100.0 - level - self.cellsLeftCount) / (100 - level);
     [[[JMSLeaderboardManager alloc] init] postGameScore:lroundf(self.score)
                                                   level:level
                                                progress:progress];
@@ -548,7 +552,7 @@ const CGFloat baseScore = 175;
 
 #pragma mark - Tutorial Actions
 
-- (void)didTutorialCompleted
+- (void)finishTutorial
 {
     [self updateMenu];
 }

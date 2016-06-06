@@ -13,4 +13,7 @@
 @property (nonatomic) NSUInteger power;
 @property (nonatomic) NSUInteger minimumValue;
 @property (nonatomic) NSUInteger maximumValue;
+
+@property (nonatomic, weak) id delegate;
+
 @end

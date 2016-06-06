@@ -11,32 +11,37 @@
 #import "UIColor+ColorFromHexString.h"
 #import "JMSGameKitHelper.h"
 #import "JMSAboutViewController.h"
-
+#import "JMSMainView.h"
+#import "JMSAboutView.h"
 
 @interface JMSMainViewController ()
-{
-    JMSAboutViewController *aboutViewController;
-}
+
+@property (nonatomic, strong) JMSAboutViewController * aboutViewController;
+@property (nonatomic, readonly) JMSMainView *mainView;
+@property (nonatomic, readonly) JMSAboutView *aboutView;
+
 @end
 
 @implementation JMSMainViewController
+
+#pragma mark - Life Cycle methods and events
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 
-    aboutViewController = [[JMSAboutViewController alloc] initWithNibName:@"JMSAboutViewController" bundle:nil];
+    self.aboutViewController = [[JMSAboutViewController alloc] initWithNibName:@"JMSAboutViewController" bundle:nil];
     
-    [self addChildViewController:aboutViewController];
-    [self.view addSubview:aboutViewController.view];
+    [self addChildViewController:self.aboutViewController];
+    [self.mainView addSubview:[self aboutView]];
     
     UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self
                                                                                     action:@selector(handlePan:)];
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
                                                                                            action:@selector(handleMainScreenTouch:)];
-    [aboutViewController.view addGestureRecognizer:panRecognizer];
-    [self.view addGestureRecognizer:tapGestureRecognizer];
-    [self hideAboutView];
+    [self.aboutView addGestureRecognizer:panRecognizer];
+    [self.mainView addGestureRecognizer:tapGestureRecognizer];
+    [self.aboutView hideAboutView];
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
@@ -51,22 +56,14 @@
     UIImage *wallpaperImage = [UIImage imageNamed:@"wallpaper"];
     self.view.backgroundColor = [UIColor colorWithPatternImage:wallpaperImage];
     
-    [self updateButtons];
-
+    [self.mainView updateButtonsWithModel:self.gameModel];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     
-    for (JMSGradientButton *gradientButton in self.gradientButtons)
-    {
-        [gradientButton drawGradientWithStartColor:[UIColor gradientStartColor]
-                                    andFinishColor:[UIColor gradientFinishColor]];
-        [gradientButton.layer setCornerRadius:[[JMSKeyValueSettingsHelper instance] menuButtonCornerRadius]];
-        [gradientButton.layer setMasksToBounds:YES];
-    }
-    
+    [self.mainView drawGradients];
 
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(showAuthenticationViewController)
@@ -79,15 +76,12 @@
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (NSArray *)gradientButtons
+- (void)didReceiveMemoryWarning
 {
-    return @[_btnStart, _btnLeaderboard, _btnComplexityLevel];
-}
-
-- (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
@@ -97,31 +91,31 @@
     return YES;
 }
 
-- (void)updateButtons
-{
-    [self.btnStart setTitle:_gameSessionInfo != nil ? @"Continue" : @"New game" forState:UIControlStateNormal];
+#pragma mark - Access Properties
 
-    CGFloat heightSum = 0;
-    for (JMSGradientButton *gradientButton in [self gradientButtons])
+- (JMSMainView *)mainView
+{
+    if ([self.view isKindOfClass:[JMSMainView class]])
     {
-        heightSum += CGRectGetHeight(gradientButton.frame);
+        return (JMSMainView *)self.view;
     }
-    CGSize size = self.buttonListContainer.frame.size;
-    CGFloat interval = (size.height - heightSum) / ([self gradientButtons].count - 1);
-    
-    CGFloat y = 0;
-    for (JMSGradientButton *gradientButton in [self gradientButtons])
-    {
-        gradientButton.center = CGPointMake(size.width / 2, y + CGRectGetHeight(gradientButton.frame) / 2);
-        y += CGRectGetHeight(gradientButton.frame) + interval;
-    }
+    return nil;
 }
 
-- (void)setGameSessionInfo:(JMSGameSessionInfo *)gameSessionInfo
+- (JMSAboutView *)aboutView
 {
-    _gameSessionInfo = gameSessionInfo;
+    if ([self.aboutViewController.view isKindOfClass:[JMSAboutView class]])
+    {
+        return (JMSAboutView *)self.aboutViewController.view;
+    }
+    return nil;
+}
+
+- (void)setGameModel:(JMSGameModel *)gameSessionInfo
+{
+    _gameModel = gameSessionInfo;
     
-    [self updateButtons];
+    [self.mainView updateButtonsWithModel:gameSessionInfo];
 }
 
 
@@ -136,69 +130,25 @@
                      completion:nil];
 }
 
-#pragma mark - screen transition methods
+#pragma mark - Screen transition methods
 
 - (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    [self hideAboutView];
+    [self.aboutView hideAboutView];
     
     if ([segue.identifier isEqualToString:@"toGame"])
     {
         JMSGameBoardViewController *destinationController = (JMSGameBoardViewController *)segue.destinationViewController;
         destinationController.mainViewController = self;
+        destinationController.gameModel = self.gameModel;
     }
 }
 
-#pragma mark - about screen methods
+#pragma mark - About screen methods
 
 - (IBAction)showAboutScreen:(UIButton *)sender
 {
-    [self animateShowView];
-}
-
-- (CGFloat)extraOffset
-{
-    return 100;
-}
-- (void)animateShowView
-{
-    NSLog(@"%s", __FUNCTION__);
-    [UIView animateWithDuration:1.5 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:0.1
-                        options:UIViewAnimationOptionCurveEaseInOut animations:^{
-                            aboutViewController.view.center = CGPointMake([[UIScreen mainScreen] bounds].size.width / 2,
-                                                                          [[UIScreen mainScreen] bounds].size.height - [self extraOffset]);
-                        } completion:nil];
-
-}
-
-- (void)animateHideViewWithVelocity:(CGFloat)velocity;
-{
-    NSLog(@"%s", __FUNCTION__);
-    CGRect bounds = [[UIScreen mainScreen] bounds];
-    [UIView animateWithDuration:2.25 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:velocity
-                        options:UIViewAnimationOptionCurveEaseInOut animations:^{
-                            aboutViewController.view.center = CGPointMake(bounds.size.width / 2,
-                                                                          bounds.size.height + aboutViewController.view.frame.size.height);
-                        } completion:nil];
-}
-
-- (void)hideAboutView
-{
-    CGRect bounds = [[UIScreen mainScreen] bounds];
-    aboutViewController.view.center = CGPointMake(CGRectGetMidX(bounds),
-                                                  CGRectGetHeight(bounds) + CGRectGetHeight(aboutViewController.view.frame));
-}
-
-- (void)animateJumpBack
-{
-    CGFloat timeMultiplier = -(aboutViewController.view.center.y - [[UIScreen mainScreen] bounds].size.height + [self extraOffset]) /
-                                aboutViewController.view.frame.size.height;
-    [UIView animateWithDuration:2.25 * timeMultiplier
-                          delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:0.25
-                        options:UIViewAnimationOptionCurveEaseInOut animations:^{
-                            aboutViewController.view.center = CGPointMake([[UIScreen mainScreen] bounds].size.width / 2,
-                                                                          [[UIScreen mainScreen] bounds].size.height - [self extraOffset]);
-                        } completion:nil];
+    [self.aboutView animateShowView];
 }
 
 - (void)handlePan:(UIPanGestureRecognizer *)gestureRecognizer
@@ -223,11 +173,11 @@
         {
             if (gestureRecognizer.view.center.y - oldCenter.y < CGRectGetHeight(gestureRecognizer.view.frame) / 4)
             {
-                [self animateJumpBack];
+                [self.aboutView animateJumpBack];
             }
             else
             {
-                [self animateHideViewWithVelocity:[gestureRecognizer velocityInView:self.view].y / 200.0];
+                [self.aboutView animateHideViewWithVelocity:[gestureRecognizer velocityInView:self.view].y / 200.0];
             }
         }
             break;
@@ -238,9 +188,9 @@
 
 - (void)handleMainScreenTouch:(UITapGestureRecognizer *)gestureRecognizer
 {
-    if (aboutViewController.isInScreen)
+    if (self.aboutView.isViewInScreen)
     {
-        [self animateHideViewWithVelocity:1];
+        [self.aboutView animateHideViewWithVelocity:1];
     }
 }
 @end

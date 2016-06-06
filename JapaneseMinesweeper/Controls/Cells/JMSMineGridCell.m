@@ -42,8 +42,7 @@
         default: return [UIColor colorFromInteger:0xffbf2222];
     }
 }
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
+
 - (void)drawRect:(CGRect)rect
 {
     NSLog(@"%s", __FUNCTION__);
@@ -105,7 +104,7 @@
             {
                 CGContextSetRGBStrokeColor(context, 0.8, 0.9, 0.9, 0.8);
                 CGContextSetLineWidth(context, 1.0);
-                UIFont* font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:20];
+                UIFont* font = [UIFont systemFontOfSize:20 weight:UIFontWeightMedium];
                 CGContextBeginPath(context);
                 CGContextMoveToPoint(context, 0, 0);
                 CGContextAddLineToPoint(context, rect.size.width, rect.size.height);

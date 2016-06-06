@@ -7,12 +7,21 @@
 //
 
 #import "JMSTutorialManager.h"
-#import "JMSGameBoardViewController.h"
+#import "JMSGameBoardViewController+Tutorial.h"
 #import "Enums.h"
 #import "Structs.h"
 #import "JMSTutorialTask.h"
 #import "UIColor+ColorFromHexString.h"
 #import "JMSMineGridCell.h"
+#import "JMSGameModel.h"
+
+static const CGFloat kTutorialViewPadding = 16;
+
+@interface JMSTutorialManager()
+
+@property (nonatomic, readonly) CGSize size;
+
+@end
 
 @implementation JMSTutorialManager
 {
@@ -24,13 +33,14 @@
     NSMutableArray *_tasks;
 }
 
-- (instancetype)initWithGameboardController:(JMSGameBoardViewController *)gameboardController
+- (instancetype)initWithGameboardController:(JMSGameBoardViewController *)gameboardController size:(CGSize)size
 {
     if (self = [super init])
     {
         _gameboardController = gameboardController;
         _tutorialStep = JMSTutorialStepNotStarted;
         _tasks = [NSMutableArray array];
+        _size = size;
     }
     return self;
 }
@@ -38,6 +48,22 @@
 - (NSUInteger)fieldDimension
 {
     return 10;
+}
+
+- (NSDictionary *)attributesDescription
+{
+    return @{
+                NSForegroundColorAttributeName: [UIColor whiteColor],
+                NSFontAttributeName: [UIFont systemFontOfSize:18]
+            };
+}
+
+- (NSDictionary *)attributesHeader
+{
+    return @{
+                NSForegroundColorAttributeName: [UIColor whiteColor],
+                NSFontAttributeName: [UIFont systemFontOfSize:32 weight:UIFontWeightMedium]
+            };
 }
 
 - (void)moveToNextStep
@@ -59,8 +85,7 @@
 - (void)updateTutorial
 {
     UIView *tutorialStepView = [self prepareView];
-    [_gameboardController.resultsView addSubview:tutorialStepView];
-    [_gameboardController.resultsView bringSubviewToFront:tutorialStepView];
+    [_gameboardController addTutorialView:tutorialStepView];
     
     CGSize screenSize = [[UIScreen mainScreen] bounds].size;
     NSLog(@"%@", NSStringFromCGRect(tutorialStepView.frame));
@@ -113,7 +138,7 @@
         }
     }
     
-    [_gameboardController.mineGridView removeHighlights];
+    [_gameboardController removeHighlights];
 }
 
 - (void)updateHighlightedCells
@@ -126,7 +151,7 @@
             if ([vector[row] integerValue] != JMSAllowedActionsNone)
             {
                 JMSPosition position = {.column = col, .row = row};
-                [_gameboardController.mineGridView highlightCellWithPosition:position];
+                [_gameboardController highlightCellWithPosition:position];
             }
         }
     }
@@ -207,182 +232,209 @@
     }
 }
 
+#pragma mark - Tutorial Explanation View generators
+
+- (void)fillTutorialStepViewWithFirstCellView:(UIView *)tutorialStepView
+{
+    UILabel *lbHeader = [[UILabel alloc] initWithFrame:CGRectMake(0,
+                                                                  0,
+                                                                  tutorialStepView.bounds.size.width,
+                                                                  tutorialStepView.bounds.size.height / 2)];
+    
+    lbHeader.attributedText = [[NSAttributedString alloc] initWithString:@"Welcome to tutorial mode" attributes:[self attributesHeader]];
+    lbHeader.textAlignment = NSTextAlignmentCenter;
+    [tutorialStepView addSubview:lbHeader];
+    
+    UILabel *lbDescription = [[UILabel alloc] initWithFrame:CGRectMake(0,
+                                                                       CGRectGetMidY(tutorialStepView.bounds),
+                                                                       tutorialStepView.bounds.size.width,
+                                                                       tutorialStepView.bounds.size.height / 2)];
+    lbDescription.attributedText = [[NSAttributedString alloc] initWithString:@"Tap the highlighted cell to make your first step"
+                                                                   attributes:[self attributesDescription]];
+    lbDescription.textAlignment = NSTextAlignmentCenter;
+    [tutorialStepView addSubview:lbDescription];
+}
+
+- (void)fillTutorialStepViewWithSecondCellView:(UIView *)tutorialStepView
+{
+    UILabel *lbHeader = [[UILabel alloc] initWithFrame:CGRectMake(0,
+                                                                  0,
+                                                                  tutorialStepView.bounds.size.width,
+                                                                  tutorialStepView.bounds.size.height * 0.40)];
+    lbHeader.attributedText = [[NSAttributedString alloc] initWithString:@"What do these numbers mean:" attributes:[self attributesHeader]];
+    lbHeader.textAlignment = NSTextAlignmentCenter;
+    [tutorialStepView addSubview:lbHeader];
+    
+    JMSPosition position = {.column = 5, .row = 4};
+    JMSMineGridCellNeighboursSummary cellSummary = [_gameboardController.gameModel cellSummary:position];
+    
+    
+    UILabel *description = [[UILabel alloc] initWithFrame:CGRectMake(kTutorialViewPadding,
+                                                                     tutorialStepView.bounds.size.height * 0.40,
+                                                                     tutorialStepView.bounds.size.width - kTutorialViewPadding * 2,
+                                                                     tutorialStepView.bounds.size.height * 0.30)];
+    description.numberOfLines = 0;
+    description.attributedText = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"There are %ld mines above the opened cell in its column, %ld mines - below.\nAnd %ld to the left in the row, %ld to the right (between opened cell and wall).", (long)cellSummary.minesTopDirection, (long)cellSummary.minesBottomDirection, (long)cellSummary.minesLeftDirection, (long)cellSummary.minesRightDirection] attributes:[self attributesDescription]];
+    description.textAlignment = NSTextAlignmentCenter;
+    [tutorialStepView addSubview:description];
+    
+    UILabel *callToAction = [[UILabel alloc] initWithFrame:CGRectMake(kTutorialViewPadding,
+                                                                      tutorialStepView.bounds.size.height * 0.70,
+                                                                      tutorialStepView.bounds.size.width - kTutorialViewPadding * 2,
+                                                                      tutorialStepView.bounds.size.height * 0.30)];
+    callToAction.numberOfLines = 0;
+    NSDictionary *attributesCallToAction = [self attributesDescription];
+    NSString *actionString = @"Four cells in the section above and only two are safe. Tap highlighted cell again.";
+    callToAction.attributedText = [[NSAttributedString alloc] initWithString:actionString
+                                                                  attributes:attributesCallToAction];
+    callToAction.textAlignment = NSTextAlignmentCenter;
+    [tutorialStepView addSubview:callToAction];
+}
+
+- (void)fillTutorialStepViewWithPutFlagView:(UIView *)tutorialStepView
+{
+    UILabel *lbHeader = [[UILabel alloc] initWithFrame:CGRectMake(0,
+                                                                  0,
+                                                                  tutorialStepView.bounds.size.width,
+                                                                  tutorialStepView.bounds.size.height * 0.50)];
+    lbHeader.attributedText = [[NSAttributedString alloc] initWithString:@"Drop flags to mark mines by long tap"
+                                                              attributes:[self attributesHeader]];
+    lbHeader.textAlignment = NSTextAlignmentCenter;
+    [tutorialStepView addSubview:lbHeader];
+    
+    UILabel *lbDescription = [[UILabel alloc] initWithFrame:CGRectMake(0,
+                                                                       CGRectGetMidY(tutorialStepView.bounds),
+                                                                       tutorialStepView.bounds.size.width,
+                                                                       tutorialStepView.bounds.size.height / 2)];
+    lbDescription.numberOfLines = 0;
+    lbDescription.attributedText = [[NSAttributedString alloc] initWithString:@"Long tap drops flag to the specific position. Do it twice for every highlighted cell.\n\n(You can change long tap duration anytime. Available in options screen)"
+                                                                   attributes:[self attributesDescription]];
+    lbDescription.textAlignment = NSTextAlignmentCenter;
+    [tutorialStepView addSubview:lbDescription];
+}
+
+- (void)fillTutorialStepViewWithThirdCellView:(UIView *)tutorialStepView
+{
+    UILabel *lbHeader = [[UILabel alloc] initWithFrame:CGRectMake(0,
+                                                                  0,
+                                                                  tutorialStepView.bounds.size.width,
+                                                                  tutorialStepView.bounds.size.height * 0.40)];
+    lbHeader.attributedText = [[NSAttributedString alloc] initWithString:@"Great! Let's move on" attributes:[self attributesHeader]];
+    lbHeader.textAlignment = NSTextAlignmentCenter;
+    [tutorialStepView addSubview:lbHeader];
+    
+    UILabel *description = [[UILabel alloc] initWithFrame:CGRectMake(kTutorialViewPadding,
+                                                                     tutorialStepView.bounds.size.height * 0.40,
+                                                                     tutorialStepView.bounds.size.width - kTutorialViewPadding * 2,
+                                                                     tutorialStepView.bounds.size.height * 0.60)];
+    
+    NSString *descriptionText = @"Highlighted cell is absolutely safe, tap to open it.\n\nLater, all cells in 'zero' directions from tapped will be opened automatically.";
+    description.numberOfLines = 0;
+    description.attributedText = [[NSAttributedString alloc] initWithString:descriptionText attributes:[self attributesDescription]];
+    description.textAlignment = NSTextAlignmentCenter;
+    [tutorialStepView addSubview:description];
+}
+
+- (void)fillTutorialStepViewWithLastCellView:(UIView *)tutorialStepView
+{
+    UILabel *lbHeader = [[UILabel alloc] initWithFrame:CGRectMake(0,
+                                                                  0,
+                                                                  tutorialStepView.bounds.size.width,
+                                                                  tutorialStepView.bounds.size.height * 0.50)];
+    lbHeader.attributedText = [[NSAttributedString alloc] initWithString:@"The last step" attributes:[self attributesHeader]];
+    lbHeader.textAlignment = NSTextAlignmentCenter;
+    [tutorialStepView addSubview:lbHeader];
+    
+    UILabel *description = [[UILabel alloc] initWithFrame:CGRectMake(kTutorialViewPadding,
+                                                                     tutorialStepView.bounds.size.height * 0.40,
+                                                                     tutorialStepView.bounds.size.width - kTutorialViewPadding * 2,
+                                                                     tutorialStepView.bounds.size.height * 0.60)];
+    
+    NSString *descriptionText = @"Now we deal with section right of the first opened cell.\n\nTap highlighed cell to open. Every opened cell awards you with score.\nAnd bonus score as well, depending on probability to meet a mine in that cell.";
+    description.numberOfLines = 0;
+    description.attributedText = [[NSAttributedString alloc] initWithString:descriptionText attributes:[self attributesDescription]];
+    description.textAlignment = NSTextAlignmentCenter;
+    [tutorialStepView addSubview:description];
+}
+
+- (void)fillTutorialStepViewWithStepCompletedView:(UIView *)tutorialStepView
+{
+    UILabel *lbHeader = [[UILabel alloc] initWithFrame:CGRectMake(0,
+                                                                  0,
+                                                                  tutorialStepView.bounds.size.width,
+                                                                  tutorialStepView.bounds.size.height / 2)];
+    NSDictionary *attributesHeader = @{
+                                       NSForegroundColorAttributeName: [UIColor whiteColor],
+                                       NSFontAttributeName: [UIFont systemFontOfSize:32 weight:UIFontWeightMedium]
+                                       };
+    lbHeader.attributedText = [[NSAttributedString alloc] initWithString:@"Tutorial completed!" attributes:attributesHeader];
+    lbHeader.textAlignment = NSTextAlignmentCenter;
+    [tutorialStepView addSubview:lbHeader];
+    
+    UILabel *lbDescription = [[UILabel alloc] initWithFrame:CGRectMake(0,
+                                                                       CGRectGetMidY(tutorialStepView.bounds),
+                                                                       tutorialStepView.bounds.size.width,
+                                                                       tutorialStepView.bounds.size.height / 2)];
+    NSDictionary *attributesDescription = @{
+                                            NSForegroundColorAttributeName: [UIColor whiteColor],
+                                            NSFontAttributeName: [UIFont systemFontOfSize:24]
+                                            };
+    lbDescription.attributedText = [[NSAttributedString alloc] initWithString:@"Difficulty level can be changed in options section at any time."
+                                                                   attributes:attributesDescription];
+    lbDescription.textAlignment = NSTextAlignmentCenter;
+    [tutorialStepView addSubview:lbDescription];
+}
+
 - (UIView *)prepareView
 {
     if (!_gameboardController) return NULL;
     
-    CGRect frame = CGRectInset(_gameboardController.resultsView.bounds, 0, 0);
+    CGRect frame = CGRectMake(0, 0, self.size.width, self.size.height);
     UIView *tutorialStepView = [[UIView alloc] initWithFrame:frame];
     tutorialStepView.backgroundColor = _tutorialStep % 2 ? [UIColor colorFromInteger:0xff7fceef] : [UIColor colorFromInteger:0xff90ceef];
    
-    NSDictionary *attributesDescription = @{
-                                                NSForegroundColorAttributeName: [UIColor whiteColor],
-                                                NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue" size:18]
-                                            };
-    NSDictionary *attributesHeader = @{
-                                        NSForegroundColorAttributeName: [UIColor whiteColor],
-                                        NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Medium" size:32]
-                                       };
-    const CGFloat padding = 16;
+
     switch (_tutorialStep)
     {
         case JMSTutorialStepFirstCellClick:
         {
-            UILabel *lbHeader = [[UILabel alloc] initWithFrame:CGRectMake(0,
-                                                                          0,
-                                                                          tutorialStepView.bounds.size.width,
-                                                                          tutorialStepView.bounds.size.height / 2)];
-
-            lbHeader.attributedText = [[NSAttributedString alloc] initWithString:@"Welcome to tutorial mode" attributes:attributesHeader];
-            lbHeader.textAlignment = NSTextAlignmentCenter;
-            [tutorialStepView addSubview:lbHeader];
-            
-            UILabel *lbDescription = [[UILabel alloc] initWithFrame:CGRectMake(0,
-                                                                               CGRectGetMidY(tutorialStepView.bounds),
-                                                                               tutorialStepView.bounds.size.width,
-                                                                               tutorialStepView.bounds.size.height / 2)];
-            lbDescription.attributedText = [[NSAttributedString alloc] initWithString:@"Tap the highlighted cell to make your first step"
-                                                                           attributes:attributesDescription];
-            lbDescription.textAlignment = NSTextAlignmentCenter;
-            [tutorialStepView addSubview:lbDescription];
+            [self fillTutorialStepViewWithFirstCellView:tutorialStepView];
             break;
         }
         case JMSTutorialStepSecondCellClick:
         {
-            UILabel *lbHeader = [[UILabel alloc] initWithFrame:CGRectMake(0,
-                                                                          0,
-                                                                          tutorialStepView.bounds.size.width,
-                                                                          tutorialStepView.bounds.size.height * 0.40)];
-            lbHeader.attributedText = [[NSAttributedString alloc] initWithString:@"What do these numbers mean:" attributes:attributesHeader];
-            lbHeader.textAlignment = NSTextAlignmentCenter;
-            [tutorialStepView addSubview:lbHeader];
-            
-            JMSPosition position = {.column = 5, .row = 4};
-            JMSMineGridCellNeighboursSummary cellSummary = [_gameboardController.mineGridView cellSummaryWithPosition:position];
-
-
-            UILabel *description = [[UILabel alloc] initWithFrame:CGRectMake(padding,
-                                                                             tutorialStepView.bounds.size.height * 0.40,
-                                                                             tutorialStepView.bounds.size.width - padding * 2,
-                                                                             tutorialStepView.bounds.size.height * 0.30)];
-            description.numberOfLines = 0;
-            description.attributedText = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"There are %ld mines above the opened cell in its column, %ld mines - below.\nAnd %ld to the left in the row, %ld to the right (between opened cell and wall).", (long)cellSummary.minesTopDirection, (long)cellSummary.minesBottomDirection, (long)cellSummary.minesLeftDirection, (long)cellSummary.minesRightDirection] attributes:attributesDescription];
-            description.textAlignment = NSTextAlignmentCenter;
-            [tutorialStepView addSubview:description];
-            
-            UILabel *callToAction = [[UILabel alloc] initWithFrame:CGRectMake(padding,
-                                                                              tutorialStepView.bounds.size.height * 0.70,
-                                                                              tutorialStepView.bounds.size.width - padding * 2,
-                                                                              tutorialStepView.bounds.size.height * 0.30)];
-            callToAction.numberOfLines = 0;
-            NSDictionary *attributesCallToAction = attributesDescription;
-            NSString *actionString = @"Four cells in the section above and only two are safe. Tap highlighted cell again.";
-            callToAction.attributedText = [[NSAttributedString alloc] initWithString:actionString
-                                                                          attributes:attributesCallToAction];
-            callToAction.textAlignment = NSTextAlignmentCenter;
-            [tutorialStepView addSubview:callToAction];
-            
+            [self fillTutorialStepViewWithSecondCellView:tutorialStepView];
             break;
         }
         case JMSTutorialStepPutFlags:
         {
-            UILabel *lbHeader = [[UILabel alloc] initWithFrame:CGRectMake(0,
-                                                                          0,
-                                                                          tutorialStepView.bounds.size.width,
-                                                                          tutorialStepView.bounds.size.height * 0.50)];
-            lbHeader.attributedText = [[NSAttributedString alloc] initWithString:@"Drop flags to mark mines by long tap"
-                                                                      attributes:attributesHeader];
-            lbHeader.textAlignment = NSTextAlignmentCenter;
-            [tutorialStepView addSubview:lbHeader];
-            
-            UILabel *lbDescription = [[UILabel alloc] initWithFrame:CGRectMake(0,
-                                                                               CGRectGetMidY(tutorialStepView.bounds),
-                                                                               tutorialStepView.bounds.size.width,
-                                                                               tutorialStepView.bounds.size.height / 2)];
-            lbDescription.numberOfLines = 0;
-            lbDescription.attributedText = [[NSAttributedString alloc] initWithString:@"Long tap drops flag to the specific position. Do it twice for every highlighted cell.\n\n(You can change long tap duration anytime. Available in options screen)"
-                                                                           attributes:attributesDescription];
-            lbDescription.textAlignment = NSTextAlignmentCenter;
-            [tutorialStepView addSubview:lbDescription];
+            [self fillTutorialStepViewWithPutFlagView:tutorialStepView];
             break;
         }
         case JMSTutorialStepThirdCellClick:
         {
-
-            UILabel *lbHeader = [[UILabel alloc] initWithFrame:CGRectMake(0,
-                                                                          0,
-                                                                          tutorialStepView.bounds.size.width,
-                                                                          tutorialStepView.bounds.size.height * 0.40)];
-            lbHeader.attributedText = [[NSAttributedString alloc] initWithString:@"Great! Let's move on" attributes:attributesHeader];
-            lbHeader.textAlignment = NSTextAlignmentCenter;
-            [tutorialStepView addSubview:lbHeader];
-            
-            UILabel *description = [[UILabel alloc] initWithFrame:CGRectMake(padding,
-                                                                             tutorialStepView.bounds.size.height * 0.40,
-                                                                             tutorialStepView.bounds.size.width - padding * 2,
-                                                                             tutorialStepView.bounds.size.height * 0.60)];
-
-            NSString *descriptionText = @"Highlighted cell is absolutely safe, tap to open it.\n\nLater, all cells in 'zero' directions from tapped will be opened automatically.";
-            description.numberOfLines = 0;
-            description.attributedText = [[NSAttributedString alloc] initWithString:descriptionText attributes:attributesDescription];
-            description.textAlignment = NSTextAlignmentCenter;
-            [tutorialStepView addSubview:description];
-            
+            [self fillTutorialStepViewWithThirdCellView:tutorialStepView];
             break;
         }
         case JMSTutorialStepLastCellClick:
         {
-            UILabel *lbHeader = [[UILabel alloc] initWithFrame:CGRectMake(0,
-                                                                          0,
-                                                                          tutorialStepView.bounds.size.width,
-                                                                          tutorialStepView.bounds.size.height * 0.50)];
-            lbHeader.attributedText = [[NSAttributedString alloc] initWithString:@"The last step" attributes:attributesHeader];
-            lbHeader.textAlignment = NSTextAlignmentCenter;
-            [tutorialStepView addSubview:lbHeader];
-            
-            UILabel *description = [[UILabel alloc] initWithFrame:CGRectMake(padding,
-                                                                             tutorialStepView.bounds.size.height * 0.40,
-                                                                             tutorialStepView.bounds.size.width - padding * 2,
-                                                                             tutorialStepView.bounds.size.height * 0.60)];
-            
-            NSString *descriptionText = @"Now we deal with section right of the first opened cell.\n\nTap highlighed cell to open. Every opened cell awards you with score.\nAnd bonus score as well, depending on probability to meet a mine in that cell.";
-            description.numberOfLines = 0;
-            description.attributedText = [[NSAttributedString alloc] initWithString:descriptionText attributes:attributesDescription];
-            description.textAlignment = NSTextAlignmentCenter;
-            [tutorialStepView addSubview:description];
+            [self fillTutorialStepViewWithLastCellView:tutorialStepView];
             break;
         }
         case JMSTutorialStepCompleted:
         {
-            UILabel *lbHeader = [[UILabel alloc] initWithFrame:CGRectMake(0,
-                                                                          0,
-                                                                          tutorialStepView.bounds.size.width,
-                                                                          tutorialStepView.bounds.size.height / 2)];
-            NSDictionary *attributesHeader = @{
-                                               NSForegroundColorAttributeName: [UIColor whiteColor],
-                                               NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Medium" size:32]
-                                               };
-            lbHeader.attributedText = [[NSAttributedString alloc] initWithString:@"Tutorial completed!" attributes:attributesHeader];
-            lbHeader.textAlignment = NSTextAlignmentCenter;
-            [tutorialStepView addSubview:lbHeader];
+            [self fillTutorialStepViewWithStepCompletedView:tutorialStepView];
             
-            UILabel *lbDescription = [[UILabel alloc] initWithFrame:CGRectMake(0,
-                                                                               CGRectGetMidY(tutorialStepView.bounds),
-                                                                               tutorialStepView.bounds.size.width,
-                                                                               tutorialStepView.bounds.size.height / 2)];
-            NSDictionary *attributesDescription = @{
-                                                    NSForegroundColorAttributeName: [UIColor whiteColor],
-                                                    NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue" size:24]
-                                                    };
-            lbDescription.attributedText = [[NSAttributedString alloc] initWithString:@"Difficulty level can be changed in options section at any time."
-                                                                           attributes:attributesDescription];
-            lbDescription.textAlignment = NSTextAlignmentCenter;
-            [tutorialStepView addSubview:lbDescription];
-            
-            [UIView animateWithDuration:3 delay:5 options:UIViewAnimationOptionCurveEaseOut animations:^{
-                if (tutorialStepView) tutorialStepView.alpha = 0;
+            [UIView animateWithDuration:3 delay:3 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                if (tutorialStepView)
+                {
+                    tutorialStepView.alpha = 0;
+                }
             } completion:^(BOOL finished) {
-                if (tutorialStepView) [tutorialStepView removeFromSuperview];
+                if (tutorialStepView)
+                {
+                    [tutorialStepView removeFromSuperview];
+                }
             }];
             break;
         }
@@ -406,6 +458,7 @@
     }];
     return result;
 }
+
 - (void)completeTaskWithPosition:(JMSPosition)position
 {
     [_tasks enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {

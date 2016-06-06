@@ -28,13 +28,11 @@ CGFloat buttonHeight = 0;
     self = [super init];
     if (self)
     {
-        self.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
+        self.frame = [UIScreen mainScreen].bounds;
 
-        useMotionEffects = false;
+        useMotionEffects = NO;
         buttonTitle = title;
         onButtonTouchUpInside = onButtonTouchUpInsideHandler;
-        
-        
     }
     return self;
 }
@@ -184,7 +182,7 @@ CGFloat buttonHeight = 0;
     [closeButton setTitle:buttonTitle ?: @"Ok" forState:UIControlStateNormal];
     [closeButton setTitleColor:[UIColor colorFromInteger:0xffffffff] forState:UIControlStateNormal];
     [closeButton setTitleColor:[UIColor colorFromInteger:0x7f494949] forState:UIControlStateHighlighted];
-    [closeButton.titleLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Medium" size:19]];
+    [closeButton.titleLabel setFont:[UIFont systemFontOfSize:19 weight:UIFontWeightMedium]];
     [closeButton setBackgroundColor:[UIColor colorFromInteger:0xffff7f00]];
     [closeButton.layer setBorderColor:[UIColor colorFromInteger:0xffff6600].CGColor];
     [closeButton.layer setBorderWidth:1.0f];

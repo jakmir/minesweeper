@@ -10,18 +10,12 @@
 #import "JMSGradientButton.h"
 #import "JMSAboutViewController.h"
 
-@class JMSGameSessionInfo;
+@class JMSGameModel;
 
 @interface JMSMainViewController : UIViewController
 
-@property (weak, nonatomic) IBOutlet JMSGradientButton *btnStart;
-@property (weak, nonatomic) IBOutlet JMSGradientButton *btnComplexityLevel;
-@property (weak, nonatomic) IBOutlet JMSGradientButton *btnLeaderboard;
-@property (weak, nonatomic) IBOutlet UIView *buttonListContainer;
-@property (weak, nonatomic) IBOutlet UILabel *lbCaption;
 @property (strong, nonatomic) UIImage *mineGridSnapshot;
-
-@property (nonatomic, strong) JMSGameSessionInfo *gameSessionInfo;
+@property (strong, nonatomic) JMSGameModel *gameModel;
 
 - (IBAction)showAboutScreen:(UIButton *)sender;
 

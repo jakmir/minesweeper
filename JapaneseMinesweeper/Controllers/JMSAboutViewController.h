@@ -11,6 +11,4 @@
 
 @interface JMSAboutViewController : UIViewController
 
-- (BOOL)isInScreen;
-
 @end

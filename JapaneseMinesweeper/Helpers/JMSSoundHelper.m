@@ -37,7 +37,7 @@
 {
     if (_players == nil)
     {
-        _players = [[NSMutableArray alloc] init];
+        _players = [NSMutableArray array];
     }
     return _players;
 }
@@ -103,11 +103,9 @@
 {
     if (_mute) return;
 
-    NSLock *lock = [[NSLock alloc] init];
-    if ([lock tryLock]) {
+    @synchronized ([self class]) {
         AVAudioPlayer *player = [self audioPlayerForSoundAction:soundAction];
         [player play];
-        [lock unlock];
     }
 }
 

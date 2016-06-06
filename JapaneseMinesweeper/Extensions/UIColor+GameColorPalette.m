@@ -47,6 +47,6 @@
 
 + (UIColor *)needleColor
 {
-    return [UIColor colorFromInteger:0x3fffffff];
+    return [UIColor clearColor];
 }
 @end

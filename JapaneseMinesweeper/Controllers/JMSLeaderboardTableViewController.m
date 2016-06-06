@@ -12,6 +12,8 @@
 #import "JMSGameSession.h"
 #import "UIColor+ColorFromHexString.h"
 
+static const CGFloat kLeaderboardTableHeaderHeight = 22;
+
 @interface JMSLeaderboardTableViewController ()
 {
     NSArray *dataSource;
@@ -34,7 +36,7 @@
     [self.btnShowGameCenterScreen.layer setMasksToBounds:YES];
 }
 
-- (BOOL) prefersStatusBarHidden
+- (BOOL)prefersStatusBarHidden
 {
     return YES;
 }
@@ -46,7 +48,12 @@
 }
 
 - (CGFloat)headerHeight {
-    return 22.0;
+    return kLeaderboardTableHeaderHeight;
+}
+
+- (NSString *)leaderboardName
+{
+    return @"JMSMainLeaderboard";
 }
 
 #pragma mark - Table view data source
@@ -76,15 +83,15 @@
                             NSFontAttributeName:
                                 [UIFont systemFontOfSize:17]
                             };
-    lbLevelCaption.attributedText = [[NSAttributedString alloc] initWithString:@"Level"
+    lbLevelCaption.attributedText = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Level", @"Level: table column header")
                                                                     attributes:attrs];
     UILabel *lbProgressCaption = [[UILabel alloc] initWithFrame:CGRectMake(width * waypoints[1], 0, width * (waypoints[2] - waypoints[1]), height)];
-    lbProgressCaption.attributedText = [[NSAttributedString alloc] initWithString:@"Progress"
+    lbProgressCaption.attributedText = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Progress", @"Progress: table column header")
                                                                        attributes:attrs];
 
     UILabel *lbScoreCaption = [[UILabel alloc] initWithFrame:CGRectMake(width * waypoints[2], 0, width * (waypoints[3] - waypoints[2]), height)];
     lbScoreCaption.textAlignment = NSTextAlignmentRight;
-    lbScoreCaption.attributedText = [[NSAttributedString alloc] initWithString:@"Score"
+    lbScoreCaption.attributedText = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Score", @"Score: table column header")
                                                                     attributes:attrs];
     [view addSubview:lbScoreCaption];
     [view addSubview:lbLevelCaption];
@@ -96,9 +103,8 @@
 {
     JMSScoreTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ScoreCell" forIndexPath:indexPath];
     JMSGameSession *gameSession = dataSource[indexPath.row];
-    [cell assignScore:[gameSession.score intValue]
-             progress:lroundf(gameSession.progress.floatValue * 100)
-                level:[gameSession.level intValue]];
+    [cell fillWithModel:gameSession];
+
     return cell;
 }
 
@@ -111,7 +117,7 @@
 
 - (IBAction)openGameboardScreen
 {
-    [self showLeaderboard:@"JMSMainLeaderboard"];
+    [self showLeaderboard:[self leaderboardName]];
 }
 
 #pragma mark - GameCenter-related actions

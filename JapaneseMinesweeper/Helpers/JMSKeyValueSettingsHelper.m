@@ -12,6 +12,7 @@
 {
     NSDictionary *_dictionary;
 }
+
 - (id)init
 {
     if (self = [super init])

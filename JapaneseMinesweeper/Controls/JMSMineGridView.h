@@ -9,22 +9,15 @@
 #import <UIKit/UIKit.h>
 #import "Structs.h"
 #import "Enums.h"
-#import "JMSMineGrid.h"
+#import "JMSAlteredCellInfo.h"
 
-@class JMSGameSessionInfo;
+@class JMSGameModel;
 
 @interface JMSMineGridView : UIView
 
-- (void) fillTutorialMapWithLevel:(NSUInteger)level;
-- (void) fillMapWithLevel:(NSUInteger)level exceptPosition:(JMSPosition)position;
+@property (nonatomic, strong) NSArray *map;
+
 - (JMSPosition)cellPositionWithCoordinateInside: (CGPoint)point;
-- (BOOL) clickedWithCoordinate: (CGPoint)point;
-- (void) longTappedWithCoordinate: (CGPoint)point;
-- (NSInteger) cellsLeftToOpen;
-- (CGFloat) bonus:(JMSPosition)position;
-- (JMSMineGridCellState) cellState:(JMSPosition)position;
-- (JMSMineGridCellNeighboursSummary) cellSummaryWithPosition:(JMSPosition)position;
-- (NSInteger) cellsCount;
 
 - (NSArray *)exportMap;
 - (void)importMap:(NSArray *)gameboardMap;
@@ -34,8 +27,9 @@
 - (void)resetGame;
 - (NSInteger)markMines;
 
+- (void)updateCellWithAlteredCellModel:(JMSAlteredCellInfo *)alteredCellModel;
+
 @property (nonatomic, readonly) BOOL gameFinished;
-@property (nonatomic, readonly) JMSMineGrid *gameboard;
 
 - (void)highlightCellWithPosition:(JMSPosition)position;
 - (void)removeHighlights;

@@ -9,7 +9,8 @@
 #import "JMSGameBoardViewController.h"
 #import "JMSMineGridCell.h"
 #import "JMSMainViewController.h"
-#import "JMSGameSessionInfo.h"
+#import "JMSGameModel.h"
+#import "JMSAlteredCellInfo.h"
 #import "UIColor+ColorFromHexString.h"
 #import <GameKit/GKLocalPlayer.h>
 #import <GameKit/GKScore.h>
@@ -18,42 +19,43 @@
 #import "JMSSoundHelper.h"
 #import "JMSPopoverPresentationController.h"
 #import "JMSTutorialManager.h"
+#import "JMSGameboardView.h"
+#import "JMSMessageBoxView+LevelCompleted.h"
 
 @interface JMSGameBoardViewController ()
 {
     BOOL initialTapPerformed;
-    NSInteger minesCount;
-    NSUInteger level;
     BOOL popoverAlreadyDismissed;
-    BOOL shouldOpenCellInZeroDirection;
-    JMSTutorialManager *tutorialManager;
 }
 
-@property (nonatomic) CGFloat score;
-@property (nonatomic) NSInteger cellsLeftCount;
-@property (nonatomic) NSInteger cellsMarked;
-@property (nonatomic, getter=baseScore) CGFloat baseScore;
+@property (nonatomic, readonly) JMSGameboardView *gameboardView;
+@property (nonatomic, readonly) JMSTutorialManager *tutorialManager;
+@property (nonatomic) BOOL shouldOpenCellInZeroDirection;
 
 @end
 
 @implementation JMSGameBoardViewController
 
-- (CGFloat)baseScore
+- (JMSGameboardView *)gameboardView
 {
-    return 175.0;
+    if ([self.view isKindOfClass:[JMSGameboardView class]])
+    {
+        return (JMSGameboardView *)self.view;
+    }
+    return nil;
 }
 
 - (void)addGestureRecognizers
 { 
     UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
                                                                                     action:@selector(singleTap:)];
-    [self.mineGridView addGestureRecognizer:tapRecognizer];
+    [self.gameboardView.mineGridView addGestureRecognizer:tapRecognizer];
 
     UILongPressGestureRecognizer *longTapRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self
                                                                                                     action:@selector(longTap:)];
     CGFloat minimumPressDuration = [[NSUserDefaults standardUserDefaults] floatForKey:@"holdDuration"];
     longTapRecognizer.minimumPressDuration = minimumPressDuration;
-    [self.mineGridView addGestureRecognizer:longTapRecognizer];
+    [self.gameboardView.mineGridView addGestureRecognizer:longTapRecognizer];
 }
 
 - (BOOL) prefersStatusBarHidden
@@ -70,34 +72,54 @@
 {
     initialTapPerformed = YES;
     
-    JMSGameSessionInfo *gameSessionInfo = self.mainViewController.gameSessionInfo;
-    [self setScore:gameSessionInfo.score];
-    level = gameSessionInfo.level;
-    [self.mineGridView importMap:gameSessionInfo.map];
-    [self setCellsLeftCount:self.mineGridView.cellsLeftToOpen];
-    minesCount = level;
-    [self setCellsMarked:gameSessionInfo.markedCellsCount];
+    JMSGameModel *gameSessionInfo = self.mainViewController.gameModel;
+    [gameSessionInfo registerObserver:self];
+    
+    [self.gameboardView.mineGridView importMap:gameSessionInfo.map];
+    [self.gameboardView fillWithModel:gameSessionInfo];
 }
 
 - (void)createNewGame
 {
     initialTapPerformed = NO;
+    
+    JMSGameModel *gameModel = [[JMSGameModel alloc] init];
+    gameModel.score = 0;
+    gameModel.level = [[NSUserDefaults standardUserDefaults] integerForKey:@"level"];
+    gameModel.map = [self.gameboardView.mineGridView exportMap];
+    [gameModel registerObserver:self];
+    self.gameModel = gameModel;
+    [self.gameboardView fillWithModel:gameModel];
+    /*
     [self setScore:0];
     level = [[NSUserDefaults standardUserDefaults] integerForKey:@"level"];
     [self setCellsLeftCount:100 - level];
     minesCount = level;
-    [self setCellsMarked:0];
+    [self setCellsMarked:0];*/
 }
 
 - (void)createTutorialGame
 {
     initialTapPerformed = YES;
+    
+    JMSGameModel *gameModel = [[JMSGameModel alloc] init];
+    gameModel.score = 0;
+    gameModel.level = [[NSUserDefaults standardUserDefaults] integerForKey:@"level"];
+    gameModel.map = [self.gameboardView.mineGridView exportMap];
+    [gameModel registerObserver:self];
+    [gameModel fillTutorialMapWithLevel:gameModel.level];
+    self.gameModel = gameModel;
+    [self.gameboardView fillWithModel:gameModel];
+    
+    
+    /*
     [self setScore:0];
     level = [[NSUserDefaults standardUserDefaults] integerForKey:@"level"];
     [self setCellsLeftCount:100 - level];
     minesCount = level;
     [self setCellsMarked:0];
-    [self.mineGridView fillTutorialMapWithLevel:level];
+     */
+    //[self.mineGridView fillTutorialMapWithLevel:level];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -107,11 +129,11 @@
     if ([self shouldDisplayTutorial])
     {
         [self createTutorialGame];
-        tutorialManager = [[JMSTutorialManager alloc] initWithGameboardController:self];
+        _tutorialManager = [[JMSTutorialManager alloc] initWithGameboardController:self size:self.gameboardView.resultsView.bounds.size];
     }
     else
     {
-        if (self.mainViewController.gameSessionInfo)
+        if (self.mainViewController.gameModel)
         {
             [self importFromGameSession];
         }
@@ -120,45 +142,48 @@
             [self createNewGame];
         }
     }
-    shouldOpenCellInZeroDirection = [[NSUserDefaults standardUserDefaults] boolForKey:@"shouldOpenSafeCells"];
+    self.shouldOpenCellInZeroDirection = [[NSUserDefaults standardUserDefaults] boolForKey:@"shouldOpenSafeCells"];
+    
+    [self configureUI];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    [self.view bringSubviewToFront:self.ivSnapshot];
-    [self.ivSnapshot setImage:self.mainViewController.mineGridSnapshot];
-    [self.ivSnapshot setHidden:NO];
+    [self.view bringSubviewToFront:self.gameboardView.ivSnapshot];
+    [self.gameboardView.ivSnapshot setImage:self.mainViewController.mineGridSnapshot];
+    [self.gameboardView.ivSnapshot setHidden:NO];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self.mineGridView refreshCells];
-    [self.ivSnapshot setHidden:YES];
-    [self configureUI];
+    [self.gameboardView.mineGridView refreshCells];
+    [self.gameboardView.ivSnapshot setHidden:YES];
+
     [self addGestureRecognizers];
     
-    if ([self shouldDisplayTutorial] && tutorialManager)
+    if ([self shouldDisplayTutorial] && self.tutorialManager)
     {
-        [tutorialManager moveToNextStep];
+        [self.tutorialManager moveToNextStep];
     }
     
 }
 
 - (void)removeGestureRecognizers
 {
-    for (UIGestureRecognizer *gestureRecognizer in self.mineGridView.gestureRecognizers) {
-        [self.mineGridView removeGestureRecognizer:gestureRecognizer];
+    for (UIGestureRecognizer *gestureRecognizer in self.gameboardView.mineGridView.gestureRecognizers) {
+        [self.gameboardView.mineGridView removeGestureRecognizer:gestureRecognizer];
     }
 }
 
 - (void) configureUI
 {
-    [self updateMenu];
+    BOOL tutorialFinished = self.tutorialManager ? self.tutorialManager.isFinished : YES;
+    [self.gameboardView updateMenuWithFinishedTutorial:tutorialFinished gameFinished:self.gameboardView.mineGridView.gameFinished];
     UIColor *patternColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"wallpaper"]];
-    [self.resultsView setBackgroundColor:patternColor];
+    [self.gameboardView.resultsView setBackgroundColor:patternColor];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -166,8 +191,6 @@
     [super viewWillDisappear:animated];
     
     [self removeGestureRecognizers];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)didReceiveMemoryWarning
@@ -180,71 +203,9 @@
 
 - (void)finalizeGame
 {
-    [self.mineGridView finalizeGame];
-   
-    [self updateMenu];
-}
-
-- (void) updateMenu
-{
-    NSString *caption;
-    UIColor *captionColor;
-    
-    if (self.mineGridView.gameFinished)
-    {
-        captionColor = [UIColor brightOrangeColor];
-        caption = @"PLAY AGAIN";
-    }
-    else
-    {
-        captionColor = [UIColor brightPurpleColor];
-        caption = @"RESET GAME";
-    }
-
-    [self.btnResetGame setTitleColor:captionColor forState:UIControlStateNormal];
-    [self.btnResetGame setTitle:caption forState:UIControlStateNormal];
-    [self.btnResetGame setTitleColor:[UIColor lightGrayColor] forState:UIControlStateDisabled];
-    
-    CGFloat cornerRadius = [[JMSKeyValueSettingsHelper instance] buttonCornerRadius];
-    [self.btnMainMenu.layer setCornerRadius:cornerRadius];
-    [self.btnResetGame.layer setCornerRadius:cornerRadius];
-    [self.btnMainMenu.layer setMasksToBounds:YES];
-    [self.btnResetGame.layer setMasksToBounds:YES];
-    
-    if (tutorialManager)
-    {
-        [self.btnResetGame setEnabled:tutorialManager.isFinished];
-    }
-}
-
-#pragma mark - synchronize labels with real values
-
-- (void) setScore:(CGFloat)score
-{
-    _score = score;
-
-    [self.lbScore setText:[@(lroundf(score)) stringValue]];
-}
-
-- (void) setCellsLeftCount:(NSInteger)cellsLeftCount
-{
-    _cellsLeftCount = cellsLeftCount;
-    CGFloat progress = 100 * (100.0 - level - self.cellsLeftCount) / (100 - level);
-    [self.lbProgress setText:[NSString stringWithFormat:@"%ld%%", lroundf(progress)]];
-}
-
-- (void) setCellsMarked:(NSInteger)cellsMarked
-{
-    _cellsMarked = cellsMarked;
-    
-    NSString *stringToDisplay = [NSString stringWithFormat:@"%ld/%ld", (long)cellsMarked, (long)minesCount];
-    NSUInteger len = [@(cellsMarked) stringValue].length;
-    NSMutableAttributedString * string = [[NSMutableAttributedString alloc] initWithString:stringToDisplay];
-    
-    UIColor *cellsMarkedColor = cellsMarked > minesCount ? [UIColor colorFromInteger:0xffff7f7f] : [UIColor darkGrayColor];
-    [string addAttribute:NSForegroundColorAttributeName value:cellsMarkedColor range:NSMakeRange(0, len)];
-
-    self.lbCellsMarked.attributedText = string;
+    [self.gameboardView.mineGridView finalizeGame];
+    BOOL tutorialFinished = self.tutorialManager ? self.tutorialManager.isFinished : YES;
+    [self.gameboardView updateMenuWithFinishedTutorial:tutorialFinished gameFinished:self.gameboardView.mineGridView.gameFinished];
 }
 
 #pragma mark - handle taps
@@ -253,199 +214,100 @@
 {
     NSLog(@"%s", __FUNCTION__);
     
-    if (self.mineGridView.gameFinished) return;
+    if (self.gameboardView.mineGridView.gameFinished) return; //take from model like (if self.gameboardModel.gameFinished)
     
-    CGPoint coord = [gestureRecognizer locationInView:self.mineGridView];
+    CGPoint coord = [gestureRecognizer locationInView:self.gameboardView.mineGridView];
     
-    JMSPosition position = [self.mineGridView cellPositionWithCoordinateInside:coord];
+    JMSPosition position = [self.gameboardView.mineGridView cellPositionWithCoordinateInside:coord];
     
     if (position.row == NSNotFound || position.column == NSNotFound ||
-        ([self shouldDisplayTutorial] && !tutorialManager.isFinished && ![tutorialManager isAllowedWithAction:JMSAllowedActionsClick
-                                                                                                     position:position])) return;
+        ([self shouldDisplayTutorial] && !self.tutorialManager.isFinished && ![self.tutorialManager isAllowedWithAction:JMSAllowedActionsClick
+                                                                                                               position:position])) return;
     
     if (!initialTapPerformed)
     {
-        [self.mineGridView fillMapWithLevel:level exceptPosition:position];
+        [self.gameModel fillMapWithLevel:self.gameModel.level exceptPosition:position];
         initialTapPerformed = YES;
     }
     
-    if ([self.mineGridView.gameboard mineAtPosition:position])
+    if ([self.gameModel mineAtPosition:position])
     {
-        [[JMSSoundHelper instance] playSoundWithAction:JMSSoundActionGameFailed];
-        [self.mineGridView clickedWithCoordinate:coord];
-        [self postScore];
-        [self finalizeGame];
-        [self.mainViewController setGameSessionInfo:nil];
-        [self.mainViewController setMineGridSnapshot:nil];
+        [self.gameModel singleTappedWithPosition:position];
         return;
     }
     else
     {
         NSUInteger unmarkedCellsCount;
         NSUInteger openedCellsCount;
-        BOOL shouldOpenSafeCells = (![self shouldDisplayTutorial] && shouldOpenCellInZeroDirection) ||
-                                    ([self shouldDisplayTutorial] && tutorialManager.currentStep >= JMSTutorialStepLastCellClick);
-        BOOL opened = [self.mineGridView.gameboard openInZeroDirectionsFromPosition:position
-                                                                      unmarkedCount:&unmarkedCellsCount
-                                                                        openedCount:&openedCellsCount
-                                                                shouldOpenSafeCells:shouldOpenSafeCells];
-        if (opened)
-        {
-            if ([self shouldDisplayTutorial] && !tutorialManager.isFinished)
-            {
-                [tutorialManager completeTaskWithPosition:position];
-            }
-        }
-        else
+        BOOL shouldOpenSafeCells = (![self shouldDisplayTutorial] && self.shouldOpenCellInZeroDirection) ||
+                                    ([self shouldDisplayTutorial] && self.tutorialManager.currentStep >= JMSTutorialStepLastCellClick);
+        BOOL opened = [self.gameModel openInZeroDirectionsFromPosition:position
+                                                         unmarkedCount:&unmarkedCellsCount
+                                                           openedCount:&openedCellsCount
+                                                   shouldOpenSafeCells:shouldOpenSafeCells];
+        if (!opened)
         {
             return;
         }
-        self.cellsLeftCount = [self.mineGridView cellsLeftToOpen];
-        self.score += [self scoreToAddFromPosition:position];
-        self.score += [self cellBasedScore] * (openedCellsCount - 1);
-        self.cellsMarked -= unmarkedCellsCount;
-           
-        if (self.cellsLeftCount > 0)
+
+        if ([self shouldDisplayTutorial] && !self.tutorialManager.isFinished)
         {
-            [[JMSSoundHelper instance] playSoundWithAction:JMSSoundActionCellTap];
-        }
-        else
-        {
-            [[JMSSoundHelper instance] playSoundWithAction:JMSSoundActionLevelCompleted];
-            self.score *= [self levelModifier];
-            [self postScore];
-            self.cellsMarked += [self.mineGridView markMines];
-            [self finalizeGame];
-            [self showMessageBox];
+            [self.tutorialManager completeTaskWithPosition:position];
         }
     }
 }
 
-- (CGFloat)levelModifier
-{
-    return 1 + level / 100.0;
-}
-
-- (CGFloat)cellBasedScore
-{
-    return self.baseScore * pow([self levelModifier], 4);
-}
-
-- (CGFloat)scoreToAddFromPosition:(JMSPosition)position
-{
-    return [self cellBasedScore] * pow(1 + [self.mineGridView bonus:position], 3);
-}
-
-- (void) longTap: (UIGestureRecognizer *)gestureRecognizer
+- (void)longTap: (UIGestureRecognizer *)gestureRecognizer
 {
     NSLog(@"%s", __FUNCTION__);
-    if (self.mineGridView.gameFinished) return;
+    if (self.gameboardView.mineGridView.gameFinished) return;
     
     if (gestureRecognizer.state == UIGestureRecognizerStateBegan)
     {
-        CGPoint coord = [gestureRecognizer locationInView:self.mineGridView];
-        JMSPosition position = [self.mineGridView cellPositionWithCoordinateInside:coord];
+        CGPoint touchLocation = [gestureRecognizer locationInView:self.gameboardView.mineGridView];
+        JMSPosition position = [self.gameboardView.mineGridView cellPositionWithCoordinateInside:touchLocation];
         
         if (position.row == NSNotFound || position.column == NSNotFound ||
-            ([self shouldDisplayTutorial] && !tutorialManager.isFinished && ![tutorialManager isAllowedWithAction:JMSAllowedActionsMark
-                                                                                                         position:position])) return;
+            ([self shouldDisplayTutorial] && !self.tutorialManager.isFinished && ![self.tutorialManager isAllowedWithAction:JMSAllowedActionsMark
+                                                                                                                   position:position])) return;
         
         if ([self shouldDisplayTutorial])
         {
-            if ([tutorialManager taskCompletedWithPosition:position])
+            if ([self.tutorialManager taskCompletedWithPosition:position])
                 return;
             else
-                [tutorialManager completeTaskWithPosition:position];
+                [self.tutorialManager completeTaskWithPosition:position];
         }
-        JMSMineGridCellState oldState = [self.mineGridView cellState:position];
-        [self.mineGridView longTappedWithCoordinate:coord];
-        JMSMineGridCellState newState = [self.mineGridView cellState:position];
         
-        if (oldState == MineGridCellStateMarked && newState == MineGridCellStateClosed)
-        {
-            self.cellsMarked--;
-            [[JMSSoundHelper instance] playSoundWithAction:JMSSoundActionPutFlag];
-        }
-        if (oldState == MineGridCellStateClosed && newState == MineGridCellStateMarked)
-        {
-            self.cellsMarked++;
-            [[JMSSoundHelper instance] playSoundWithAction:JMSSoundActionPutFlag];
-        }
+        [self.gameModel longTappedWithPosition:position];
     }
 }
 
 - (void)showMessageBox
 {
-    JMSMessageBoxView *alertView = [[JMSMessageBoxView alloc] initWithButtonTitle:@"Play again"
+    JMSMessageBoxView *alertView = [[JMSMessageBoxView alloc] initWithButtonTitle:NSLocalizedString(@"Play again", @"Play again - button title")
                                                                     actionHandler:^{
                                                                         [self resetGame];
                                                                     }];
-    [alertView setContainerView:[self messageBoxContentView]];
+    [alertView setContainerView:[JMSMessageBoxView messageBoxContentView]];
     [alertView setUseMotionEffects:true];
     [alertView show];
 }
 
-- (UIView *)messageBoxContentView
-{
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 200)];
-    UILabel *lbCaption = [[UILabel alloc] initWithFrame:CGRectMake(0, 20, 320, 32)];
-    lbCaption.textAlignment = NSTextAlignmentCenter;
-    lbCaption.attributedText = [[NSAttributedString alloc] initWithString:@"You won this round"
-                                                               attributes:@{
-                                                                            NSForegroundColorAttributeName:
-                                                                                [UIColor juicyOrangeColor],
-                                                                            NSFontAttributeName:
-                                                                                [UIFont fontWithName:@"HelveticaNeue-Light"
-                                                                                                size:28]
-                                                                            }];
-    
-    UILabel *lbText = [[UILabel alloc] initWithFrame:CGRectMake(20, 40, 280, 150)];
-    lbText.numberOfLines = 0;
-    lbText.textAlignment = NSTextAlignmentCenter;
 
-    lbText.attributedText = [[NSAttributedString alloc] initWithString:@"Congratulations!\n\nAll mines were discovered"
-                                                            attributes:@{
-                                                                         NSForegroundColorAttributeName:
-                                                                             [UIColor lightGrayColor],
-                                                                         NSFontAttributeName:
-                                                                             [UIFont systemFontOfSize:17]
-                                                                         }];
-    [contentView addSubview:lbCaption];
-    [contentView addSubview:lbText];
-   
-    return contentView;
-}
 
 #pragma mark - Upper Menu Actions
 
 - (IBAction)backToMainMenu
 {
-    if (initialTapPerformed && !self.mineGridView.gameFinished)
+    if (initialTapPerformed && !self.gameboardView.mineGridView.gameFinished)
     {
-        JMSGameSessionInfo *gameSessionInfo = [JMSGameSessionInfo new];
-        gameSessionInfo.map = [self.mineGridView exportMap];
-        gameSessionInfo.score = self.score;
-        gameSessionInfo.level = level;
-        self.mainViewController.gameSessionInfo = gameSessionInfo;
-        self.mainViewController.mineGridSnapshot = [self snapshot:self.mineGridView];
+        [self.gameModel unregisterObserver:self];
+
+        self.mainViewController.gameModel = self.gameModel;
+        self.mainViewController.mineGridSnapshot = [self.gameboardView mineGridViewSnapshot];
     }
     [self dismissViewControllerAnimated:NO completion:nil];
-}
-
-- (UIImage *)snapshot:(UIView *)view
-{
-    UIGraphicsBeginImageContextWithOptions(view.bounds.size, YES, 0);
-    [view drawViewHierarchyInRect:view.bounds afterScreenUpdates:YES];
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return image;
-}
-
-- (BOOL)iOS8OrAbove
-{
-    NSComparisonResult order = [[UIDevice currentDevice].systemVersion compare:@"8.0"
-                                                                       options:NSNumericSearch];
-    return (order == NSOrderedSame || order == NSOrderedDescending);
 }
 
 - (void)popoverPresentationControllerDidDismissPopover:(UIPopoverPresentationController *)popoverPresentationController
@@ -463,55 +325,39 @@
     {
         return;
     }
-    if (self.mineGridView.gameFinished)
+    if (self.gameboardView.mineGridView.gameFinished)
     {
         [self resetGame];
         return;
     }
-    if ([self iOS8OrAbove])
-    {
-        
-        UIAlertController *resetGameController = [UIAlertController alertControllerWithTitle:nil
+
+    UIAlertController *resetGameController = [UIAlertController alertControllerWithTitle:nil
                                                                                      message:nil
                                                                               preferredStyle:UIAlertControllerStyleActionSheet];
-        UIAlertAction *alertActionYes = [UIAlertAction actionWithTitle:@"Confirm reset" style:UIAlertActionStyleDestructive
+    NSString *confirmResetString = NSLocalizedString(@"Confirm reset", @"Confirm reset - popover button title");
+    UIAlertAction *alertActionYes = [UIAlertAction actionWithTitle:confirmResetString style:UIAlertActionStyleDestructive
                                                                handler:^(UIAlertAction *action) {
                                                                    [self resetGame];
                                                                }];
-        [resetGameController addAction:alertActionYes];
-        [resetGameController setModalPresentationStyle:UIModalPresentationPopover];
+    [resetGameController addAction:alertActionYes];
+    [resetGameController setModalPresentationStyle:UIModalPresentationPopover];
     
-        UIPopoverPresentationController *popPresenter = [resetGameController popoverPresentationController];
-        popPresenter.sourceView = self.btnResetGame;
-        popPresenter.sourceRect = self.btnResetGame.bounds;
-        popPresenter.delegate = self;
-        [self presentViewController:resetGameController animated:YES completion:nil];
-    }
-    else
-    {
-        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self
-                                                        cancelButtonTitle:@"" destructiveButtonTitle:@"Confirm reset"
-                                                        otherButtonTitles:nil];
-        [actionSheet showFromRect:self.btnResetGame.frame inView:self.view animated:NO];
-        
-    }
-}
-
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (buttonIndex == 0)
-    {
-        [self resetGame];
-    }
+    UIPopoverPresentationController *popPresenter = [resetGameController popoverPresentationController];
+    popPresenter.sourceView = self.gameboardView.btnResetGame;
+    popPresenter.sourceRect = self.gameboardView.btnResetGame.bounds;
+    popPresenter.delegate = self;
+    [self presentViewController:resetGameController animated:YES completion:nil];
 }
 
 - (void)resetGame
 {
-    [self.mineGridView resetGame];
-    [self.mainViewController setGameSessionInfo:nil];
+    [self.gameboardView.mineGridView resetGame];
+    [self.gameModel unregisterObserver:self];
+    self.gameModel = nil;
+    [self.mainViewController setGameModel:self.gameModel];
     [self.mainViewController setMineGridSnapshot:nil];
     [self createNewGame];
-    [self updateMenu];
+    [self.gameboardView updateMenuWithFinishedTutorial:YES gameFinished:NO];
 }
 #pragma mark - Submit results
 
@@ -525,10 +371,9 @@
 }
 - (void)postScoreLocally
 {
-    CGFloat progress = (100.0 - level - self.cellsLeftCount) / (100 - level);
-    [[[JMSLeaderboardManager alloc] init] postGameScore:lroundf(self.score)
-                                                  level:level
-                                               progress:progress];
+    [[[JMSLeaderboardManager alloc] init] postGameScore:lroundf(self.gameModel.score)
+                                                  level:self.gameModel.level
+                                               progress:self.gameModel.progress];
 }
 
 - (void)postScoreToGameCenter
@@ -536,7 +381,7 @@
     // Report the high score to Game Center
     GKScore *scoreReporter = [[GKScore alloc] initWithLeaderboardIdentifier:@"JMSMainLeaderboard"
                                                                      player:[GKLocalPlayer localPlayer]];
-    scoreReporter.value = lroundf(self.score);
+    scoreReporter.value = lroundf(self.gameModel.score);
 
     [GKScore reportScores:@[scoreReporter] withCompletionHandler:^(NSError *error) {
         if (error)
@@ -550,12 +395,48 @@
     }];
 }
 
-#pragma mark - Tutorial Actions
 
-- (void)finishTutorial
+#pragma mark - Observer methods
+
+- (void)cellsChanged:(NSArray *)alteredCellsCollection
 {
-    [self updateMenu];
+    for (JMSAlteredCellInfo *alteredCellModel in alteredCellsCollection)
+    {
+        [self.gameboardView.mineGridView updateCellWithAlteredCellModel:alteredCellModel];
+    }
+    [self.gameboardView fillWithModel:self.gameModel];
 }
 
+- (void)flagAdded
+{
+    [[JMSSoundHelper instance] playSoundWithAction:JMSSoundActionPutFlag];
+}
+
+- (void)flagRemoved
+{
+    [[JMSSoundHelper instance] playSoundWithAction:JMSSoundActionPutFlag];
+}
+
+- (void)ranIntoMine
+{
+    [[JMSSoundHelper instance] playSoundWithAction:JMSSoundActionGameFailed];
+    [self postScore];
+    [self finalizeGame];
+    [self.mainViewController setGameModel:nil];
+    [self.mainViewController setMineGridSnapshot:nil];
+}
+
+- (void)cellSuccessfullyOpened
+{
+    [[JMSSoundHelper instance] playSoundWithAction:JMSSoundActionCellTap];
+}
+
+- (void)levelCompleted
+{
+    [[JMSSoundHelper instance] playSoundWithAction:JMSSoundActionLevelCompleted];
+    [self postScore];
+    [self finalizeGame];
+    [self showMessageBox];
+}
 
 @end

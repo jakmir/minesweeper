@@ -10,11 +10,13 @@
 #import "UIColor+ColorFromHexString.h"
 #import "Enums.h"
 #import "JMSSoundHelper.h"
+#import "JMSOptionsView.h"
 
 @interface JMSOptionsViewController ()
-{
-    NSInteger level;
-}
+
+@property (nonatomic) NSInteger level;
+@property (nonatomic, readonly) JMSOptionsView *optionsView;
+
 @end
 
 @implementation JMSOptionsViewController
@@ -22,12 +24,12 @@
 - (void)initializeFromUserDefaults
 {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    level = [userDefaults integerForKey:@"level"];
-    self.swSoundEnabled.on = [userDefaults boolForKey:@"soundEnabled"];
-    self.swOpenSafeCells.on = [userDefaults boolForKey:@"shouldOpenSafeCells"];
+    self.level = [userDefaults integerForKey:@"level"];
+    self.optionsView.swSoundEnabled.on = [userDefaults boolForKey:@"soundEnabled"];
+    self.optionsView.swOpenSafeCells.on = [userDefaults boolForKey:@"shouldOpenSafeCells"];
     CGFloat holdDuration = [userDefaults floatForKey:@"holdDuration"];
-    self.slHoldDuration.value = holdDuration;
-    [self sliderValueChanged:self.slHoldDuration];
+    self.optionsView.slHoldDuration.value = holdDuration;
+    [self sliderValueChanged:self.optionsView.slHoldDuration];
 }
 
 - (BOOL) prefersStatusBarHidden
@@ -35,13 +37,21 @@
     return YES;
 }
 
+- (JMSOptionsView *)optionsView
+{
+    if ([self.view isKindOfClass:[JMSOptionsView class]])
+    {
+        return (JMSOptionsView *)self.view;
+    }
+    return nil;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
     [self initializeFromUserDefaults];
-    [self.gradientSpeedmeter setMinimumValue:16];
-    [self.gradientSpeedmeter setMaximumValue:39];
-    [self.gradientSpeedmeter setPower:level];
+    [self.optionsView fillGradientSpeedmeterWithLevel:self.level];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -56,25 +66,24 @@
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-    [super viewWillDisappear:animated];
-    
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-
+    
+    [super viewWillDisappear:animated];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     
-    [self.btnSave setNeedsDisplay];
+    /*
+    [self.optionsView.btnSave setNeedsDisplay];
     [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate date]];
+    */
     
-    [self.btnSave drawGradientWithStartColor:[[JMSKeyValueSettingsHelper instance] gradientStartColor]
-                              andFinishColor:[[JMSKeyValueSettingsHelper instance] gradientFinishColor]];
-    [self.btnSave.layer setCornerRadius:[[JMSKeyValueSettingsHelper instance] menuButtonCornerRadius]];
-    [self.btnSave.layer setMasksToBounds:YES];
-    self.generalSettings.center = CGPointMake(CGRectGetMidX(self.view.frame),
-                                              (CGRectGetMaxY(self.difficultyLevel.frame) + CGRectGetMinY(self.btnSave.frame)) / 2);
+    [self.optionsView.btnSave drawGradientWithStartColor:[[JMSKeyValueSettingsHelper instance] gradientStartColor]
+                                          andFinishColor:[[JMSKeyValueSettingsHelper instance] gradientFinishColor]];
+    [self.optionsView.btnSave.layer setCornerRadius:[[JMSKeyValueSettingsHelper instance] menuButtonCornerRadius]];
+    [self.optionsView.btnSave.layer setMasksToBounds:YES];
 }
 
 - (void)didReceiveMemoryWarning
@@ -87,36 +96,25 @@
 {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     
-    [userDefaults setInteger:level forKey:@"level"];
-    [userDefaults setBool:self.swSoundEnabled.on forKey:@"soundEnabled"];
-    [userDefaults setFloat:self.slHoldDuration.value forKey:@"holdDuration"];
-    [userDefaults setBool:self.swOpenSafeCells.on forKey:@"shouldOpenSafeCells"];
+    [userDefaults setInteger:self.level forKey:@"level"];
+    [userDefaults setBool:self.optionsView.swSoundEnabled.on forKey:@"soundEnabled"];
+    [userDefaults setFloat:self.optionsView.slHoldDuration.value forKey:@"holdDuration"];
+    [userDefaults setBool:self.optionsView.swOpenSafeCells.on forKey:@"shouldOpenSafeCells"];
     [userDefaults synchronize];
     
-    [[JMSSoundHelper instance] mute:!self.swSoundEnabled.on];
+    [[JMSSoundHelper instance] mute:!self.optionsView.swSoundEnabled.on];
+    
     [self dismissViewControllerAnimated:NO completion:nil];
 }
 
 - (void)valueChanged:(NSNotification *)notification
 {
-    level = self.gradientSpeedmeter.power;
+    self.level = self.optionsView.gradientSpeedmeter.power;
 }
 
 - (IBAction)sliderValueChanged:(UISlider *)sender
 {
-    self.lbHoldDuration.text = [NSString stringWithFormat:@"%0.2f", sender.value];
-}
-
-- (void)selectButton: (UIButton *)button withColor: (UIColor *)color
-{
-    [button.titleLabel setFont:[UIFont boldSystemFontOfSize:48]];
-    [button setTitleColor:color forState:UIControlStateNormal];
-}
-
-- (void)deselectButton: (UIButton *)button
-{
-    [button.titleLabel setFont:[UIFont boldSystemFontOfSize:36]];
-    [button setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+    [self.optionsView updateHoldDurationWithValue:sender.value];
 }
 
 @end

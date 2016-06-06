@@ -1,0 +1,18 @@
+/* 
+  Localizable.strings
+  JapaneseMinesweeper
+
+  Created by Jakmir on 6/6/16.
+  Copyright © 2016 Jakmir. All rights reserved.
+*/
+
+"Play again" = "PLAY AGAIN";
+"Reset game" = "RESET GAME";
+"Continue" = "Continue";
+"New game" = "New game";
+"SecondSliderFormatString" = "%0.2f sec.";
+"Confirm reset" = "Confirm reset";
+"Play again" = "Play again";
+"Level" = "Level";
+"Progress" = "Progress";
+"Score" = "Score";

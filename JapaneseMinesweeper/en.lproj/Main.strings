@@ -1,0 +1,57 @@
+
+/* Class = "UILabel"; text = "It seems high score table is empty."; ObjectID = "0TO-so-GXw"; */
+"0TO-so-GXw.text" = "It seems high score table is empty.";
+
+/* Class = "UIButton"; normalTitle = "MAIN MENU"; ObjectID = "4ds-Im-0Uw"; */
+"4ds-Im-0Uw.normalTitle" = "MAIN MENU";
+
+/* Class = "UILabel"; text = "MARKED"; ObjectID = "5A7-5Z-pFf"; */
+"5A7-5Z-pFf.text" = "MARKED";
+
+/* Class = "UILabel"; text = "Complexity level"; ObjectID = "5JJ-yD-9HS"; */
+"5JJ-yD-9HS.text" = "Complexity level";
+
+/* Class = "UILabel"; text = "Open safe cells in zero directions"; ObjectID = "6F5-L0-1HF"; */
+"6F5-L0-1HF.text" = "Open safe cells in zero directions";
+
+/* Class = "UILabel"; text = "General settings"; ObjectID = "7Zw-yK-84V"; */
+"7Zw-yK-84V.text" = "General settings";
+
+/* Class = "UIButton"; normalTitle = "Options"; ObjectID = "86h-eI-uVR"; */
+"86h-eI-uVR.normalTitle" = "Options";
+
+/* Class = "UILabel"; text = "PROGRESS"; ObjectID = "APp-XT-Rh3"; */
+"APp-XT-Rh3.text" = "PROGRESS";
+
+/* Class = "UILabel"; text = "Hold duration"; ObjectID = "AzL-e9-mFR"; */
+"AzL-e9-mFR.text" = "Hold duration";
+
+/* Class = "UIButton"; normalTitle = "Save"; ObjectID = "Lvi-YS-yc3"; */
+"Lvi-YS-yc3.normalTitle" = "Save";
+
+/* Class = "UIButton"; normalTitle = "MAIN MENU"; ObjectID = "NvZ-iE-SsV"; */
+"NvZ-iE-SsV.normalTitle" = "MAIN MENU";
+
+/* Class = "UILabel"; text = "High Score"; ObjectID = "Pd7-7w-cEG"; */
+"Pd7-7w-cEG.text" = "High Score";
+
+/* Class = "UILabel"; text = "Enable sounds"; ObjectID = "T1b-gu-8ID"; */
+"T1b-gu-8ID.text" = "Enable sounds";
+
+/* Class = "UIButton"; normalTitle = "New game"; ObjectID = "e2E-Xw-dcG"; */
+"e2E-Xw-dcG.normalTitle" = "New game";
+
+/* Class = "UIButton"; normalTitle = "Leaderboard"; ObjectID = "eRA-Bq-gov"; */
+"eRA-Bq-gov.normalTitle" = "Leaderboard";
+
+/* Class = "UIButton"; normalTitle = "RESET GAME"; ObjectID = "kjE-xz-TRM"; */
+"kjE-xz-TRM.normalTitle" = "RESET GAME";
+
+/* Class = "UILabel"; text = "Japanese Minesweeper"; ObjectID = "o68-EY-UG6"; */
+"o68-EY-UG6.text" = "Japanese Minesweeper";
+
+/* Class = "UIButton"; normalTitle = "GAME CENTER BOARDS"; ObjectID = "o8x-Au-iys"; */
+"o8x-Au-iys.normalTitle" = "GAME CENTER BOARDS";
+
+/* Class = "UILabel"; text = "SCORE"; ObjectID = "oR2-8t-m07"; */
+"oR2-8t-m07.text" = "SCORE";

@@ -70,7 +70,7 @@
                                                                             NSForegroundColorAttributeName:
                                                                                 [UIColor colorFromInteger:0xffcfcfcf],
                                                                             NSFontAttributeName:
-                                                                                [UIFont fontWithName:@"HelveticaNeue-Bold" size:128],
+                                                                                [UIFont systemFontOfSize:128 weight:UIFontWeightBold]
                                                                           }];
     [lbPower setAttributedText:str];
    
@@ -108,9 +108,10 @@
     CGContextRotateCTM(context, M_PI / 2 - M_PI / extraSteps);
     CGContextRotateCTM(context,-incrementalAngle/2);
     
-    for (NSUInteger i=0; i<discreteStepsCount + extraSteps * 3; i++)
+    NSUInteger totalSteps = discreteStepsCount + extraSteps * 3;
+    for (NSUInteger i=0; i<totalSteps; i++)
     {
-        CGFloat hue = 0.25 * (1 - (CGFloat)i/discreteStepsCount);
+        CGFloat hue = 0.25 * (1 - (CGFloat)i/totalSteps);
         [[UIColor colorWithHue:hue saturation:1 brightness:1 alpha:1] set];
         [cell fill];
         [cell stroke];

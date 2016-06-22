@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
+#import "JMSGameModel.h"
+#import "JMSMineGridCellInfo.h"
 
 @interface JapaneseMinesweeperTests : XCTestCase
 
@@ -25,16 +27,76 @@
     [super tearDown];
 }
 
-- (void)testExample {
-    // This is an example of a functional test case.
-    XCTAssert(YES, @"Pass");
-}
-
+/*
 - (void)testPerformanceExample {
     // This is an example of a performance test case.
     [self measureBlock:^{
         // Put the code you want to measure the time of here.
     }];
 }
+*/
 
+- (void)testGameModelIfMapAssigned {
+    NSUInteger level = 25;
+    JMSGameModel *gameModel = [[JMSGameModel alloc] initWithLevel:level];
+    JMSPosition position = {.column = 0, .row = 0};
+    [gameModel fillMapWithLevel:level exceptPosition:position];
+    XCTAssertNotNil(gameModel.map, @"Map is not assigned");
+}
+
+- (void)testGameModelAssignedPositionIsSafeAndClosed {
+    NSUInteger level = 25;
+    JMSGameModel *gameModel = [[JMSGameModel alloc] initWithLevel:level];
+    JMSPosition position = {.column = 0, .row = 0};
+    [gameModel fillMapWithLevel:level exceptPosition:position];
+    
+    XCTAssertTrue(![gameModel mineAtPosition:position] &&
+                   [gameModel cellState:position] == MineGridCellStateClosed);
+}
+
+- (void)testGameModelFirstClickPositionIsSafeAndOpened {
+    NSUInteger level = 25;
+    JMSGameModel *gameModel = [[JMSGameModel alloc] initWithLevel:level];
+    JMSPosition position = {.column = 0, .row = 0};
+    [gameModel fillMapWithLevel:level exceptPosition:position];
+    [gameModel singleTappedWithPosition:position];
+    
+    XCTAssertTrue(![gameModel mineAtPosition:position] &&
+                  [gameModel cellState:position] == MineGridCellStateOpened);
+}
+
+- (void)testGameModelFirstClickPositionIsSafeAndMarked {
+    NSUInteger level = 25;
+    JMSGameModel *gameModel = [[JMSGameModel alloc] initWithLevel:level];
+    JMSPosition position = {.column = 0, .row = 0};
+    [gameModel fillMapWithLevel:level exceptPosition:position];
+    [gameModel longTappedWithPosition:position];
+    
+    XCTAssertTrue(![gameModel mineAtPosition:position] &&
+                  [gameModel cellState:position] == MineGridCellStateMarked);
+}
+
+- (void)testGameModel {
+    NSUInteger level = 25;
+    
+    JMSGameModel *gameModel = [[JMSGameModel alloc] initWithLevel:level];
+
+    JMSPosition position = {.column = 0, .row = 0};
+    [gameModel fillMapWithLevel:level exceptPosition:position];
+    
+    NSUInteger minesCount = 0;
+    for (NSUInteger col = 0; col < gameModel.map.count; col++)
+    {
+        NSArray *vector = gameModel.map[col];
+        for (NSUInteger row = 0; row < vector.count; row++)
+        {
+            JMSMineGridCellInfo *mineGridCellInfo = vector[row];
+            if (mineGridCellInfo.mine)
+            {
+                minesCount++;
+            }
+        }
+    }
+    XCTAssertTrue(level == minesCount);
+}
 @end

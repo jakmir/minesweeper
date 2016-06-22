@@ -21,6 +21,9 @@
 
 @property (nonatomic, strong) NSArray *map;
 
+- (instancetype)initWithLevel:(NSUInteger)level map:(NSArray *)map;
+- (instancetype)initWithLevel:(NSUInteger)level;
+
 - (NSUInteger)markedCellsCount;
 
 - (CGFloat)baseScore;

@@ -7,8 +7,8 @@
 //
 
 #import "JMSAppDelegate.h"
-#import "Helpers/JMSSoundHelper.h"
 #import <AVFoundation/AVFoundation.h>
+#import "Helpers/JMSSoundHelper.h"
 
 @interface JMSAppDelegate ()
 
@@ -19,6 +19,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+
     static dispatch_once_t predicate;
     dispatch_once(&predicate, ^{
         NSTimeInterval timeInterval = [NSDate timeIntervalSinceReferenceDate];
@@ -37,7 +38,7 @@
         [userDefaults synchronize];
     }
     
-    [[JMSSoundHelper instance] mute:![userDefaults boolForKey:@"soundEnabled"]];
+    [[JMSSoundHelper instance] muteSound:![userDefaults boolForKey:@"soundEnabled"]];
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:nil];
     return YES;
 }

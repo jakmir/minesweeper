@@ -45,6 +45,11 @@
     return [UIColor colorFromInteger:0xffa818ff];
 }
 
++ (UIColor *)antDashedBorderColor
+{
+    return [[JMSKeyValueSettingsHelper instance] antDashedBorderColor];
+}
+
 + (UIColor *)needleColor
 {
     return [UIColor clearColor];

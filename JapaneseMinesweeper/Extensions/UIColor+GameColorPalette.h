@@ -18,5 +18,6 @@
 + (UIColor *)brightPurpleColor;
 + (UIColor *)juicyOrangeColor;
 + (UIColor *)needleColor;
++ (UIColor *)antDashedBorderColor;
 
 @end

@@ -11,15 +11,6 @@
 
 @implementation JMSGameBoardViewController (Tutorial)
 
-- (JMSGameboardView *)gameboardView
-{
-    if ([self.view isKindOfClass:[JMSGameboardView class]])
-    {
-        return (JMSGameboardView *)self.view;
-    }
-    return nil;
-}
-
 - (void)finishTutorial
 {
     [self.gameboardView updateMenuWithFinishedTutorial:YES gameFinished:self.gameboardView.mineGridView.gameFinished];

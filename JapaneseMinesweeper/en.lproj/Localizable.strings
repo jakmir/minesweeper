@@ -12,7 +12,37 @@
 "New game" = "New game";
 "SecondSliderFormatString" = "%0.2f sec.";
 "Confirm reset" = "Confirm reset";
-"Play again" = "Play again";
+"Play again Btn" = "Play again";
 "Level" = "Level";
 "Progress" = "Progress";
 "Score" = "Score";
+
+/*
+ * Tutorial text
+*/
+
+//First cell click
+"Welcome to tutorial mode" = "Welcome to tutorial mode";
+"Tap the highlighted cell to make your first step" = "Tap the highlighted cell to make your first step";
+
+//Second cell click
+"What do these numbers mean:" = "What do these numbers mean:";
+"SecondCellDescription" = "There are %ld mines above the opened cell in its column, %ld mines - below.\nAnd %ld to the left in the row, %ld to the right (between opened cell and wall).";
+"Four cells in the section above and only two are safe. Tap highlighted cell again." = "Four cells in the section above and only two are safe. Tap highlighted cell again.";
+
+//Put flag 1
+"PutFlag1DescriptionText" = "Long tap drops flag to the specific position. Do it twice for every highlighted cell.\n\n(You can change long tap duration anytime. Available in options screen)";
+"Drop flags to mark mines by long tap" = "Drop flags to mark mines by long tap";
+
+//Third cell click
+"Great! Let's move on" = "Great! Let's move on";
+"ThirdCellDescription" = "Highlighted cell is absolutely safe, tap to open it.\n\nLater, all cells in 'zero' directions from tapped will be opened automatically.";
+
+//Last cell click
+"The last step" = "The last step";
+"LastCellDescription" = "Now we deal with section right of the first opened cell.\n\nTap highlighed cell to open. Every opened cell awards you with score.\nAnd bonus score as well, depending on probability to meet a mine in that cell.";
+
+//Completion step
+"Tutorial completed!" = "Tutorial completed!";
+"CompletedStepDescription" = "Difficulty level can be changed in options section at any time.";
+

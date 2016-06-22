@@ -179,8 +179,6 @@
         [self setPower:power];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"SpeedmeterValueChanged" object:nil];
     }
-    
-    
 }
 
 

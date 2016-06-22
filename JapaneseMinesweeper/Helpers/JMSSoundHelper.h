@@ -22,6 +22,6 @@ typedef NS_ENUM(NSUInteger, JMSSoundAction)
 
 + (instancetype)instance;
 - (void)playSoundWithAction:(JMSSoundAction)soundAction;
-- (void)mute:(BOOL)mute;
+- (void)muteSound:(BOOL)mute;
 
 @end

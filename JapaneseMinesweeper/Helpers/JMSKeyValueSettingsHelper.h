@@ -15,6 +15,7 @@
 - (UIColor *)gradientFinishColor;
 - (UIColor *)completedPercentageLabelColor;
 - (UIColor *)progressPercentageLabelColor;
+- (UIColor *)antDashedBorderColor;
 - (CGFloat)menuButtonCornerRadius;
 - (CGFloat)buttonCornerRadius;
 

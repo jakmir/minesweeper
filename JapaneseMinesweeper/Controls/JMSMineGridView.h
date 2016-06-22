@@ -25,7 +25,6 @@
 
 - (void)finalizeGame;
 - (void)resetGame;
-- (NSInteger)markMines;
 
 - (void)updateCellWithAlteredCellModel:(JMSAlteredCellInfo *)alteredCellModel;
 

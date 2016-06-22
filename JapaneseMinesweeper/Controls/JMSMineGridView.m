@@ -9,6 +9,7 @@
 #import "JMSMineGridView.h"
 #import "JMSMineGridCell.h"
 #import "UIColor+ColorFromHexString.h"
+#import "UIColor+GameColorPalette.h"
 #import "JMSMineGridCellInfo.h"
 #import "JMSGameModel.h"
 
@@ -36,7 +37,6 @@ const NSInteger spacing = 1;
 - (void)refreshCells
 {
     NSLog(@"%s", __FUNCTION__);
-    [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate date]];
     for (int col = 0; col < count; col++)
     {
         for (int row = 0; row < count; row++)
@@ -48,7 +48,6 @@ const NSInteger spacing = 1;
             }
         }
     }
-    [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate date]];
 }
 
 - (void)refreshAllCells
@@ -66,11 +65,6 @@ const NSInteger spacing = 1;
             }
         }
     }
-}
-
-- (NSInteger)markMines
-{
-    return [self markMines];
 }
 
 - (void) resetGame
@@ -216,7 +210,7 @@ const NSInteger spacing = 1;
     CAShapeLayer *antLayer = [CAShapeLayer layer];
     [antLayer setBounds:rect];
     [antLayer setPosition:CGPointMake(CGRectGetMidX(rect), CGRectGetMidY(rect))];
-    [antLayer setFillColor:[[UIColor colorFromInteger:0x3f00ceef] CGColor]];
+    [antLayer setFillColor:[[UIColor antDashedBorderColor] CGColor]];
     [antLayer setStrokeColor:[[UIColor blueColor] CGColor]];
     [antLayer setLineWidth:1];
     [antLayer setLineJoin:kCALineJoinRound];
@@ -251,6 +245,8 @@ const NSInteger spacing = 1;
     
     [highlightedAreas removeAllObjects];
 }
+
+#pragma mark - Model-Dependent Methods that update view and subviews
 
 - (void)updateWithModel:(JMSGameModel *)gameSessionInfo
 {

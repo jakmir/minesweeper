@@ -14,6 +14,7 @@
 #import "AlteredCellObserver.h"
 
 @class JMSMainViewController;
+@class JMSGameboardView;
 
 @interface JMSGameBoardViewController : UIViewController<UIPopoverPresentationControllerDelegate, AlteredCellObserver>
 
@@ -27,5 +28,7 @@
 - (IBAction)resetGameClicked;
 
 @property (strong, nonatomic) id gameboardModel;
+
+- (JMSGameboardView *)gameboardView;
 
 @end

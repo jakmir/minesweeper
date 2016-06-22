@@ -8,6 +8,7 @@
 
 #import "JMSKeyValueSettingsHelper.h"
 #import "UIColor+ColorFromHexString.h"
+
 @implementation JMSKeyValueSettingsHelper
 {
     NSDictionary *_dictionary;
@@ -51,6 +52,11 @@
 - (UIColor *)completedPercentageLabelColor
 {
     return [UIColor colorFromInteger:[_dictionary[@"completedPercentageLabelColor"] intValue]];
+}
+
+- (UIColor *)antDashedBorderColor
+{
+    return [UIColor colorFromInteger:[_dictionary[@"antDashedBorderColor"] intValue]];
 }
 
 - (CGFloat)menuButtonCornerRadius

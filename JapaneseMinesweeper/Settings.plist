@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>antDashedBorderColor</key>
+	<integer>1057017583</integer>
 	<key>buttonCornerRadius</key>
 	<integer>10</integer>
 	<key>menuButtonCornerRadius</key>

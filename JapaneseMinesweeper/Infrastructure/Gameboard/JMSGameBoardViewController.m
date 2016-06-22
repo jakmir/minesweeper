@@ -83,43 +83,25 @@
 {
     initialTapPerformed = NO;
     
-    JMSGameModel *gameModel = [[JMSGameModel alloc] init];
-    gameModel.score = 0;
-    gameModel.level = [[NSUserDefaults standardUserDefaults] integerForKey:@"level"];
-    gameModel.map = [self.gameboardView.mineGridView exportMap];
+    NSUInteger level = [[NSUserDefaults standardUserDefaults] integerForKey:@"level"];
+    NSArray *map = [self.gameboardView.mineGridView exportMap];
+    JMSGameModel *gameModel = [[JMSGameModel alloc] initWithLevel:level map:map];
     [gameModel registerObserver:self];
     self.gameModel = gameModel;
     [self.gameboardView fillWithModel:gameModel];
-    /*
-    [self setScore:0];
-    level = [[NSUserDefaults standardUserDefaults] integerForKey:@"level"];
-    [self setCellsLeftCount:100 - level];
-    minesCount = level;
-    [self setCellsMarked:0];*/
 }
 
 - (void)createTutorialGame
 {
     initialTapPerformed = YES;
     
-    JMSGameModel *gameModel = [[JMSGameModel alloc] init];
-    gameModel.score = 0;
-    gameModel.level = [[NSUserDefaults standardUserDefaults] integerForKey:@"level"];
-    gameModel.map = [self.gameboardView.mineGridView exportMap];
+    NSUInteger level = [[NSUserDefaults standardUserDefaults] integerForKey:@"level"];
+    NSArray *map = [self.gameboardView.mineGridView exportMap];
+    JMSGameModel *gameModel = [[JMSGameModel alloc] initWithLevel:level map:map];
     [gameModel registerObserver:self];
     [gameModel fillTutorialMapWithLevel:gameModel.level];
     self.gameModel = gameModel;
     [self.gameboardView fillWithModel:gameModel];
-    
-    
-    /*
-    [self setScore:0];
-    level = [[NSUserDefaults standardUserDefaults] integerForKey:@"level"];
-    [self setCellsLeftCount:100 - level];
-    minesCount = level;
-    [self setCellsMarked:0];
-     */
-    //[self.mineGridView fillTutorialMapWithLevel:level];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -129,7 +111,8 @@
     if ([self shouldDisplayTutorial])
     {
         [self createTutorialGame];
-        _tutorialManager = [[JMSTutorialManager alloc] initWithGameboardController:self size:self.gameboardView.resultsView.bounds.size];
+        _tutorialManager = [[JMSTutorialManager alloc] initWithGameboardController:self
+                                                                              size:self.gameboardView.resultsView.bounds.size];
     }
     else
     {
@@ -268,15 +251,22 @@
         JMSPosition position = [self.gameboardView.mineGridView cellPositionWithCoordinateInside:touchLocation];
         
         if (position.row == NSNotFound || position.column == NSNotFound ||
-            ([self shouldDisplayTutorial] && !self.tutorialManager.isFinished && ![self.tutorialManager isAllowedWithAction:JMSAllowedActionsMark
-                                                                                                                   position:position])) return;
+            ([self shouldDisplayTutorial] && !self.tutorialManager.isFinished &&
+             ![self.tutorialManager isAllowedWithAction:JMSAllowedActionsMark position:position]))
+        {
+            return;
+        }
         
         if ([self shouldDisplayTutorial])
         {
             if ([self.tutorialManager taskCompletedWithPosition:position])
+            {
                 return;
+            }
             else
+            {
                 [self.tutorialManager completeTaskWithPosition:position];
+            }
         }
         
         [self.gameModel longTappedWithPosition:position];
@@ -285,7 +275,8 @@
 
 - (void)showMessageBox
 {
-    JMSMessageBoxView *alertView = [[JMSMessageBoxView alloc] initWithButtonTitle:NSLocalizedString(@"Play again", @"Play again - button title")
+    NSString *localizedTitle = NSLocalizedString(@"Play again Btn", @"Play again - button title");
+    JMSMessageBoxView *alertView = [[JMSMessageBoxView alloc] initWithButtonTitle:localizedTitle
                                                                     actionHandler:^{
                                                                         [self resetGame];
                                                                     }];
@@ -298,6 +289,15 @@
 
 #pragma mark - Upper Menu Actions
 
+- (void)popoverPresentationControllerDidDismissPopover:(UIPopoverPresentationController *)popoverPresentationController
+{
+}
+
+- (BOOL)popoverPresentationControllerShouldDismissPopover:(UIPopoverPresentationController *)popoverPresentationController
+{
+    return YES;
+}
+
 - (IBAction)backToMainMenu
 {
     if (initialTapPerformed && !self.gameboardView.mineGridView.gameFinished)
@@ -308,15 +308,6 @@
         self.mainViewController.mineGridSnapshot = [self.gameboardView mineGridViewSnapshot];
     }
     [self dismissViewControllerAnimated:NO completion:nil];
-}
-
-- (void)popoverPresentationControllerDidDismissPopover:(UIPopoverPresentationController *)popoverPresentationController
-{
-}
-
-- (BOOL)popoverPresentationControllerShouldDismissPopover:(UIPopoverPresentationController *)popoverPresentationController
-{
-    return YES;
 }
 
 - (IBAction)resetGameClicked

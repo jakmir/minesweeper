@@ -47,17 +47,16 @@
 {
     NSURL *soundUrl = [[NSBundle mainBundle] URLForResource:[self soundNameByAction:soundAction] withExtension:@"wav"];
     
-    NSMutableArray *availablePlayers = [[self players] mutableCopy];
+    NSArray *availablePlayers = [[self players] copy];
     
     NSPredicate *filteringPredicate = [NSPredicate predicateWithBlock:^BOOL(AVAudioPlayer *evaluatedObject, NSDictionary *bindings) {
         return !evaluatedObject.playing && [evaluatedObject.url isEqual:soundUrl];
     }];
 
-    [availablePlayers filterUsingPredicate:filteringPredicate];
-
-    if (availablePlayers.count > 0)
+    NSArray *filteredAvailablePlayers = [availablePlayers filteredArrayUsingPredicate:filteringPredicate];
+    if (filteredAvailablePlayers.count > 0)
     {
-        return [availablePlayers firstObject];
+        return [filteredAvailablePlayers firstObject];
     }
     
     NSError *error = nil;
@@ -94,7 +93,7 @@
     }
 }
 
-- (void)mute:(BOOL)mute
+- (void)muteSound:(BOOL)mute
 {
     _mute = mute;
 }
@@ -108,6 +107,5 @@
         [player play];
     }
 }
-
 
 @end

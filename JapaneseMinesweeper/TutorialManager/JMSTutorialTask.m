@@ -23,7 +23,11 @@
 
 - (void)setDone:(BOOL)done
 {
-    if (_done && !done) return;
+    BOOL doneBefore = _done;
+    if (doneBefore == YES && done == NO)
+    {
+        return;
+    }
     _done = done;
 }
 

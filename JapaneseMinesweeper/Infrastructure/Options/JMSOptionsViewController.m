@@ -75,11 +75,6 @@
 {
     [super viewDidAppear:animated];
     
-    /*
-    [self.optionsView.btnSave setNeedsDisplay];
-    [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate date]];
-    */
-    
     [self.optionsView.btnSave drawGradientWithStartColor:[[JMSKeyValueSettingsHelper instance] gradientStartColor]
                                           andFinishColor:[[JMSKeyValueSettingsHelper instance] gradientFinishColor]];
     [self.optionsView.btnSave.layer setCornerRadius:[[JMSKeyValueSettingsHelper instance] menuButtonCornerRadius]];
@@ -102,7 +97,7 @@
     [userDefaults setBool:self.optionsView.swOpenSafeCells.on forKey:@"shouldOpenSafeCells"];
     [userDefaults synchronize];
     
-    [[JMSSoundHelper instance] mute:!self.optionsView.swSoundEnabled.on];
+    [[JMSSoundHelper instance] muteSound:!self.optionsView.swSoundEnabled.on];
     
     [self dismissViewControllerAnimated:NO completion:nil];
 }

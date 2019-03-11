@@ -14,8 +14,7 @@
 
 @implementation JMSAboutViewController
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
     
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"xv"]];
@@ -26,14 +25,6 @@
     layer.shadowOffset = CGSizeZero;
     layer.shadowRadius = 6;
     layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:self.view.bounds cornerRadius:0].CGPath;
-    
 }
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-
 
 @end

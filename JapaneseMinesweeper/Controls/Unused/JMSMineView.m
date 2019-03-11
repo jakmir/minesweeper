@@ -9,11 +9,10 @@
 #import "JMSMineView.h"
 #import "UIColor+ColorFromHexString.h"
 
-@implementation JMSMineView
-{
+@implementation JMSMineView {
     CAGradientLayer *layer;
-    
-}/*
+}
+
 - (void)drawRect:(CGRect)rect
 {
     NSLog(@"%s", __FUNCTION__);
@@ -89,8 +88,7 @@
         [self.layer addSublayer:shapeLayer];
     }
     
-    for (int i=0; i<=7; i++)
-    {
+    for (int i=0; i<=7; i++) {
         CAShapeLayer *shapeLayer = [CAShapeLayer layer];
         CGMutablePathRef path = CGPathCreateMutable();
         CGPoint cp1 = CGPointMake(c.x + cos(2 * M_PI - smallarr[i] * M_PI / 180) * d*0.85, c.y - sin(2 * M_PI - smallarr[i] * M_PI / 180) * d*0.85);
@@ -104,8 +102,7 @@
         CGPathRelease(path);
         [self.layer addSublayer:shapeLayer];
     }
-    if (!layer)
-    {
+    if (!layer) {
         layer = [CAGradientLayer layer];
         layer.frame = rect;
         layer.startPoint = CGPointMake(0.5, 0.0);
@@ -114,18 +111,11 @@
         
         [self.layer insertSublayer:layer atIndex:0];
     }
-    
 
-}*/
-
-- (void)drawRect:(CGRect)rect
-{
-    
 }
-- (void) drawGradientWithStartColor:(UIColor *)startColor andFinishColor:(UIColor *)finishColor;
-{
-    NSLog(@"%s", __FUNCTION__);
-    
+
+- (void)drawGradientWithStartColor:(UIColor *)startColor
+                       finishColor:(UIColor *)finishColor {
     if (!layer) return;
     
     [CATransaction begin];

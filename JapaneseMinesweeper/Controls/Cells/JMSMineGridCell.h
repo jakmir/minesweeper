@@ -12,9 +12,9 @@
 
 @class JMSMineGridView, JMSMineGridCellInfo;
 
-@interface JMSMineGridCell : UIView
+@interface JMSMineGridCell: UIView
 
-- (instancetype) initWithFrame:(CGRect)frame;
+- (instancetype)initWithFrame:(CGRect)frame;
 
 @property (nonatomic) JMSMineGridCellState state;
 @property (nonatomic) BOOL mine;
@@ -23,6 +23,6 @@
 @property (nonatomic) JMSMineGridCellNeighboursSummary cellInfo;
 
 - (JMSMineGridCellInfo *)exportCell;
-- (void)import:(JMSMineGridCellInfo *)mineGridCellInfo;
+- (void)importFromCellInfo:(JMSMineGridCellInfo *)mineGridCellInfo;
 
 @end

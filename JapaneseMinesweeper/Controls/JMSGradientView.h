@@ -8,8 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface JMSGradientView : UIView
+@interface JMSGradientView: UIView
 
-- (void) drawGradientWithStartColor:(UIColor *)startColor andFinishColor:(UIColor *)finishColor;
+- (void)drawGradientWithStartColor:(UIColor *)startColor andFinishColor:(UIColor *)finishColor;
 
 @end

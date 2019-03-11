@@ -12,13 +12,12 @@
 @implementation JMSSoundHelper
 {
     NSMutableArray *_players;
-    BOOL _mute;
+    BOOL _isMuted;
 }
 
 - (id)init
 {
-    if (self = [super init])
-    {
+    if (self = [super init]) {
     }
     return self;
 }
@@ -33,18 +32,16 @@
     return anInstance;
 }
 
-- (NSMutableArray *) players
+- (NSMutableArray *)players
 {
-    if (_players == nil)
-    {
+    if (_players == nil) {
         _players = [NSMutableArray array];
     }
     return _players;
 }
 
 
-- (AVAudioPlayer *)audioPlayerForSoundAction:(JMSSoundAction)soundAction
-{
+- (AVAudioPlayer *)audioPlayerForSoundAction:(JMSSoundAction)soundAction {
     NSURL *soundUrl = [[NSBundle mainBundle] URLForResource:[self soundNameByAction:soundAction] withExtension:@"wav"];
     
     NSArray *availablePlayers = [[self players] copy];
@@ -54,13 +51,12 @@
     }];
 
     NSArray *filteredAvailablePlayers = [availablePlayers filteredArrayUsingPredicate:filteringPredicate];
-    if (filteredAvailablePlayers.count > 0)
-    {
+    if (filteredAvailablePlayers.count > 0) {
         return [filteredAvailablePlayers firstObject];
     }
     
     NSError *error = nil;
-    AVAudioPlayer* newPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:soundUrl error:&error];
+    AVAudioPlayer *newPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:soundUrl error:&error];
     
     if (newPlayer == nil)
     {
@@ -74,10 +70,8 @@
     
 }
 
-- (NSString *)soundNameByAction:(JMSSoundAction)soundAction
-{
-    switch (soundAction)
-    {
+- (NSString *)soundNameByAction:(JMSSoundAction)soundAction {
+    switch (soundAction) {
         case JMSSoundActionGameFailed:
             return @"game_over";
         case JMSSoundActionCellTap:
@@ -93,14 +87,14 @@
     }
 }
 
-- (void)muteSound:(BOOL)mute
-{
-    _mute = mute;
+- (void)muteSound:(BOOL)mute {
+    _isMuted = mute;
 }
 
-- (void)playSoundWithAction:(JMSSoundAction)soundAction
-{
-    if (_mute) return;
+- (void)playSoundWithAction:(JMSSoundAction)soundAction {
+    if (_isMuted) {
+        return;
+    }
 
     @synchronized ([self class]) {
         AVAudioPlayer *player = [self audioPlayerForSoundAction:soundAction];

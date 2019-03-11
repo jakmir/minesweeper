@@ -10,10 +10,8 @@
 
 @implementation JMSTutorialTask
 
-- (instancetype)initWithPosition:(JMSPosition)position action:(JMSAllowedAction)action
-{
-    if (self = [super init])
-    {
+- (instancetype)initWithPosition:(JMSPosition)position action:(JMSAllowedAction)action {
+    if (self = [super init]) {
         _position = position;
         _action = action;
         _done = NO;
@@ -21,11 +19,9 @@
     return self;
 }
 
-- (void)setDone:(BOOL)done
-{
+- (void)setDone:(BOOL)done { // TODO: this place looks suspicious
     BOOL doneBefore = _done;
-    if (doneBefore == YES && done == NO)
-    {
+    if (doneBefore == YES && done == NO) {
         return;
     }
     _done = done;

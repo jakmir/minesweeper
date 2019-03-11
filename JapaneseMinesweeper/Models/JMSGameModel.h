@@ -13,8 +13,11 @@
 
 @interface JMSGameModel : NSObject
 
-@property (nonatomic, readonly, getter=isLevelCreated) BOOL levelCreated;
-@property (nonatomic) BOOL gameFinished;
+@property (nonatomic, readonly) NSInteger rowCount;
+@property (nonatomic, readonly) NSInteger colCount;
+
+@property (nonatomic, getter=isLevelCreated) BOOL levelCreated;
+@property (nonatomic, readonly, getter=isGameFinished) BOOL gameFinished;
 @property (nonatomic) NSUInteger score;
 @property (nonatomic) NSUInteger level;
 @property (nonatomic, readonly) NSUInteger minesCount;
@@ -29,27 +32,28 @@
 - (CGFloat)baseScore;
 
 - (CGFloat)progress;
-- (BOOL)mineAtPosition:(JMSPosition)position;
-- (void)fillTutorialMapWithLevel:(NSUInteger)level;
+- (BOOL)isMinePresentAtPosition:(JMSPosition)position;
 - (void)fillMapWithLevel:(NSUInteger)level exceptPosition:(JMSPosition)position;
+- (void)evaluateMapCellInfos;
 - (JMSMineGridCellState) cellState:(JMSPosition)position;
 - (JMSMineGridCellNeighboursSummary) cellSummary:(JMSPosition)position;
 - (CGFloat)levelModifier;
 - (CGFloat)cellBasedScore;
 - (CGFloat)scoreToAddFromPosition:(JMSPosition)position;
 - (NSInteger)cellsLeftToOpen;
-- (CGFloat)bonus:(JMSPosition)position;
+- (CGFloat)bonusFromPosition:(JMSPosition)position;
 - (NSInteger)markMines;
 - (BOOL)openInZeroDirectionsFromPosition:(JMSPosition)position
                            unmarkedCount:(NSUInteger *)unmarkedCount
                              openedCount:(NSUInteger *)openedCount
                      shouldOpenSafeCells:(BOOL)shouldOpenSafeCells;
 
-- (BOOL)singleTappedWithPosition:(JMSPosition)position;
-- (void)longTappedWithPosition:(JMSPosition)position;
+- (BOOL)openCellWithPosition:(JMSPosition)position;
+- (void)toggleMarkWithPosition:(JMSPosition)position;
 
 - (void)registerObserver:(id<AlteredCellObserver>)observer;
 - (void)unregisterObserver:(id<AlteredCellObserver>)observer;
 - (void)unregisterAllObservers;
 - (void)notifyObserversWithChanges:(NSArray *)changedCells;
+
 @end

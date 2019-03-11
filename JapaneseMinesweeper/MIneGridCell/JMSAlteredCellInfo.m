@@ -10,14 +10,13 @@
 
 @implementation JMSAlteredCellInfo
 
-- (instancetype)initWithCellInfo:(JMSMineGridCellInfo *)cellInfo col:(NSUInteger)col row:(NSUInteger)row
-{
-    if (self = [super init])
-    {
+- (instancetype)initWithCellInfo:(JMSMineGridCellInfo *)cellInfo col:(NSUInteger)col row:(NSUInteger)row {
+    if (self = [super init]) {
         JMSPosition position = {.column = col, .row = row};
         _position = position;
         _cellInfo = cellInfo;
     }
     return self;
 }
+
 @end

@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@class JMSGameSession;
+@class JMSGameSessionModel;
 
 @interface JMSScoreTableViewCell : UITableViewCell
 
@@ -16,6 +16,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *lbProgress;
 @property (weak, nonatomic) IBOutlet UILabel *lbLevel;
 
-- (void)fillWithModel:(JMSGameSession *)model;
+- (void)fillWithModel:(JMSGameSessionModel *)model;
 
 @end

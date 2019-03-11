@@ -8,7 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface JMSMineView : UIView
-//-(void)drawGradient;
-- (void) drawGradientWithStartColor:(UIColor *)startColor andFinishColor:(UIColor *)finishColor;
+@interface JMSMineView: UIView
+
+- (void)drawGradientWithStartColor:(UIColor *)startColor
+                       finishColor:(UIColor *)finishColor;
 @end

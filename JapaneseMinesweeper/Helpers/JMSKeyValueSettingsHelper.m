@@ -9,15 +9,12 @@
 #import "JMSKeyValueSettingsHelper.h"
 #import "UIColor+ColorFromHexString.h"
 
-@implementation JMSKeyValueSettingsHelper
-{
+@implementation JMSKeyValueSettingsHelper {
     NSDictionary *_dictionary;
 }
 
-- (id)init
-{
-    if (self = [super init])
-    {
+- (instancetype)init {
+    if (self = [super init]) {
         NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"Settings" ofType:@"plist"];
         _dictionary = [NSDictionary dictionaryWithContentsOfFile:plistPath];
     }
@@ -34,38 +31,32 @@
     return anInstance;
 }
 
-- (UIColor *)gradientStartColor
-{
+- (UIColor *)gradientStartColor {
     return [UIColor colorFromInteger:[_dictionary[@"gradientStartColor"] intValue]];
 }
 
-- (UIColor *)gradientFinishColor
-{
+- (UIColor *)gradientFinishColor {
     return [UIColor colorFromInteger:[_dictionary[@"gradientFinishColor"] intValue]];
 }
 
-- (UIColor *)progressPercentageLabelColor
-{
+- (UIColor *)progressPercentageLabelColor {
     return [UIColor colorFromInteger:[_dictionary[@"progressPercentageLabelColor"] intValue]];
 }
 
-- (UIColor *)completedPercentageLabelColor
-{
+- (UIColor *)completedPercentageLabelColor {
     return [UIColor colorFromInteger:[_dictionary[@"completedPercentageLabelColor"] intValue]];
 }
 
-- (UIColor *)antDashedBorderColor
-{
+- (UIColor *)antDashedBorderColor {
     return [UIColor colorFromInteger:[_dictionary[@"antDashedBorderColor"] intValue]];
 }
 
-- (CGFloat)menuButtonCornerRadius
-{
+- (CGFloat)menuButtonCornerRadius {
     return [_dictionary[@"menuButtonCornerRadius"] doubleValue];
 }
 
-- (CGFloat)buttonCornerRadius
-{
+- (CGFloat)buttonCornerRadius {
     return [_dictionary[@"buttonCornerRadius"] doubleValue];
 }
+
 @end

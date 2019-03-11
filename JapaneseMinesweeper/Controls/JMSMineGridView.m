@@ -17,89 +17,70 @@ const NSInteger count = 10;
 const NSInteger padding = 19;
 const NSInteger spacing = 1;
 
-@implementation JMSMineGridView
-{
-    CALayer *layer;
-    NSMutableArray *highlightedAreas;
-}
+@interface JMSMineGridView()
 
-- (instancetype) initWithCoder:(NSCoder *)aDecoder
-{
-    if (self = [super initWithCoder:aDecoder])
-    {
+@property (nonatomic, strong) NSMutableArray *highlightedAreas;
+
+@end
+
+@implementation JMSMineGridView
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    if (self = [super initWithCoder:aDecoder]) {
         [self prepareCells];
         [self prepareBackground];
-        highlightedAreas = [NSMutableArray array];
+        self.highlightedAreas = [NSMutableArray array];
     }
     return self;
 }
 
-- (void)refreshCells
-{
-    NSLog(@"%s", __FUNCTION__);
-    for (int col = 0; col < count; col++)
-    {
-        for (int row = 0; row < count; row++)
-        {
+- (void)refreshCells {
+    for (int col = 0; col < count; col++) {
+        for (int row = 0; row < count; row++) {
             JMSMineGridCell *cell = self.map[col][row];
-            if (cell.state != MineGridCellStateClosed)
-            {
+            if (cell.state != MineGridCellStateClosed) {
                 [cell setNeedsDisplay];
             }
         }
     }
 }
 
-- (void)refreshAllCells
-{
-    NSLog(@"%s", __FUNCTION__);
-    
-    for (int col = 0; col < count; col++)
-    {
-        for (int row = 0; row < count; row++)
-        {
+- (void)refreshAllCells {
+    for (int col = 0; col < count; col++) {
+        for (int row = 0; row < count; row++) {
             JMSMineGridCell *cell = self.map[col][row];
-            if (cell.state != MineGridCellStateOpened)
-            {
+            if (cell.state != MineGridCellStateOpened) {
                 [cell setNeedsDisplay];
             }
         }
     }
 }
 
-- (void) resetGame
-{
-    for (int col = 0; col < count; col ++)
-    {
-        for (int row = 0; row < count; row++)
-        {
+- (void)resetGame {
+    for (int col = 0; col < count; col ++) {
+        for (int row = 0; row < count; row++) {
             JMSMineGridCell *cell = self.map[col][row];
             cell.mine = NO;
             cell.state = MineGridCellStateClosed;
-            
         }
     }
     _gameFinished = NO;
     [self refreshAllCells];
 }
 
-- (void) prepareBackground
-{
+- (void)prepareBackground {
     self.backgroundColor = [UIColor whiteColor];
 }
 
-- (void) prepareCells
-{
+- (void)prepareCells {
     NSMutableArray *columns = [NSMutableArray array];
     
     NSInteger dimensionSize = (self.frame.size.width - 2 * padding - (count - 1) * spacing) / count;
     CGSize size = CGSizeMake(dimensionSize, dimensionSize);
     CGVector offset = CGVectorMake(padding, padding);
-    for (int col = 0; col < count; col++)
-    {
+    for (int col = 0; col < count; col++) {
         NSMutableArray *line = [NSMutableArray array];
-        for (int row = 0; row < count; row++)
-        {
+        for (int row = 0; row < count; row++) {
             CGRect frame = CGRectMake((size.width + spacing) * col + offset.dx,
                                       (size.height + spacing) * row + offset.dy,
                                       size.width,
@@ -116,15 +97,12 @@ const NSInteger spacing = 1;
     self.map = columns;
 }
 
-- (void)refreshCellWithPosition:(JMSPosition)position
-{
+- (void)refreshCellWithPosition:(JMSPosition)position {
     JMSMineGridCell *cell = self.map[position.column][position.row];
     [cell setNeedsDisplay];
 }
 
-
-- (JMSPosition)cellPositionWithCoordinateInside: (CGPoint)point
-{
+- (JMSPosition)cellPositionWithCoordinateInside:(CGPoint)point {
     CGVector offset = CGVectorMake(padding, padding);
     NSInteger dimensionSize = (self.frame.size.width - 2 * padding - (count - 1) * spacing) / count;
     CGPoint relativePoint = CGPointMake(point.x - offset.dx, point.y - offset.dy);
@@ -133,12 +111,11 @@ const NSInteger spacing = 1;
     BOOL clickedInField = CGRectContainsPoint(CGRectMake(0, 0, (dimensionSize + spacing) * count, (dimensionSize + spacing) * count),
                                               relativePoint);
     BOOL clickedInCell = (int)relativePoint.x % (dimensionSize + spacing) < dimensionSize &&
-    (int)relativePoint.y % (dimensionSize + spacing) < dimensionSize;
+                         (int)relativePoint.y % (dimensionSize + spacing) < dimensionSize;
     
     JMSPosition position = {.row = NSNotFound, .column = NSNotFound};
     
-    if (clickedInField && clickedInCell)
-    {
+    if (clickedInField && clickedInCell) {
         position.row = row;
         position.column = col;
     }
@@ -146,20 +123,15 @@ const NSInteger spacing = 1;
     return position;
 }
 
-- (void) finalizeGame
-{
+- (void)finalizeGame {
     _gameFinished = YES;
 }
 
-- (NSUInteger) markUncoveredMines
-{
+- (NSUInteger)markUncoveredMines {
     NSUInteger count = 0;
-    for (NSArray *column in self.map)
-    {
-        for (JMSMineGridCell *cell in column)
-        {
-            if (cell.mine && cell.state == MineGridCellStateClosed)
-            {
+    for (NSArray *column in self.map) {
+        for (JMSMineGridCell *cell in column) {
+            if (cell.mine && cell.state == MineGridCellStateClosed) {
                 [cell setState:MineGridCellStateMarked];
                 count++;
             }
@@ -170,14 +142,11 @@ const NSInteger spacing = 1;
 
 #pragma mark - Export/Import methods
 
-- (NSArray *)exportMap
-{
+- (NSArray *)exportMap {
     NSMutableArray *localMap = [NSMutableArray array];
-    for (NSArray *vector in self.map)
-    {
+    for (NSArray *vector in self.map) {
         NSMutableArray *localVector = [NSMutableArray array];
-        for (JMSMineGridCell *cell in vector)
-        {
+        for (JMSMineGridCell *cell in vector) {
             [localVector addObject:cell.exportCell];
         }
         [localMap addObject:localVector];
@@ -185,25 +154,19 @@ const NSInteger spacing = 1;
     return localMap;
 }
 
-- (void)importMap:(NSArray *)gameboardMap
-{
-    NSLog(@"%s", __FUNCTION__);
-    
-    for (int col = 0; col < count; col++)
-    {
-        for (int row = 0; row < count; row++)
-        {
+- (void)importFromGameboardMap:(NSArray *)gameboardMap {
+    for (int col = 0; col < count; col++) {
+        for (int row = 0; row < count; row++) {
             JMSMineGridCell *cell = self.map[col][row];
             JMSMineGridCellInfo *cellInfo = gameboardMap[col][row];
-            [cell import:cellInfo];
+            [cell importFromCellInfo:cellInfo];
         }
     }
 }
 
 #pragma mark - Higlight/Unhighlight methods
 
-- (void)highlightCellWithPosition:(JMSPosition)position
-{
+- (void)highlightCellWithPosition:(JMSPosition)position {
     JMSMineGridCell *cell = self.map[position.column][position.row];
 
     CGRect rect = CGRectInset(cell.frame, 1, 1);
@@ -223,8 +186,7 @@ const NSInteger spacing = 1;
         
     [self.layer addSublayer:antLayer];
     
-    CABasicAnimation *dashAnimation;
-    dashAnimation = [CABasicAnimation animationWithKeyPath:@"lineDashPhase"];
+    CABasicAnimation *dashAnimation = [CABasicAnimation animationWithKeyPath:@"lineDashPhase"];
         
     [dashAnimation setFromValue:@0];
     [dashAnimation setToValue:@14];
@@ -233,29 +195,23 @@ const NSInteger spacing = 1;
     
     [antLayer addAnimation:dashAnimation forKey:@"linePhase"];
     
-    [highlightedAreas addObject:antLayer];
+    [self.highlightedAreas addObject:antLayer];
 }
 
-- (void)removeHighlights
-{
-    [highlightedAreas enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+- (void)removeHighlights {
+    [self.highlightedAreas enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         CAShapeLayer *lyr = obj;
         [lyr removeFromSuperlayer];
     }];
     
-    [highlightedAreas removeAllObjects];
+    [self.highlightedAreas removeAllObjects];
 }
 
 #pragma mark - Model-Dependent Methods that update view and subviews
 
-- (void)updateWithModel:(JMSGameModel *)gameSessionInfo
-{
-    NSLog(@"%s", __FUNCTION__);
-    
-    for (int col = 0; col < count; col++)
-    {
-        for (int row = 0; row < count; row++)
-        {
+- (void)updateWithModel:(JMSGameModel *)gameSessionInfo {
+    for (int col = 0; col < count; col++) {
+        for (int row = 0; row < count; row++)  {
             JMSPosition position = {.column = col, .row = row};
             JMSAlteredCellInfo *alteredCellModel = (JMSAlteredCellInfo *)gameSessionInfo.map[col][row];
             alteredCellModel.position = position;
@@ -264,11 +220,11 @@ const NSInteger spacing = 1;
     }
 }
 
-- (void)updateCellWithAlteredCellModel:(JMSAlteredCellInfo *)alteredCellModel
-{
+- (void)updateCellWithAlteredCellModel:(JMSAlteredCellInfo *)alteredCellModel {
     NSUInteger col = alteredCellModel.position.column, row = alteredCellModel.position.row;
     JMSMineGridCell *cell = self.map[col][row];
-    [cell import:alteredCellModel.cellInfo];
+    [cell importFromCellInfo:alteredCellModel.cellInfo];
     [cell setNeedsDisplay];
 }
+
 @end

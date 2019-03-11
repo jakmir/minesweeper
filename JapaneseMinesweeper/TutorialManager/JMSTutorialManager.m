@@ -36,10 +36,8 @@ static const NSUInteger kFieldDimension = 10;
 
 #pragma mark - Init
 
-- (instancetype)initWithGameboardController:(JMSGameBoardViewController *)gameboardController size:(CGSize)size
-{
-    if (self = [super init])
-    {
+- (instancetype)initWithGameboardController:(JMSGameBoardViewController *)gameboardController size:(CGSize)size {
+    if (self = [super init]) {
         _gameboardController = gameboardController;
         _tutorialStep = JMSTutorialStepNotStarted;
         _tasks = [NSMutableArray array];
@@ -50,48 +48,40 @@ static const NSUInteger kFieldDimension = 10;
 
 #pragma mark - Computable Properties
 
-- (NSUInteger)fieldDimension
-{
+- (NSUInteger)fieldDimension {
     return kFieldDimension;
 }
 
-- (NSDictionary *)attributesDescription
-{
+- (NSDictionary *)attributesDescription {
     return @{
                 NSForegroundColorAttributeName: [UIColor whiteColor],
                 NSFontAttributeName: [UIFont systemFontOfSize:18]
             };
 }
 
-- (NSDictionary *)attributesHeader
-{
+- (NSDictionary *)attributesHeader {
     return @{
                 NSForegroundColorAttributeName: [UIColor whiteColor],
                 NSFontAttributeName: [UIFont systemFontOfSize:32 weight:UIFontWeightMedium]
             };
 }
 
-- (BOOL)isFinished
-{
+- (BOOL)isFinished {
     return _tutorialStep >= JMSTutorialStepCompleted;
 }
 
-- (JMSTutorialStep)currentStep
-{
+- (JMSTutorialStep)currentStep {
     return _tutorialStep;
 }
 
 #pragma mark - Tutorial Navigation Actions
 
-- (void)moveToNextStep
-{
-    if (_tutorialStep < JMSTutorialStepCompleted)
-    {
+- (void)moveToNextStep {
+    if (_tutorialStep < JMSTutorialStepCompleted) {
         _tutorialStep++;
         [self updateTutorial];
     }
-    if (_tutorialStep == JMSTutorialStepCompleted)
-    {
+    if (_tutorialStep == JMSTutorialStepCompleted) {
         NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
         [userDefaults setBool:NO forKey:@"shouldLaunchTutorial"];
         [userDefaults synchronize];
@@ -99,29 +89,26 @@ static const NSUInteger kFieldDimension = 10;
     }
 }
 
-- (BOOL)isAllowedWithAction:(JMSAllowedAction)action position:(JMSPosition)position
-{
+- (BOOL)isAllowedWithAction:(JMSAllowedAction)action position:(JMSPosition)position {
     return ([_allowedActionsMap[position.column][position.row] integerValue] & action ) == action;
 }
 
-- (void)putAllowedAction:(JMSAllowedAction)allowedAction position:(JMSPosition)position
-{
+- (BOOL)putAllowedAction:(JMSAllowedAction)allowedAction position:(JMSPosition)position {
     if (position.row < 0 || position.column < 0 || position.row >= [self fieldDimension] || position.column >= [self fieldDimension])
-        return;
+        return NO;
     
     _allowedActionsMap[position.column][position.row] = @(allowedAction);
+    return YES;
 }
 
-- (JMSAllowedAction)allowedActionForPosition:(JMSPosition)position
-{
+- (JMSAllowedAction)allowedActionForPosition:(JMSPosition)position {
     if (position.row < 0 || position.column < 0 || position.row >= [self fieldDimension] || position.column >= [self fieldDimension])
         return JMSAllowedActionsNone;
     
     return [_allowedActionsMap[position.column][position.row] integerValue];
 }
 
-- (void)putAllowedActions
-{
+- (void)putAllowedActions {
     [self clearAllowedActionsMap];
     [self clearTasks];
     
@@ -175,13 +162,11 @@ static const NSUInteger kFieldDimension = 10;
 }
 
 
-- (BOOL)taskCompletedWithPosition:(JMSPosition)position
-{
+- (BOOL)taskCompletedWithPosition:(JMSPosition)position {
     __block BOOL result = NO;
     [_tasks enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         JMSTutorialTask *task = obj;
-        if (task.position.row == position.row && task.position.column == position.column && task.done)
-        {
+        if (task.position.row == position.row && task.position.column == position.column && task.done) {
             result = YES;
             *stop = YES;
         }
@@ -189,12 +174,10 @@ static const NSUInteger kFieldDimension = 10;
     return result;
 }
 
-- (void)completeTaskWithPosition:(JMSPosition)position
-{
+- (void)completeTaskWithPosition:(JMSPosition)position {
     [_tasks enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         JMSTutorialTask *task = obj;
-        if (task.position.row == position.row && task.position.column == position.column)
-        {
+        if (task.position.row == position.row && task.position.column == position.column) {
             [task setDone:YES];
             *stop = YES;
         }
@@ -203,17 +186,17 @@ static const NSUInteger kFieldDimension = 10;
     [self checkTasks];
 }
 
-- (void)checkTasks
-{
+- (void)checkTasks {
     __block BOOL allDone = YES;
     [_tasks enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         JMSTutorialTask *task = obj;
         allDone &= task.done;
-        if (!allDone) *stop = YES;
+        if (!allDone) {
+            *stop = YES;
+        }
     }];
     
-    if (allDone)
-    {
+    if (allDone) {
         [self moveToNextStep];
     }
 }
@@ -232,46 +215,40 @@ static const NSUInteger kFieldDimension = 10;
     [UIView animateWithDuration:1 delay:0
                         options:UIViewAnimationOptionTransitionCrossDissolve
                      animations:^{
-                         if (_previousTutorialStepView)
-                         {
-                             _previousTutorialStepView.frame = CGRectOffset(_previousTutorialStepView.frame, -screenSize.width, 0);
+                         if (self->_previousTutorialStepView) {
+                             self->_previousTutorialStepView.frame = CGRectOffset(self->_previousTutorialStepView.frame, -screenSize.width, 0);
                          }
                          tutorialStepView.frame = CGRectOffset(tutorialStepView.frame, -screenSize.width, 0);
                          
                      } completion:^(BOOL finished) {
-                         _previousTutorialStepView = tutorialStepView;
+                         self->_previousTutorialStepView = tutorialStepView;
                          [self putAllowedActions];
                          [self updateHighlightedCells];
                      }];
 }
 
-- (void)clearTasks
-{
+- (void)clearTasks {
     [_tasks removeAllObjects];
 }
 
-- (void)clearAllowedActionsMap
-{
-    if (!_gameboardController) return;
-    if (!_allowedActionsMap)
-    {
+- (void)clearAllowedActionsMap {
+    if (!_gameboardController) {
+        return;
+    }
+    if (!_allowedActionsMap) {
         _allowedActionsMap = [NSMutableArray array];
-        for (NSUInteger col = 0; col < [self fieldDimension]; col++)
-        {
+        for (NSUInteger col = 0; col < [self fieldDimension]; col++) {
             NSMutableArray *vector = [NSMutableArray array];
-            for (NSUInteger row = 0; row < [self fieldDimension]; row++)
-            {
+            for (NSUInteger row = 0; row < [self fieldDimension]; row++) {
                 [vector addObject:@(JMSAllowedActionsNone)];
             }
             [_allowedActionsMap addObject:vector];
         }
     }
 
-    for (NSUInteger col = 0; col < [self fieldDimension]; col++)
-    {
+    for (NSUInteger col = 0; col < [self fieldDimension]; col++) {
         NSMutableArray *vector = _allowedActionsMap[col];
-        for (NSUInteger row = 0; row < [self fieldDimension]; row++)
-        {
+        for (NSUInteger row = 0; row < [self fieldDimension]; row++) {
             vector[row] = @(JMSAllowedActionsNone);
         }
     }
@@ -279,18 +256,15 @@ static const NSUInteger kFieldDimension = 10;
     [_gameboardController removeHighlights];
 }
 
-- (void)updateHighlightedCells
-{
-    for (NSUInteger col = 0; col < [self fieldDimension]; col++)
-    {
+- (void)updateHighlightedCells {
+    for (NSUInteger col = 0; col < [self fieldDimension]; col++) {
         NSMutableArray *vector = _allowedActionsMap[col];
-        for (NSUInteger row = 0; row < [self fieldDimension]; row++)
-        {
-            if ([vector[row] integerValue] != JMSAllowedActionsNone)
-            {
-                JMSPosition position = {.column = col, .row = row};
-                [_gameboardController highlightCellWithPosition:position];
+        for (NSUInteger row = 0; row < [self fieldDimension]; row++) {
+            if ([vector[row] integerValue] == JMSAllowedActionsNone) {
+                continue;
             }
+            JMSPosition position = {.column = col, .row = row};
+            [_gameboardController highlightCellWithPosition:position];
         }
     }
 }
@@ -298,8 +272,7 @@ static const NSUInteger kFieldDimension = 10;
 
 #pragma mark - Tutorial Explanation View generators
 
-- (void)fillTutorialStepViewWithFirstCellView:(UIView *)tutorialStepView
-{
+- (void)fillTutorialStepViewWithFirstCellView:(UIView *)tutorialStepView {
     UILabel *lbHeader = [[UILabel alloc] initWithFrame:CGRectMake(0,
                                                                   0,
                                                                   tutorialStepView.bounds.size.width,
@@ -320,8 +293,7 @@ static const NSUInteger kFieldDimension = 10;
     [tutorialStepView addSubview:lbDescription];
 }
 
-- (void)fillTutorialStepViewWithSecondCellView:(UIView *)tutorialStepView
-{
+- (void)fillTutorialStepViewWithSecondCellView:(UIView *)tutorialStepView {
     UILabel *lbHeader = [[UILabel alloc] initWithFrame:CGRectMake(0,
                                                                   0,
                                                                   tutorialStepView.bounds.size.width,
@@ -358,8 +330,7 @@ static const NSUInteger kFieldDimension = 10;
     [tutorialStepView addSubview:callToAction];
 }
 
-- (void)fillTutorialStepViewWithPutFlagView:(UIView *)tutorialStepView
-{
+- (void)fillTutorialStepViewWithPutFlagView:(UIView *)tutorialStepView {
     UILabel *lbHeader = [[UILabel alloc] initWithFrame:CGRectMake(0,
                                                                   0,
                                                                   tutorialStepView.bounds.size.width,
@@ -381,8 +352,7 @@ static const NSUInteger kFieldDimension = 10;
     [tutorialStepView addSubview:lbDescription];
 }
 
-- (void)fillTutorialStepViewWithThirdCellView:(UIView *)tutorialStepView
-{
+- (void)fillTutorialStepViewWithThirdCellView:(UIView *)tutorialStepView {
     UILabel *lbHeader = [[UILabel alloc] initWithFrame:CGRectMake(0,
                                                                   0,
                                                                   tutorialStepView.bounds.size.width,
@@ -404,8 +374,7 @@ static const NSUInteger kFieldDimension = 10;
     [tutorialStepView addSubview:description];
 }
 
-- (void)fillTutorialStepViewWithLastCellView:(UIView *)tutorialStepView
-{
+- (void)fillTutorialStepViewWithLastCellView:(UIView *)tutorialStepView {
     UILabel *lbHeader = [[UILabel alloc] initWithFrame:CGRectMake(0,
                                                                   0,
                                                                   tutorialStepView.bounds.size.width,
@@ -427,8 +396,7 @@ static const NSUInteger kFieldDimension = 10;
     [tutorialStepView addSubview:description];
 }
 
-- (void)fillTutorialStepViewWithStepCompletedView:(UIView *)tutorialStepView
-{
+- (void)fillTutorialStepViewWithStepCompletedView:(UIView *)tutorialStepView {
     UILabel *lbHeader = [[UILabel alloc] initWithFrame:CGRectMake(0,
                                                                   0,
                                                                   tutorialStepView.bounds.size.width,
@@ -456,17 +424,16 @@ static const NSUInteger kFieldDimension = 10;
     [tutorialStepView addSubview:lbDescription];
 }
 
-- (UIView *)prepareView
-{
-    if (!_gameboardController) return NULL;
-    
+- (UIView *)prepareView {
+    if (!_gameboardController) {
+        return nil;
+    }
     CGRect frame = CGRectMake(0, 0, self.size.width, self.size.height);
     UIView *tutorialStepView = [[UIView alloc] initWithFrame:frame];
     tutorialStepView.backgroundColor = _tutorialStep % 2 ? [UIColor colorFromInteger:0xff7fceef] : [UIColor colorFromInteger:0xff90ceef];
    
 
-    switch (_tutorialStep)
-    {
+    switch (_tutorialStep) {
         case JMSTutorialStepFirstCellClick:
         {
             [self fillTutorialStepViewWithFirstCellView:tutorialStepView];
@@ -497,13 +464,11 @@ static const NSUInteger kFieldDimension = 10;
             [self fillTutorialStepViewWithStepCompletedView:tutorialStepView];
             
             [UIView animateWithDuration:3 delay:3 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-                if (tutorialStepView)
-                {
+                if (tutorialStepView) {
                     tutorialStepView.alpha = 0;
                 }
             } completion:^(BOOL finished) {
-                if (tutorialStepView)
-                {
+                if (tutorialStepView) {
                     [tutorialStepView removeFromSuperview];
                 }
             }];

@@ -6,6 +6,8 @@
   Copyright © 2016 Jakmir. All rights reserved.
 */
 
+"You won this round" = "You won this round";
+"Congralutations" = "Congratulations!\n\nAll mines were discovered";
 "Play again" = "PLAY AGAIN";
 "Reset game" = "RESET GAME";
 "Continue" = "Continue";

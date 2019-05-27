@@ -3,17 +3,17 @@
     {
       "orientation" : "portrait",
       "idiom" : "ipad",
+      "filename" : "launchImage_portrait.png",
       "extent" : "full-screen",
       "minimum-system-version" : "7.0",
-      "filename" : "2015-02-20 03.15.31.png",
       "scale" : "1x"
     },
     {
       "orientation" : "landscape",
       "idiom" : "ipad",
+      "filename" : "launchImage_album.png",
       "extent" : "full-screen",
       "minimum-system-version" : "7.0",
-      "filename" : "2015-02-20 03.16.27.png",
       "scale" : "1x"
     },
     {

@@ -32,4 +32,5 @@ typedef NS_ENUM(NSUInteger, JMSTutorialStep)
 - (BOOL)taskCompletedWithPosition:(JMSPosition)position;
 - (BOOL)isFinished;
 - (JMSTutorialStep)currentStep;
+
 @end

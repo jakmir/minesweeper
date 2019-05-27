@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		92597C52221B2FCF001924ED /* JMSGameModel.m in Sources */ = {isa = PBXBuildFile; fileRef = F75010281D078BC400EC511C /* JMSGameModel.m */; };
+		9289064D2297497600B52773 /* JMSGameModel+Tutorial.m in Sources */ = {isa = PBXBuildFile; fileRef = 9289064C2297497600B52773 /* JMSGameModel+Tutorial.m */; };
+		92CB28AD229B53C0009F5F9A /* JMSMapModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 92CB28AC229B53C0009F5F9A /* JMSMapModel.m */; };
 		F707112019E0C7A700D3BBD2 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F707111F19E0C7A700D3BBD2 /* GameKit.framework */; };
 		F73B16911A44AE0E0085A18A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F73B16901A44AE0E0085A18A /* QuartzCore.framework */; };
 		F73BD86519C395EF00CD51B9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F73BD86419C395EF00CD51B9 /* main.m */; };
@@ -69,6 +72,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		9289064B2297497600B52773 /* JMSGameModel+Tutorial.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "JMSGameModel+Tutorial.h"; sourceTree = "<group>"; };
+		9289064C2297497600B52773 /* JMSGameModel+Tutorial.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "JMSGameModel+Tutorial.m"; sourceTree = "<group>"; };
+		92CB28AB229B53C0009F5F9A /* JMSMapModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JMSMapModel.h; sourceTree = "<group>"; };
+		92CB28AC229B53C0009F5F9A /* JMSMapModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JMSMapModel.m; sourceTree = "<group>"; };
 		F707111F19E0C7A700D3BBD2 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		F73B16901A44AE0E0085A18A /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		F73BD85F19C395EF00CD51B9 /* JapaneseMinesweeper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JapaneseMinesweeper.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -399,6 +406,10 @@
 			children = (
 				F75010271D078BC400EC511C /* JMSGameModel.h */,
 				F75010281D078BC400EC511C /* JMSGameModel.m */,
+				9289064B2297497600B52773 /* JMSGameModel+Tutorial.h */,
+				9289064C2297497600B52773 /* JMSGameModel+Tutorial.m */,
+				92CB28AB229B53C0009F5F9A /* JMSMapModel.h */,
+				92CB28AC229B53C0009F5F9A /* JMSMapModel.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -523,7 +534,7 @@
 		F73BD85719C395EF00CD51B9 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0730;
+				LastUpgradeCheck = 1010;
 				ORGANIZATIONNAME = Jakmir;
 				TargetAttributes = {
 					F73BD85E19C395EF00CD51B9 = {
@@ -544,7 +555,7 @@
 			};
 			buildConfigurationList = F73BD85A19C395EF00CD51B9 /* Build configuration list for PBXProject "JapaneseMinesweeper" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
@@ -625,7 +636,9 @@
 				F7C3F98B1B3F446900CCE5C8 /* JapaneseMinesweeper.xcdatamodeld in Sources */,
 				F750104D1D078CAF00EC511C /* JMSTutorialManager.m in Sources */,
 				F75010171D078B0100EC511C /* JMSGameboardView.m in Sources */,
+				92CB28AD229B53C0009F5F9A /* JMSMapModel.m in Sources */,
 				F775748F1B3A174E00160A53 /* JMSKeyValueSettingsHelper.m in Sources */,
+				9289064D2297497600B52773 /* JMSGameModel+Tutorial.m in Sources */,
 				F75010481D078C5600EC511C /* UIColor+ColorFromHexString.m in Sources */,
 				F75010251D078BA200EC511C /* JMSMainView.m in Sources */,
 				F7C3F9BA1B3F472700CCE5C8 /* JMSGradientSpeedmeterView.m in Sources */,
@@ -651,6 +664,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F73BD88219C395F000CD51B9 /* JapaneseMinesweeperTests.m in Sources */,
+				92597C52221B2FCF001924ED /* JMSGameModel.m in Sources */,
 				F7ABEFB91A9AA49F0069FDA2 /* JMSSoundHelper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -695,13 +709,23 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Denys Melnyk (SB3RGW3B8Q)";
@@ -710,6 +734,7 @@
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -738,13 +763,23 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Denys Melnyk (SB3RGW3B8Q)";
@@ -752,6 +787,7 @@
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;

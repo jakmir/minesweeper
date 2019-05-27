@@ -16,7 +16,7 @@
 
 @interface JMSMainViewController ()
 
-@property (nonatomic, strong) JMSAboutViewController * aboutViewController;
+@property (nonatomic, strong) JMSAboutViewController *aboutViewController;
 @property (nonatomic, readonly) JMSMainView *mainView;
 @property (nonatomic, readonly) JMSAboutView *aboutView;
 
@@ -26,8 +26,7 @@
 
 #pragma mark - Life Cycle methods and events
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
 
     self.aboutViewController = [[JMSAboutViewController alloc] initWithNibName:@"JMSAboutViewController" bundle:nil];
@@ -44,13 +43,11 @@
     [self.aboutView hideAboutView];
 }
 
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
-{
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
     return YES;
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
     UIImage *wallpaperImage = [UIImage imageNamed:@"wallpaper"];
@@ -59,8 +56,7 @@
     [self.mainView updateButtonsWithModel:self.gameModel];
 }
 
-- (void)viewDidAppear:(BOOL)animated
-{
+- (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
     [self.mainView drawGradients];
@@ -73,46 +69,33 @@
    
 }
 
-- (void)viewDidDisappear:(BOOL)animated
-{
+- (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-- (BOOL) prefersStatusBarHidden
-{
+- (BOOL)prefersStatusBarHidden {
     return YES;
 }
 
 #pragma mark - Access Properties
 
-- (JMSMainView *)mainView
-{
-    if ([self.view isKindOfClass:[JMSMainView class]])
-    {
+- (JMSMainView *)mainView {
+    if ([self.view isKindOfClass:[JMSMainView class]]) {
         return (JMSMainView *)self.view;
     }
     return nil;
 }
 
-- (JMSAboutView *)aboutView
-{
-    if ([self.aboutViewController.view isKindOfClass:[JMSAboutView class]])
-    {
+- (JMSAboutView *)aboutView {
+    if ([self.aboutViewController.view isKindOfClass:[JMSAboutView class]]) {
         return (JMSAboutView *)self.aboutViewController.view;
     }
     return nil;
 }
 
-- (void)setGameModel:(JMSGameModel *)gameSessionInfo
-{
+- (void)setGameModel:(JMSGameModel *)gameSessionInfo {
     _gameModel = gameSessionInfo;
     
     [self.mainView updateButtonsWithModel:gameSessionInfo];
@@ -121,8 +104,7 @@
 
 #pragma mark - GameKit methods
 
-- (void)showAuthenticationViewController
-{
+- (void)showAuthenticationViewController {
     JMSGameKitHelper *gameKitHelper = [JMSGameKitHelper instance];
     
     [self presentViewController:gameKitHelper.authenticationViewController
@@ -132,12 +114,10 @@
 
 #pragma mark - Screen transition methods
 
-- (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     [self.aboutView hideAboutView];
     
-    if ([segue.identifier isEqualToString:@"toGame"])
-    {
+    if ([segue.identifier isEqualToString:@"toGame"]) {
         JMSGameBoardViewController *destinationController = (JMSGameBoardViewController *)segue.destinationViewController;
         destinationController.mainViewController = self;
         destinationController.gameModel = self.gameModel;
@@ -146,13 +126,11 @@
 
 #pragma mark - About screen methods
 
-- (IBAction)showAboutScreen:(UIButton *)sender
-{
+- (IBAction)showAboutScreen:(UIButton *)sender {
     [self.aboutView animateShowView];
 }
 
-- (void)handlePan:(UIPanGestureRecognizer *)gestureRecognizer
-{
+- (void)handlePan:(UIPanGestureRecognizer *)gestureRecognizer {
     static CGPoint oldCenter;
     
     switch (gestureRecognizer.state)
@@ -163,20 +141,17 @@
         case UIGestureRecognizerStateChanged:
         {
             CGPoint translatedPoint = [gestureRecognizer translationInView:self.view];
-            if (translatedPoint.y > 0)
-            {
+            if (translatedPoint.y > 0) {
                 gestureRecognizer.view.center = CGPointMake(oldCenter.x, oldCenter.y + translatedPoint.y);
             }
         }
             break;
         case UIGestureRecognizerStateEnded:
         {
-            if (gestureRecognizer.view.center.y - oldCenter.y < CGRectGetHeight(gestureRecognizer.view.frame) / 4)
-            {
+            if (gestureRecognizer.view.center.y - oldCenter.y < CGRectGetHeight(gestureRecognizer.view.frame) / 4) {
                 [self.aboutView animateJumpBack];
             }
-            else
-            {
+            else {
                 [self.aboutView animateHideViewWithVelocity:[gestureRecognizer velocityInView:self.view].y / 200.0];
             }
         }
@@ -186,11 +161,10 @@
     }
 }
 
-- (void)handleMainScreenTouch:(UITapGestureRecognizer *)gestureRecognizer
-{
-    if (self.aboutView.isViewInScreen)
-    {
+- (void)handleMainScreenTouch:(UITapGestureRecognizer *)gestureRecognizer {
+    if (self.aboutView.isViewInScreen) {
         [self.aboutView animateHideViewWithVelocity:1];
     }
 }
+
 @end

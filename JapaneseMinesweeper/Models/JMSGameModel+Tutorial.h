@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface JMSGameModel (Tutorial)
 
+- (void)fillTutorialMapWithLevel:(NSUInteger)level;
+
 @end
 
 NS_ASSUME_NONNULL_END

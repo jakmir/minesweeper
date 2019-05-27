@@ -10,8 +10,7 @@
 
 @implementation JMSMessageBoxView (LevelCompleted)
 
-+ (UIView *)messageBoxContentView
-{
++ (UIView *)messageBoxContentView {
     UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 200)];
     UILabel *lbCaption = [[UILabel alloc] initWithFrame:CGRectMake(0, 20, 320, 32)];
     lbCaption.textAlignment = NSTextAlignmentCenter;

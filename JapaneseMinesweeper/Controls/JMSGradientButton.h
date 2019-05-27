@@ -10,6 +10,6 @@
 
 @interface JMSGradientButton : UIButton
 
-- (void) drawGradientWithStartColor:(UIColor *)startColor andFinishColor:(UIColor *)finishColor;
+- (void)drawGradientWithStartColor:(UIColor *)startColor finishColor:(UIColor *)finishColor;
 
 @end

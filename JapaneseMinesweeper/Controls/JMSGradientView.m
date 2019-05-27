@@ -8,40 +8,39 @@
 
 #import "JMSGradientView.h"
 
-@implementation JMSGradientView
-{
-    CAGradientLayer *layer;
-}
+@interface JMSGradientView()
 
-- (void)drawRect:(CGRect)rect
-{
-    NSLog(@"%s", __FUNCTION__);
+@property (nonatomic, strong) CAGradientLayer *gradientLayer;
+
+@end
+
+@implementation JMSGradientView
+
+- (void)drawRect:(CGRect)rect {
     [super drawRect:rect];
     
-    if (!layer)
-    {
-        layer = [CAGradientLayer layer];
-        layer.frame = rect;
-        layer.startPoint = CGPointMake(0.5, 0.0);
-        layer.endPoint = CGPointMake(0.5, 1.0);
-        layer.position = CGPointMake(CGRectGetWidth(rect) / 2, CGRectGetHeight(rect) / 2);
+    if (_gradientLayer == nil) {
+        _gradientLayer = [CAGradientLayer layer];
+        _gradientLayer.frame = rect;
+        _gradientLayer.startPoint = CGPointMake(0.5, 0.0);
+        _gradientLayer.endPoint = CGPointMake(0.5, 1.0);
+        _gradientLayer.position = CGPointMake(CGRectGetMidX(rect), CGRectGetMidY(rect));
     
-        [self.layer insertSublayer:layer atIndex:0];
+        [self.layer insertSublayer:self.gradientLayer atIndex:0];
     }
  
     self.layer.cornerRadius = 10.0f;
     self.layer.masksToBounds = YES;
 }
 
-- (void) drawGradientWithStartColor:(UIColor *)startColor andFinishColor:(UIColor *)finishColor;
-{
-    NSLog(@"%s", __FUNCTION__);
-    
-    if (!layer) return;
+- (void)drawGradientWithStartColor:(UIColor *)startColor andFinishColor:(UIColor *)finishColor {
+    if (!self.gradientLayer) {
+        return;
+    }
     
     [CATransaction begin];
     [CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions];
-    layer.colors = @[(id)startColor.CGColor, (id)finishColor.CGColor];
+    self.gradientLayer.colors = @[(id)startColor.CGColor, (id)finishColor.CGColor];
     [CATransaction commit];
 }
 

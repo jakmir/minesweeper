@@ -17,4 +17,5 @@
 - (void)ranIntoMine;
 - (void)cellSuccessfullyOpened;
 - (void)levelCompleted;
+
 @end

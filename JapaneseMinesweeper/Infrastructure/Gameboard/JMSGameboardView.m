@@ -13,8 +13,7 @@ static const UInt32 kTooManyMarkedMinesColor = 0xffff7f7f;
 
 @implementation JMSGameboardView
 
-- (void)fillWithModel:(JMSGameModel *)model
-{
+- (void)fillWithModel:(JMSGameModel *)model {
     [self.lbScore setText:[@(lroundf(model.score)) stringValue]];
 
     [self.lbProgress setText:[NSString stringWithFormat:@"%ld%%", lroundf(model.progress)]];
@@ -30,8 +29,7 @@ static const UInt32 kTooManyMarkedMinesColor = 0xffff7f7f;
     self.lbCellsMarked.attributedText = string;
 }
 
-- (UIImage *)mineGridViewSnapshot
-{
+- (UIImage *)mineGridViewSnapshot {
     CGRect bounds = self.mineGridView.bounds;
     UIGraphicsBeginImageContextWithOptions(bounds.size, YES, 0);
     [self.mineGridView drawViewHierarchyInRect:bounds afterScreenUpdates:YES];
@@ -40,32 +38,31 @@ static const UInt32 kTooManyMarkedMinesColor = 0xffff7f7f;
     return image;
 }
 
-- (void)updateMenuWithFinishedTutorial:(BOOL)tutorialFinished gameFinished:(BOOL)gameFinished
-{
+- (void)updateMenuWithFinishedTutorial:(BOOL)tutorialFinished gameFinished:(BOOL)gameFinished {
     NSString *caption;
     UIColor *captionColor;
     
-    if (gameFinished)
-    {
+    if (gameFinished) {
         captionColor = [UIColor brightOrangeColor];
         caption = NSLocalizedString(@"Play again", @"Play again - button caption");
     }
-    else
-    {
+    else {
         captionColor = [UIColor brightPurpleColor];
         caption = NSLocalizedString(@"Reset game", @"Reset game - button caption");
     }
     
+    CGFloat cornerRadius = [[JMSKeyValueSettingsHelper instance] buttonCornerRadius];
+    
     [self.btnResetGame setTitleColor:captionColor forState:UIControlStateNormal];
     [self.btnResetGame setTitle:caption forState:UIControlStateNormal];
-    [self.btnResetGame setTitleColor:[UIColor lightGrayColor] forState:UIControlStateDisabled];
-    
-    CGFloat cornerRadius = [[JMSKeyValueSettingsHelper instance] buttonCornerRadius];
-    [self.btnMainMenu.layer setCornerRadius:cornerRadius];
+    [self.btnResetGame setTitleColor:[UIColor lightGrayColor]
+                            forState:UIControlStateDisabled];
     [self.btnResetGame.layer setCornerRadius:cornerRadius];
-    [self.btnMainMenu.layer setMasksToBounds:YES];
     [self.btnResetGame.layer setMasksToBounds:YES];
-    
     [self.btnResetGame setEnabled:tutorialFinished];
+    
+    [self.btnMainMenu.layer setCornerRadius:cornerRadius];
+    [self.btnMainMenu.layer setMasksToBounds:YES];
 }
+
 @end

@@ -31,22 +31,18 @@ typedef NS_ENUM(NSUInteger, JMSCellAction) {
 
 @implementation JMSGameModel
 
-- (instancetype)init
-{
+- (instancetype)init {
     return [self initWithLevel:0];
 }
 
 #pragma mark - Designed Initializers
 
-- (instancetype)initWithLevel:(NSUInteger)level
-{
+- (instancetype)initWithLevel:(NSUInteger)level {
     NSUInteger count = 10;
     NSMutableArray *map = [NSMutableArray array];
-    for (NSUInteger column = 0; column < count; column++)
-    {
+    for (NSUInteger column = 0; column < count; column++) {
         NSMutableArray *vector = [NSMutableArray array];
-        for (NSUInteger row = 0; row < count; row++)
-        {
+        for (NSUInteger row = 0; row < count; row++) {
             JMSMineGridCellInfo *cellInfo = [[JMSMineGridCellInfo alloc] init];
             cellInfo.mine = NO;
             cellInfo.state = MineGridCellStateClosed;
@@ -55,12 +51,10 @@ typedef NS_ENUM(NSUInteger, JMSCellAction) {
         [map addObject:vector];
     }
     return [self initWithLevel:level map:map];
-
 }
-- (instancetype)initWithLevel:(NSUInteger)level map:(NSArray *)map
-{
-    if (self = [super init])
-    {
+
+- (instancetype)initWithLevel:(NSUInteger)level map:(NSArray *)map {
+    if (self = [super init]) {
         _observerCollection = [NSMutableArray array];
         _gameFinished = NO;
         _levelCreated = NO;
@@ -73,20 +67,15 @@ typedef NS_ENUM(NSUInteger, JMSCellAction) {
 
 #pragma mark - Accessors
 
-- (NSInteger) cellsLeftToOpen
-{
-    if (![self isLevelCreated])
-    {
+- (NSInteger) cellsLeftToOpen {
+    if (![self isLevelCreated]) {
         return 100 - self.minesCount;
     }
     
     NSInteger count = 0;
-    for (NSArray *column in self.map)
-    {
-        for (JMSMineGridCellInfo *cell in column)
-        {
-            if (!cell.mine && cell.state != MineGridCellStateOpened)
-            {
+    for (NSArray *column in self.map) {
+        for (JMSMineGridCellInfo *cell in column) {
+            if (!cell.mine && cell.state != MineGridCellStateOpened) {
                 count++;
             }
         }
@@ -94,95 +83,81 @@ typedef NS_ENUM(NSUInteger, JMSCellAction) {
     return count;
 }
 
-- (CGFloat)progress
-{
-    if (self.level < 100)
-    {
+- (CGFloat)progress {
+    if (self.level < 100) {
         return 100.0 * (100 - self.level - self.cellsLeftToOpen) / (100 - self.level);
     }
     return 0.0;
 }
 
-- (NSUInteger)markedCellsCount
-{
-    if (!self.map) return 0;
+- (NSUInteger)markedCellsCount {
+    if (!self.map) {
+        return 0;
+    }
     
     NSUInteger count = 0;
-    for (NSUInteger col = 0; col < self.map.count; col++)
-    {
+    for (NSUInteger col = 0; col < self.map.count; col++) {
         NSArray *vector = self.map[col];
-        for (NSUInteger row = 0; row < vector.count; row++)
-        {
+        for (NSUInteger row = 0; row < vector.count; row++) {
             JMSMineGridCellInfo *mineGridCellInfo = vector[row];
-            if (mineGridCellInfo.state == MineGridCellStateMarked) count++;
+            if (mineGridCellInfo.state == MineGridCellStateMarked) {
+                count++;
+            }
         }
     }
     return count;
 }
 
-- (CGFloat)baseScore
-{
+- (CGFloat)baseScore {
     return kBaseScore;
 }
 
-- (NSInteger)rowCount
-{
+- (NSInteger)rowCount {
     NSArray *row = self.map.firstObject;
     return row ? row.count : 0;
 }
 
-- (NSInteger)colCount
-{
+- (NSInteger)colCount {
     return self.map.count;
 }
 
-- (CGFloat)levelModifier
-{
+- (CGFloat)levelModifier {
     return 1 + self.level / 100.0;
 }
 
-- (CGFloat)cellBasedScore
-{
+- (CGFloat)cellBasedScore {
     return self.baseScore * pow([self levelModifier], 4);
 }
 
-- (CGFloat)scoreToAddFromPosition:(JMSPosition)position
-{
-    return [self cellBasedScore] * pow(1 + [self bonus:position], 3);
+- (CGFloat)scoreToAddFromPosition:(JMSPosition)position {
+    return [self cellBasedScore] * pow(1 + [self bonusFromPosition:position], 3);
 }
 
 #pragma mark - Mutators
 
-- (void)setLevel:(NSUInteger)level
-{
+- (void)setLevel:(NSUInteger)level {
     _level = level;
     _minesCount = level;
 }
 
 #pragma mark - Map Information Methods
 
-
-- (BOOL)mineAtPosition:(JMSPosition)position
-{
+- (BOOL)isMinePresentAtPosition:(JMSPosition)position {
     JMSMineGridCellInfo *cell = self.map[position.column][position.row];
     return cell.mine;
 }
 
-- (JMSMineGridCellState) cellState:(JMSPosition)position
-{
+- (JMSMineGridCellState)cellState:(JMSPosition)position {
     JMSMineGridCellInfo *cell = self.map[position.column][position.row];
-    if (cell)
-    {
+    if (cell) {
         return cell.state;
     }
     return MineGridCellStateClosed;
 }
 
-- (JMSMineGridCellNeighboursSummary) cellSummary:(JMSPosition)position
-{
+- (JMSMineGridCellNeighboursSummary)cellSummary:(JMSPosition)position {
     JMSMineGridCellInfo *cell = self.map[position.column][position.row];
-    if (cell)
-    {
+    if (cell) {
         return cell.cellInfo;
     }
     JMSMineGridCellNeighboursSummary summary = {
@@ -194,56 +169,12 @@ typedef NS_ENUM(NSUInteger, JMSCellAction) {
 
 #pragma mark - Map Filling Methods
 
-- (void) fillTutorialMapWithLevel:(NSUInteger)level
-{
-    NSInteger rowToExclude = 4, columnToExclude = 5;
-    const NSInteger cellsToFillCount = 8;
-    JMSPosition cellsToFill[cellsToFillCount] =
-    {
-        {.row = rowToExclude, .column = 0},
-        {.row = rowToExclude, .column = 2},
-        {.row = rowToExclude, .column = 6},
-        {.row = 2, .column = columnToExclude},
-        {.row = 3, .column = columnToExclude},
-        {.row = 6, .column = columnToExclude},
-        {.row = 8, .column = columnToExclude},
-        {.row = 9, .column = columnToExclude}
-    };
-    for (int mineNumber = 0; mineNumber < cellsToFillCount; mineNumber++)
-    {
-        JMSMineGridCellInfo *mineGridCell = self.map[cellsToFill[mineNumber].column][cellsToFill[mineNumber].row];
-        mineGridCell.mine = YES;
-    }
-    
-    for (int mineNumber = cellsToFillCount; mineNumber < level; mineNumber++)
-    {
-        BOOL mine;
-        NSInteger r, c;
-        JMSMineGridCellInfo *mineGridCell;
-        do
-        {
-            r = rand() % self.rowCount;
-            c = rand() % self.colCount;
-            mineGridCell = self.map[c][r];
-            mine = mineGridCell.mine;
-        }
-        while (mine || r == rowToExclude || c == columnToExclude);
-        mineGridCell.mine = YES;
-    }
-    
-    _levelCreated = YES;
-    [self evaluateMapCellInfos];
-}
-
-- (void)fillMapWithLevel:(NSUInteger)level exceptPosition:(JMSPosition)position
-{
-    for (int mineNumber = 1; mineNumber <= level; mineNumber++)
-    {
+- (void)fillMapWithLevel:(NSUInteger)level exceptPosition:(JMSPosition)position {
+    for (int mineNumber = 1; mineNumber <= level; mineNumber++) {
         BOOL mine;
         NSInteger r, c;
         JMSMineGridCellInfo *mineGridCellInfo;
-        do
-        {
+        do {
             r = rand() % self.rowCount;
             c = rand() % self.colCount;
             mineGridCellInfo = self.map[c][r];
@@ -257,64 +188,53 @@ typedef NS_ENUM(NSUInteger, JMSCellAction) {
     [self evaluateMapCellInfos];
 }
 
-- (void) evaluateMapCellInfos
-{
+- (void)evaluateMapCellInfos {
     for (int col = 0; col < self.colCount; col++)
-        for (int row = 0; row < self.rowCount; row++)
-        {
+        for (int row = 0; row < self.rowCount; row++) {
             JMSMineGridCellInfo *cell = self.map[col][row];
-            if (!cell.mine)
-            {
-                NSUInteger left = 0, right = 0, up = 0, down = 0;
-                for (int c = 0; c < self.colCount; c++)
-                {
-                    JMSMineGridCellInfo *checkingCell = self.map[c][row];
-                    if (checkingCell.mine)
-                    {
-                        if (c < col)
-                        {
-                            left++;
-                        }
-                        else
-                        {
-                            right++;
-                        }
-                    }
-                }
-                for (int r = 0; r < self.rowCount; r++)
-                {
-                    JMSMineGridCellInfo *checkingCell = self.map[col][r];
-                    if (checkingCell.mine)
-                    {
-                        if (r < row)
-                        {
-                            up++;
-                        }
-                        else
-                        {
-                            down++;
-                        }
-                    }
-                }
-                JMSMineGridCellNeighboursSummary cellInfo = {
-                    .minesTopDirection = up, .minesBottomDirection = down,
-                    .minesLeftDirection = left, .minesRightDirection = right
-                };
-                
-                cell.cellInfo = cellInfo;
+            if (cell.mine) {
+                continue;
             }
+            NSUInteger left = 0, right = 0, up = 0, down = 0;
+            for (int c = 0; c < self.colCount; c++) {
+                JMSMineGridCellInfo *checkingCell = self.map[c][row];
+                if (checkingCell.mine) {
+                    if (c < col) {
+                        left++;
+                    }
+                    else {
+                        right++;
+                    }
+                }
+            }
+            for (int r = 0; r < self.rowCount; r++) {
+                JMSMineGridCellInfo *checkingCell = self.map[col][r];
+                if (checkingCell.mine) {
+                    if (r < row)  {
+                        up++;
+                    }
+                    else {
+                        down++;
+                    }
+                }
+            }
+            JMSMineGridCellNeighboursSummary cellInfo = {
+                .minesTopDirection = up, .minesBottomDirection = down,
+                .minesLeftDirection = left, .minesRightDirection = right
+            };
+                
+            cell.cellInfo = cellInfo;
         }
 }
 
 
-- (CGFloat)bonus:(JMSPosition)position
-{
+- (CGFloat)bonusFromPosition:(JMSPosition)position {
     NSInteger leftBound = position.column, rightBound = position.column;
     NSInteger topBound = position.row, bottomBound = position.row;
     
-    BOOL(^isNotOpened)(JMSMineGridCellInfo *) = ^BOOL (JMSMineGridCellInfo *cell)
+    BOOL(^isOpened)(JMSMineGridCellInfo *) = ^BOOL (JMSMineGridCellInfo *cell)
     {
-        return cell && cell.state != MineGridCellStateOpened;
+        return cell.state == MineGridCellStateOpened;
     };
     
     BOOL (^xinsideGameboard)(NSInteger) = ^BOOL(NSInteger coordinate)
@@ -328,33 +248,29 @@ typedef NS_ENUM(NSUInteger, JMSCellAction) {
     };
     
     JMSMineGridCellInfo *cell;
-    do
-    {
+    do {
         leftBound--;
         cell = leftBound >= 0 ? self.map[leftBound][position.row] : nil;
     }
-    while (isNotOpened(cell));
+    while (!isOpened(cell));
     
-    do
-    {
+    do {
         rightBound++;
         cell = rightBound < self.colCount ? self.map[rightBound][position.row] : nil;
     }
-    while (isNotOpened(cell));
+    while (!isOpened(cell));
     
-    do
-    {
+    do {
         topBound--;
         cell = topBound >= 0 ? self.map[position.column][topBound] : nil;
     }
-    while (isNotOpened(cell));
+    while (!isOpened(cell));
     
-    do
-    {
+    do {
         bottomBound++;
         cell = bottomBound < self.rowCount ? self.map[position.column][bottomBound] : nil;
     }
-    while (isNotOpened(cell));
+    while (!isOpened(cell));
     
     NSLog(@"horizontal: %ld <-> %ld", (long)leftBound, (long)rightBound);
     NSLog(@"vertical  : %ld <-> %ld", (long)topBound, (long)bottomBound);
@@ -372,16 +288,13 @@ typedef NS_ENUM(NSUInteger, JMSCellAction) {
     BOOL horizontalLineWithPivot = leftBoundInside || rightBoundInside;
     BOOL verticalLinesWithPivot = topBoundInside || bottomBoundInside;
     
-    if (horizontalLineWithPivot)
-    {
+    if (horizontalLineWithPivot) {
         length = rightBound - leftBound - 1;
         
-        if (!leftBoundInside)
-        {
+        if (!leftBoundInside) {
             leftBound = 0;
         }
-        if (!rightBoundInside)
-        {
+        if (!rightBoundInside) {
             rightBound = self.colCount - 1;
         }
         
@@ -391,22 +304,18 @@ typedef NS_ENUM(NSUInteger, JMSCellAction) {
         ? cell2.cellInfo.minesLeftDirection - cell1.cellInfo.minesLeftDirection
         : cell1.cellInfo.minesRightDirection - cell2.cellInfo.minesRightDirection;
         
-        if (mines > 0)
-        {
-            a = length/mines;
+        if (mines > 0) {
+            a = length / mines;
         }
     }
     
-    if (verticalLinesWithPivot)
-    {
+    if (verticalLinesWithPivot) {
         length = bottomBound - topBound - 1;
         
-        if (!topBoundInside)
-        {
+        if (!topBoundInside) {
             topBound = 0;
         }
-        if (!bottomBoundInside)
-        {
+        if (!bottomBoundInside) {
             bottomBound = self.rowCount - 1;
         }
         
@@ -416,28 +325,22 @@ typedef NS_ENUM(NSUInteger, JMSCellAction) {
         ? cell2.cellInfo.minesTopDirection - cell1.cellInfo.minesTopDirection
         : cell1.cellInfo.minesBottomDirection - cell2.cellInfo.minesBottomDirection;
         
-        if (mines > 0)
-        {
-            b = length/mines;
+        if (mines > 0) {
+            b = length / mines;
         }
     }
     
-    if (horizontalLineWithPivot)
-    {
-        if (verticalLinesWithPivot)
-        {
+    if (horizontalLineWithPivot) {
+        if (verticalLinesWithPivot) {
             bonus = 1 / (2 + a * b - a - b);
         }
-        else
-        {
-            bonus = 1/a;
+        else {
+            bonus = 1 / a;
         }
     }
-    else
-    {
-        if (verticalLinesWithPivot)
-        {
-            bonus = 1/b;
+    else {
+        if (verticalLinesWithPivot) {
+            bonus = 1 / b;
         }
     }
     
@@ -446,19 +349,15 @@ typedef NS_ENUM(NSUInteger, JMSCellAction) {
 
 #pragma mark - Map Interaction API Methods
 
-- (NSInteger)markMines
-{
+- (NSInteger)markMines {
     NSInteger markedCellsCount = 0;
     NSMutableArray *changedCells = [NSMutableArray array];
     
-    for (NSUInteger col = 0; col < self.map.count; col++)
-    {
+    for (NSUInteger col = 0; col < self.map.count; col++) {
         NSArray *vector = self.map[col];
-        for (NSUInteger row = 0; row < vector.count; row++)
-        {
+        for (NSUInteger row = 0; row < vector.count; row++) {
             JMSMineGridCellInfo *cell = vector[row];
-            if (cell.mine && cell.state != MineGridCellStateMarked)
-            {
+            if (cell.mine && cell.state != MineGridCellStateMarked) {
                 [cell setState:MineGridCellStateMarked];
                 
                 JMSAlteredCellInfo *alteredCellInfo = [[JMSAlteredCellInfo alloc] initWithCellInfo:cell col:col row:row];
@@ -467,8 +366,7 @@ typedef NS_ENUM(NSUInteger, JMSCellAction) {
             }
         }
     }
-    if (changedCells.count > 0)
-    {
+    if (changedCells.count > 0) {
         [self notifyObserversWithChanges:changedCells];
     }
     return markedCellsCount;
@@ -477,24 +375,20 @@ typedef NS_ENUM(NSUInteger, JMSCellAction) {
 - (BOOL)openInZeroDirectionsFromPosition:(JMSPosition)position
                            unmarkedCount:(NSUInteger *)unmarkedCount
                              openedCount:(NSUInteger *)openedCount
-                     shouldOpenSafeCells:(BOOL)shouldOpenSafeCells
-{
+                     shouldOpenSafeCells:(BOOL)shouldOpenSafeCells {
     NSUInteger unmarkedCells = 0;
     NSUInteger openedCells = 0;
     
     JMSMineGridCellInfo *cell = self.map[position.column][position.row];
-    if (cell.state == MineGridCellStateOpened)
-    {
+    if (cell.state == MineGridCellStateOpened) {
         *unmarkedCount = 0;
         *openedCount = 0;
         return NO;
     }
     NSMutableArray *floodMap = [NSMutableArray array];
-    for (NSUInteger col = 0; col < self.colCount; col++)
-    {
+    for (NSUInteger col = 0; col < self.colCount; col++) {
         NSMutableArray *floodColumn = [NSMutableArray array];
-        for (NSUInteger row = 0; row < self.rowCount; row++)
-        {
+        for (NSUInteger row = 0; row < self.rowCount; row++) {
             [floodColumn addObject:@(UINT32_MAX)];
         }
         [floodMap addObject:floodColumn];
@@ -502,113 +396,95 @@ typedef NS_ENUM(NSUInteger, JMSCellAction) {
     
     floodMap[position.column][position.row] = @(0);
     
-    void (^checkLeftCell)(JMSPosition) = ^(JMSPosition pos)
-    {
+    void (^checkLeftCell)(JMSPosition) = ^(JMSPosition pos) {
         JMSMineGridCellInfo *thisCell = self.map[pos.column][pos.row];
         NSUInteger thisValue = [floodMap[pos.column][pos.row] integerValue];
-        if (thisValue < UINT32_MAX && pos.column > 0 && thisCell.cellInfo.minesLeftDirection == 0)
-        {
+        if (thisValue < UINT32_MAX && pos.column > 0 && thisCell.cellInfo.minesLeftDirection == 0) {
             JMSMineGridCellInfo *neighbourCell = self.map[pos.column - 1][pos.row];
-            if (neighbourCell.state != MineGridCellStateOpened)
-            {
+            if (neighbourCell.state != MineGridCellStateOpened) {
                 floodMap[pos.column - 1][pos.row] = @(MIN([floodMap[pos.column - 1][pos.row] integerValue], thisValue + 1));
             }
         }
     };
-    void (^checkRightCell)(JMSPosition) = ^(JMSPosition pos)
-    {
+    void (^checkRightCell)(JMSPosition) = ^(JMSPosition pos) {
         JMSMineGridCellInfo *thisCell = self.map[pos.column][pos.row];
         NSUInteger thisValue = [floodMap[pos.column][pos.row] integerValue];
-        if (thisValue < UINT32_MAX && pos.column < self.colCount-1 && thisCell.cellInfo.minesRightDirection == 0)
-        {
+        if (thisValue < UINT32_MAX && pos.column < self.colCount-1 && thisCell.cellInfo.minesRightDirection == 0) {
             JMSMineGridCellInfo *neighbourCell = self.map[pos.column + 1][pos.row];
-            if (neighbourCell.state != MineGridCellStateOpened)
-            {
+            if (neighbourCell.state != MineGridCellStateOpened) {
                 floodMap[pos.column + 1][pos.row] = @(MIN([floodMap[pos.column + 1][pos.row] integerValue], thisValue + 1));
             }
         }
     };
-    void (^checkUpperCell)(JMSPosition) = ^(JMSPosition pos)
-    {
+    void (^checkUpperCell)(JMSPosition) = ^(JMSPosition pos) {
         JMSMineGridCellInfo *thisCell = self.map[pos.column][pos.row];
         NSUInteger thisValue = [floodMap[pos.column][pos.row] integerValue];
-        if (thisValue < UINT32_MAX && pos.row > 0 && thisCell.cellInfo.minesTopDirection == 0)
-        {
+        if (thisValue < UINT32_MAX && pos.row > 0 && thisCell.cellInfo.minesTopDirection == 0) {
             JMSMineGridCellInfo *neighbourCell = self.map[pos.column][pos.row - 1];
-            if (neighbourCell.state != MineGridCellStateOpened)
-            {
+            if (neighbourCell.state != MineGridCellStateOpened) {
                 floodMap[pos.column][pos.row - 1] = @(MIN([floodMap[pos.column][pos.row - 1] integerValue], thisValue + 1));
             }
         }
     };
-    void (^checkLowerCell)(JMSPosition) = ^(JMSPosition pos)
-    {
+    void (^checkLowerCell)(JMSPosition) = ^(JMSPosition pos) {
         JMSMineGridCellInfo *thisCell = self.map[pos.column][pos.row];
         NSUInteger thisValue = [floodMap[pos.column][pos.row] integerValue];
-        if (thisValue < UINT32_MAX && pos.row < self.rowCount-1 && thisCell.cellInfo.minesBottomDirection == 0)
-        {
+        if (thisValue < UINT32_MAX && pos.row < self.rowCount-1 && thisCell.cellInfo.minesBottomDirection == 0) {
             JMSMineGridCellInfo *neighbourCell = self.map[pos.column][pos.row + 1];
-            if (neighbourCell.state != MineGridCellStateOpened)
-            {
+            if (neighbourCell.state != MineGridCellStateOpened) {
                 floodMap[pos.column][pos.row + 1] = @(MIN([floodMap[pos.column][pos.row + 1] integerValue], thisValue + 1));
             }
         }
     };
     
-    if (shouldOpenSafeCells)
-    {
-        for (NSUInteger loopsCount = 0; loopsCount < 10; loopsCount++)
-        {
-            for (NSInteger col = 0; col < self.colCount; col++)
-                for (NSInteger row = 0; row < self.rowCount; row++)
-                {
+    if (shouldOpenSafeCells) {
+        for (NSUInteger loopsCount = 0; loopsCount < 10; loopsCount++) {
+            for (NSInteger col = 0; col < self.colCount; col++) {
+                for (NSInteger row = 0; row < self.rowCount; row++) {
                     JMSPosition p;
                     p.row = row;
                     p.column = col;
                     checkRightCell(p);
                     checkLowerCell(p);
                 }
-            for (NSInteger col = self.colCount - 1; col >= 0; col--)
-                for (NSInteger row = 0; row < self.rowCount; row++)
-                {
+            }
+            for (NSInteger col = self.colCount - 1; col >= 0; col--) {
+                for (NSInteger row = 0; row < self.rowCount; row++) {
                     JMSPosition p;
                     p.row = row;
                     p.column = col;
                     checkLeftCell(p);
                     checkLowerCell(p);
                 }
-            for (NSInteger col = self.colCount - 1; col >= 0; col--)
-                for (NSInteger row = self.rowCount - 1; row >= 0; row--)
-                {
+            }
+            for (NSInteger col = self.colCount - 1; col >= 0; col--) {
+                for (NSInteger row = self.rowCount - 1; row >= 0; row--) {
                     JMSPosition p;
                     p.row = row;
                     p.column = col;
                     checkLeftCell(p);
                     checkUpperCell(p);
                 }
-            for (NSInteger col = 0; col <= self.colCount - 1; col++)
-                for (NSInteger row = self.rowCount - 1; row >= 0; row--)
-                {
+            }
+            for (NSInteger col = 0; col <= self.colCount - 1; col++) {
+                for (NSInteger row = self.rowCount - 1; row >= 0; row--) {
                     JMSPosition p;
                     p.row = row;
                     p.column = col;
                     checkRightCell(p);
                     checkUpperCell(p);
                 }
+            }
         }
     }
     
     NSMutableArray *changedCells = [NSMutableArray array];
     
-    for (NSUInteger col = 0; col < self.colCount; col++)
-    {
-        for (NSUInteger row = 0; row < self.rowCount; row++)
-        {
-            if ([floodMap[col][row] integerValue] < UINT32_MAX)
-            {
+    for (NSUInteger col = 0; col < self.colCount; col++) {
+        for (NSUInteger row = 0; row < self.rowCount; row++) {
+            if ([floodMap[col][row] integerValue] < UINT32_MAX) {
                 JMSMineGridCellInfo *cellToOpen = self.map[col][row];
-                if (cellToOpen.state == MineGridCellStateMarked)
-                {
+                if (cellToOpen.state == MineGridCellStateMarked) {
                     unmarkedCells++;
                 }
                 openedCells++;
@@ -622,72 +498,61 @@ typedef NS_ENUM(NSUInteger, JMSCellAction) {
     
     self.score += [self scoreToAddFromPosition:position];
     self.score += [self cellBasedScore] * (openedCells - 1);
-
    
-    if (self.cellsLeftToOpen > 0)
-    {
+    if (self.cellsLeftToOpen > 0) {
         [self notifyWithCellAction:JMSCellActionSuccessfullyOpened];
     }
-    else
-    {
+    else {
         self.score *= [self levelModifier];
         [self markMines];
         [self notifyWithLevelCompletion];
     }
     
-    if (changedCells.count > 0)
-    {
+    if (changedCells.count > 0) {
         [self notifyObserversWithChanges:changedCells];
     }
     return YES;
 }
 
-- (BOOL)singleTappedWithPosition:(JMSPosition)position
-{
-    if (self.gameFinished) return NO;
-    
-    JMSMineGridCellInfo *cell = self.map[position.column][position.row];
-    
-    if (cell)
-    {
-        [cell setState:MineGridCellStateOpened];
-        JMSAlteredCellInfo *alteredCellInfo = [[JMSAlteredCellInfo alloc] initWithCellInfo:cell col:position.column row:position.row];
-        
-        [self notifyObserversWithChanges:@[alteredCellInfo]];
-        BOOL mine = cell.mine;
-        if (mine)
-        {
-            [self notifyWithCellAction:JMSCellActionRanIntoMine];
-            
-            NSMutableArray *changedCells = [NSMutableArray array];
-            for (NSUInteger col = 0; col < self.colCount; col++)
-            {
-                for (NSUInteger row = 0; row < self.rowCount; row++)
-                {
-                    JMSMineGridCellInfo *thisCell = self.map[col][row];
-                    if (thisCell.mine || (thisCell.state == MineGridCellStateMarked && !thisCell.mine))
-                    {
-                        JMSAlteredCellInfo *alteredCellInfo = [[JMSAlteredCellInfo alloc] initWithCellInfo:thisCell col:col row:row];
-                        [changedCells addObject:alteredCellInfo];
-                    }
-                }
-            }
-            if (changedCells.count > 0)
-            {
-                [self notifyObserversWithChanges:changedCells];
-            }
-        }
-        else
-        {
-            [self notifyWithCellAction:JMSCellActionSuccessfullyOpened];
-        }
-        return mine;
+- (BOOL)openCellWithPosition:(JMSPosition)position {
+    if (self.gameFinished) {
+        return NO;
     }
     
-    return NO;
+    JMSMineGridCellInfo *cell = self.map[position.column][position.row];
+    if (!cell) {
+        return NO;
+    }
+    
+    [cell setState:MineGridCellStateOpened];
+    JMSAlteredCellInfo *alteredCellInfo = [[JMSAlteredCellInfo alloc] initWithCellInfo:cell col:position.column row:position.row];
+        
+    [self notifyObserversWithChanges:@[alteredCellInfo]];
+
+    if (!cell.mine) {
+        [self notifyWithCellAction:JMSCellActionSuccessfullyOpened];
+        return NO;
+    }
+    
+    [self notifyWithCellAction:JMSCellActionRanIntoMine];
+            
+    NSMutableArray *changedCells = [NSMutableArray array];
+    for (NSUInteger col = 0; col < self.colCount; col++) {
+        for (NSUInteger row = 0; row < self.rowCount; row++) {
+            JMSMineGridCellInfo *thisCell = self.map[col][row];
+            if (thisCell.mine || (thisCell.state == MineGridCellStateMarked && !thisCell.mine)) {
+                JMSAlteredCellInfo *alteredCellInfo = [[JMSAlteredCellInfo alloc] initWithCellInfo:thisCell col:col row:row];
+                [changedCells addObject:alteredCellInfo];
+            }
+        }
+    }
+    if (changedCells.count > 0) {
+        [self notifyObserversWithChanges:changedCells];
+    }
+    return YES;
 }
 
-- (void) longTappedWithPosition:(JMSPosition)position
+- (void) toggleMarkWithPosition:(JMSPosition)position
 {
     JMSMineGridCellState oldState = [self cellState:position];
 
@@ -715,45 +580,36 @@ typedef NS_ENUM(NSUInteger, JMSCellAction) {
     
     JMSMineGridCellState newState = [self cellState:position];
     
-    if (oldState == MineGridCellStateMarked && newState == MineGridCellStateClosed)
-    {
+    if (oldState == MineGridCellStateMarked && newState == MineGridCellStateClosed) {
         [self notifyWithCellAction:JMSCellActionFlagAdded];
     }
-    if (oldState == MineGridCellStateClosed && newState == MineGridCellStateMarked)
-    {
+    if (oldState == MineGridCellStateClosed && newState == MineGridCellStateMarked) {
         [self notifyWithCellAction:JMSCellActionFlagRemoved];
     }
 
 }
 #pragma mark - observer methods
 
-- (void)registerObserver:(id<AlteredCellObserver>)observer
-{
+- (void)registerObserver:(id<AlteredCellObserver>)observer {
     [self.observerCollection addObject:observer];
 }
 
-- (void)unregisterObserver:(id<AlteredCellObserver>)observer
-{
+- (void)unregisterObserver:(id<AlteredCellObserver>)observer {
     [self.observerCollection removeObject:observer];
 }
 
-- (void)unregisterAllObservers
-{
+- (void)unregisterAllObservers {
     [self.observerCollection removeAllObjects];
 }
 
-- (void)notifyObserversWithChanges:(NSArray *)changedCells
-{
-    for (id<AlteredCellObserver> observer in self.observerCollection)
-    {
+- (void)notifyObserversWithChanges:(NSArray *)changedCells {
+    for (id<AlteredCellObserver> observer in self.observerCollection) {
         [observer cellsChanged:changedCells];
     }
 }
 
-- (void)notifyWithCellAction:(JMSCellAction)action
-{
-    for (id<AlteredCellObserver> observer in self.observerCollection)
-    {
+- (void)notifyWithCellAction:(JMSCellAction)action {
+    for (id<AlteredCellObserver> observer in self.observerCollection) {
         switch (action) {
             case JMSCellActionFlagAdded:
                 [observer flagAdded];
@@ -773,11 +629,10 @@ typedef NS_ENUM(NSUInteger, JMSCellAction) {
     }
 }
 
-- (void)notifyWithLevelCompletion
-{
-    for (id<AlteredCellObserver> observer in self.observerCollection)
-    {
+- (void)notifyWithLevelCompletion {
+    for (id<AlteredCellObserver> observer in self.observerCollection) {
         [observer levelCompleted];
     }
 }
+
 @end

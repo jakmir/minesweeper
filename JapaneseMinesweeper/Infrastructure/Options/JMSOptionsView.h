@@ -11,7 +11,7 @@
 @class JMSGradientSpeedmeterView;
 @class JMSGradientButton;
 
-@interface JMSOptionsView : UIView
+@interface JMSOptionsView: UIView
 
 @property (weak, nonatomic) IBOutlet UIView *difficultyLevel;
 @property (weak, nonatomic) IBOutlet UIView *generalSettings;

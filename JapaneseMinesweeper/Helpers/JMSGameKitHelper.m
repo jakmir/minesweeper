@@ -15,8 +15,7 @@ NSString *const kPresentAuthenticationViewController = @"notificationPresentAuth
     BOOL _gameCenterEnabled;
 }
 
-- (id)init
-{
+- (instancetype)init {
     if (self = [super init])
     {
         _gameCenterEnabled = YES;
@@ -41,31 +40,26 @@ NSString *const kPresentAuthenticationViewController = @"notificationPresentAuth
     localPlayer.authenticateHandler = ^(UIViewController *viewController, NSError *error) {
         [self setLastError:error];
         
-        if (viewController != nil)
-        {
+        if (viewController != nil) {
            [self setAuthenticationViewController:viewController];
         }
-        else
-        {
-            _gameCenterEnabled = [GKLocalPlayer localPlayer].isAuthenticated;
+        else {
+            self->_gameCenterEnabled = [GKLocalPlayer localPlayer].isAuthenticated;
         }
     };
 }
 
 - (void)setAuthenticationViewController:(UIViewController *)authenticationViewController
 {
-    if (authenticationViewController != nil)
-    {
+    if (authenticationViewController != nil) {
         _authenticationViewController = authenticationViewController;
         [[NSNotificationCenter defaultCenter] postNotificationName:kPresentAuthenticationViewController object:self];
     }
 }
 
-- (void)setLastError:(NSError *)error
-{
+- (void)setLastError:(NSError *)error {
     _lastError = [error copy];
-    if (_lastError)
-    {
+    if (_lastError) {
         NSLog(@"Error occured in GameKitHelper: %@", [[_lastError userInfo] description]);
     }
 }

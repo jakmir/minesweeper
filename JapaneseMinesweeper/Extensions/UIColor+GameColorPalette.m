@@ -8,50 +8,42 @@
 
 #import "UIColor+GameColorPalette.h"
 #import "UIColor+ColorFromHexString.h"
+
 @implementation UIColor (GameColorPalette)
 
-+ (UIColor *)progressPercentageLabelColor
-{
++ (UIColor *)progressPercentageLabelColor {
     return [[JMSKeyValueSettingsHelper instance] progressPercentageLabelColor];
 }
 
-+ (UIColor *)completedPercentageLabelColor
-{
++ (UIColor *)completedPercentageLabelColor {
     return [[JMSKeyValueSettingsHelper instance] completedPercentageLabelColor];
 }
 
-+ (UIColor *)gradientStartColor
-{
++ (UIColor *)gradientStartColor {
     return [[JMSKeyValueSettingsHelper instance] gradientStartColor];
 }
 
-+ (UIColor *)gradientFinishColor
-{
++ (UIColor *)gradientFinishColor {
     return [[JMSKeyValueSettingsHelper instance] gradientFinishColor];
 }
 
-+ (UIColor *)juicyOrangeColor
-{
++ (UIColor *)juicyOrangeColor {
     return [UIColor colorFromInteger:0xffff6600];
 }
 
-+ (UIColor *)brightOrangeColor
-{
++ (UIColor *)brightOrangeColor {
     return [UIColor colorFromInteger:0xffff3300];
 }
 
-+ (UIColor *)brightPurpleColor
-{
++ (UIColor *)brightPurpleColor {
     return [UIColor colorFromInteger:0xffa818ff];
 }
 
-+ (UIColor *)antDashedBorderColor
-{
++ (UIColor *)antDashedBorderColor {
     return [[JMSKeyValueSettingsHelper instance] antDashedBorderColor];
 }
 
-+ (UIColor *)needleColor
-{
++ (UIColor *)needleColor {
     return [UIColor clearColor];
 }
 @end

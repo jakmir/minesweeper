@@ -9,15 +9,12 @@
 #import "JMSKeyValueSettingsHelper.h"
 #import "UIColor+ColorFromHexString.h"
 
-@implementation JMSKeyValueSettingsHelper
-{
+@implementation JMSKeyValueSettingsHelper {
     NSDictionary *_dictionary;
 }
 
-- (id)init
-{
-    if (self = [super init])
-    {
+- (instancetype)init {
+    if (self = [super init]) {
         NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"Settings" ofType:@"plist"];
         _dictionary = [NSDictionary dictionaryWithContentsOfFile:plistPath];
     }

@@ -15,9 +15,9 @@
 static const CGFloat kLeaderboardTableHeaderHeight = 22;
 
 @interface JMSLeaderboardTableViewController ()
-{
-    NSArray *dataSource;
-}
+
+@property (nonatomic, strong) NSArray *dataSource;
+
 @end
 
 @implementation JMSLeaderboardTableViewController
@@ -26,8 +26,8 @@ static const CGFloat kLeaderboardTableHeaderHeight = 22;
 {
     [super viewDidLoad];
     
-    dataSource = [[[JMSLeaderboardManager alloc] init] highScoreList];
-    self.lbEmptyRemark.hidden = dataSource.count > 0;
+    self.dataSource = [[[JMSLeaderboardManager alloc] init] highScoreList];
+    self.lbEmptyRemark.hidden = self.dataSource.count > 0;
     
     CGFloat cornerRadius = [[JMSKeyValueSettingsHelper instance] buttonCornerRadius];
     [self.btnBackToMainMenu.layer setCornerRadius:cornerRadius];
@@ -36,40 +36,29 @@ static const CGFloat kLeaderboardTableHeaderHeight = 22;
     [self.btnShowGameCenterScreen.layer setMasksToBounds:YES];
 }
 
-- (BOOL)prefersStatusBarHidden
-{
+- (BOOL)prefersStatusBarHidden {
     return YES;
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 - (CGFloat)headerHeight {
     return kLeaderboardTableHeaderHeight;
 }
 
-- (NSString *)leaderboardName
-{
+- (NSString *)leaderboardName {
     return @"JMSMainLeaderboard";
 }
 
 #pragma mark - Table view data source
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    return dataSource.count;
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return self.dataSource.count;
 }
 
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-{
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     CGFloat height = [self headerHeight];
     CGFloat width = CGRectGetWidth(tableView.frame);
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, width, height)];
@@ -99,10 +88,9 @@ static const CGFloat kLeaderboardTableHeaderHeight = 22;
     return view;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     JMSScoreTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ScoreCell" forIndexPath:indexPath];
-    JMSGameSession *gameSession = dataSource[indexPath.row];
+    JMSGameSession *gameSession = self.dataSource[indexPath.row];
     [cell fillWithModel:gameSession];
 
     return cell;
@@ -110,32 +98,28 @@ static const CGFloat kLeaderboardTableHeaderHeight = 22;
 
 #pragma mark - Button actions
 
-- (IBAction)back
-{
+- (IBAction)back {
     [self dismissViewControllerAnimated:NO completion:nil];
 }
 
-- (IBAction)openGameboardScreen
-{
+- (IBAction)openGameboardScreen {
     [self showLeaderboard:[self leaderboardName]];
 }
 
 #pragma mark - GameCenter-related actions
 
-- (void) showLeaderboard: (NSString *)leaderboardId
-{
+- (void)showLeaderboard:(NSString *)leaderboardId {
     GKGameCenterViewController *gameCenterController = [[GKGameCenterViewController alloc] init];
-    if (gameCenterController != nil)
-    {
-        gameCenterController.gameCenterDelegate = self;
-        gameCenterController.viewState = GKGameCenterViewControllerStateLeaderboards;
-        gameCenterController.leaderboardIdentifier = leaderboardId;
-        [self presentViewController:gameCenterController animated:YES completion:nil];
+    if (gameCenterController == nil) {
+        return;
     }
+    gameCenterController.gameCenterDelegate = self;
+    gameCenterController.viewState = GKGameCenterViewControllerStateLeaderboards;
+    gameCenterController.leaderboardIdentifier = leaderboardId;
+    [self presentViewController:gameCenterController animated:YES completion:nil];
 }
 
-- (void)gameCenterViewControllerDidFinish:(GKGameCenterViewController *)gameCenterViewController
-{
+- (void)gameCenterViewControllerDidFinish:(GKGameCenterViewController *)gameCenterViewController {
     [gameCenterViewController dismissViewControllerAnimated:NO completion:nil];
 }
 

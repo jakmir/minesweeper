@@ -16,16 +16,7 @@
 
 @implementation JMSAppDelegate
 
-
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
-
-    static dispatch_once_t predicate;
-    dispatch_once(&predicate, ^{
-        NSTimeInterval timeInterval = [NSDate timeIntervalSinceReferenceDate];
-        srand(timeInterval);
-    });
-    
+- (void)completeOnboarding {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     if (![userDefaults boolForKey:@"userDefaultsInitialized"])
     {
@@ -37,8 +28,21 @@
         [userDefaults setBool:YES forKey:@"shouldLaunchTutorial"];
         [userDefaults synchronize];
     }
+}
+
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+
+    static dispatch_once_t predicate;
+    dispatch_once(&predicate, ^{
+        NSTimeInterval timeInterval = [NSDate timeIntervalSinceReferenceDate];
+        srand(timeInterval);
+    });
     
-    [[JMSSoundHelper instance] muteSound:![userDefaults boolForKey:@"soundEnabled"]];
+    [self completeOnboarding];
+    
+    BOOL isSoundEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"soundEnabled"];
+    [[JMSSoundHelper instance] muteSound:!isSoundEnabled];
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:nil];
     return YES;
 }

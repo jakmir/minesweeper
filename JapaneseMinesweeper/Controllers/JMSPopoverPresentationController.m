@@ -10,8 +10,7 @@
 
 @implementation JMSPopoverPresentationController
 
-- (BOOL)popoverPresentationControllerShouldDismissPopover:(UIPopoverPresentationController *)popoverPresentationController
-{
+- (BOOL)popoverPresentationControllerShouldDismissPopover:(UIPopoverPresentationController *)popoverPresentationController {
     NSLog(@"delegate method called asking permission to dismiss popover");
     return YES;
 }

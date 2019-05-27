@@ -27,14 +27,17 @@
     [super tearDown];
 }
 
-/*
+
 - (void)testPerformanceExample {
     // This is an example of a performance test case.
     [self measureBlock:^{
-        // Put the code you want to measure the time of here.
+        NSUInteger level = 25;
+        JMSGameModel *gameModel = [[JMSGameModel alloc] initWithLevel:level];
+        JMSPosition position = {.column = 0, .row = 0};
+        [gameModel fillMapWithLevel:level exceptPosition:position];
     }];
 }
-*/
+
 
 - (void)testGameModelIfMapAssigned {
     NSUInteger level = 25;

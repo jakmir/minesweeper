@@ -16,19 +16,18 @@
 @interface JMSMineGridView : UIView
 
 @property (nonatomic, strong) NSArray *map;
+@property (nonatomic, readonly) BOOL gameFinished;
 
-- (JMSPosition)cellPositionWithCoordinateInside: (CGPoint)point;
+- (JMSPosition)cellPositionWithCoordinateInside:(CGPoint)point;
 
 - (NSArray *)exportMap;
-- (void)importMap:(NSArray *)gameboardMap;
+- (void)importFromGameboardMap:(NSArray *)gameboardMap;
 - (void)refreshCells;
 
 - (void)finalizeGame;
 - (void)resetGame;
 
 - (void)updateCellWithAlteredCellModel:(JMSAlteredCellInfo *)alteredCellModel;
-
-@property (nonatomic, readonly) BOOL gameFinished;
 
 - (void)highlightCellWithPosition:(JMSPosition)position;
 - (void)removeHighlights;

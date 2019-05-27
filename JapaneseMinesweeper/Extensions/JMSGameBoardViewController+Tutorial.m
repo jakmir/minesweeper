@@ -11,24 +11,20 @@
 
 @implementation JMSGameBoardViewController (Tutorial)
 
-- (void)finishTutorial
-{
+- (void)finishTutorial {
     [self.gameboardView updateMenuWithFinishedTutorial:YES gameFinished:self.gameboardView.mineGridView.gameFinished];
 }
 
-- (void)addTutorialView:(UIView *)tutorialView
-{
+- (void)addTutorialView:(UIView *)tutorialView {
     [self.gameboardView.resultsView addSubview:tutorialView];
     [self.gameboardView.resultsView bringSubviewToFront:tutorialView];
 }
 
-- (void)highlightCellWithPosition:(JMSPosition)position
-{
+- (void)highlightCellWithPosition:(JMSPosition)position {
     [self.gameboardView.mineGridView highlightCellWithPosition:position];
 }
 
-- (void)removeHighlights
-{
+- (void)removeHighlights {
     [self.gameboardView.mineGridView removeHighlights];
 }
 

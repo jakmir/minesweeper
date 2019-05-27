@@ -10,10 +10,8 @@
 
 @implementation JMSDataManagerBase
 
-- (instancetype) init
-{
-    if (self = [super init])
-    {
+- (instancetype)init {
+    if (self = [super init]) {
         JMSAppDelegate *appDelegate = (JMSAppDelegate *)[[UIApplication sharedApplication] delegate];
         self.managedObjectContext = [appDelegate managedObjectContext];
     }

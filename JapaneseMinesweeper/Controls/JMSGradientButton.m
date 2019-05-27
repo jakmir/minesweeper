@@ -8,41 +8,40 @@
 
 #import "JMSGradientButton.h"
 
-@implementation JMSGradientButton
-{
-    CAGradientLayer *layer;
-    
-}
+@interface JMSGradientButton()
 
-- (void)drawRect:(CGRect)rect
-{
-    NSLog(@"%s", __FUNCTION__);
+@property (nonatomic, strong) CAGradientLayer *gradientLayer;
+
+@end
+
+@implementation JMSGradientButton
+
+- (void)drawRect:(CGRect)rect {
     [super drawRect:rect];
     
-    if (!layer)
-    {
-        layer = [CAGradientLayer layer];
-        layer.frame = rect;
-        layer.startPoint = CGPointMake(0.5, 0.0);
-        layer.endPoint = CGPointMake(0.5, 1.0);
-        layer.position = CGPointMake(CGRectGetWidth(rect) / 2, CGRectGetHeight(rect) / 2);
+    if (!self.gradientLayer) {
+        self.gradientLayer = [CAGradientLayer layer];
+        self.gradientLayer.frame = rect;
+        self.gradientLayer.startPoint = CGPointMake(0.5, 0.0);
+        self.gradientLayer.endPoint = CGPointMake(0.5, 1.0);
+        self.gradientLayer.position = CGPointMake(CGRectGetWidth(rect) / 2, CGRectGetHeight(rect) / 2);
         
-        [self.layer insertSublayer:layer below:[self.layer.sublayers firstObject]];
+        [self.layer insertSublayer:self.gradientLayer
+                             below:[self.layer.sublayers firstObject]];
     }
     
     self.layer.cornerRadius = 10.0f;
     self.layer.masksToBounds = YES;
 }
 
-- (void) drawGradientWithStartColor:(UIColor *)startColor andFinishColor:(UIColor *)finishColor;
-{
-    NSLog(@"%s", __FUNCTION__);
-    
-    if (!layer) return;
+- (void)drawGradientWithStartColor:(UIColor *)startColor finishColor:(UIColor *)finishColor {
+    if (!self.gradientLayer) {
+        return;
+    }
     
     [CATransaction begin];
     [CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions];
-    layer.colors = @[(id)startColor.CGColor, (id)finishColor.CGColor];
+    self.gradientLayer.colors = @[(id)startColor.CGColor, (id)finishColor.CGColor];
     [CATransaction commit];
 }
 

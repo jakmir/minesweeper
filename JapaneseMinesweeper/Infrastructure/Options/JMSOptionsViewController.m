@@ -12,7 +12,7 @@
 #import "JMSSoundHelper.h"
 #import "JMSOptionsView.h"
 
-@interface JMSOptionsViewController ()
+@interface JMSOptionsViewController () <JMSGradientSpeedmeterViewDelegate>
 
 @property (nonatomic) NSInteger level;
 @property (nonatomic, readonly) JMSOptionsView *optionsView;
@@ -21,8 +21,7 @@
 
 @implementation JMSOptionsViewController
 
-- (void)initializeFromUserDefaults
-{
+- (void)initializeFromUserDefaults {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     self.level = [userDefaults integerForKey:@"level"];
     self.optionsView.swSoundEnabled.on = [userDefaults boolForKey:@"soundEnabled"];
@@ -32,63 +31,26 @@
     [self sliderValueChanged:self.optionsView.slHoldDuration];
 }
 
-- (BOOL) prefersStatusBarHidden
-{
+- (BOOL)prefersStatusBarHidden {
     return YES;
 }
 
-- (JMSOptionsView *)optionsView
-{
-    if ([self.view isKindOfClass:[JMSOptionsView class]])
-    {
+- (JMSOptionsView *)optionsView {
+    if ([self.view isKindOfClass:[JMSOptionsView class]]) {
         return (JMSOptionsView *)self.view;
     }
     return nil;
 }
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
     
     [self initializeFromUserDefaults];
+    [self.optionsView.gradientSpeedmeter setDelegate:self];
     [self.optionsView fillGradientSpeedmeterWithLevel:self.level];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(valueChanged:)
-                                                 name:@"SpeedmeterValueChanged" object:nil];
-
-}
-
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    
-    [super viewWillDisappear:animated];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    
-    [self.optionsView.btnSave drawGradientWithStartColor:[[JMSKeyValueSettingsHelper instance] gradientStartColor]
-                                          andFinishColor:[[JMSKeyValueSettingsHelper instance] gradientFinishColor]];
-    [self.optionsView.btnSave.layer setCornerRadius:[[JMSKeyValueSettingsHelper instance] menuButtonCornerRadius]];
-    [self.optionsView.btnSave.layer setMasksToBounds:YES];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-- (IBAction)save
-{
+- (IBAction)save {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     
     [userDefaults setInteger:self.level forKey:@"level"];
@@ -102,14 +64,13 @@
     [self dismissViewControllerAnimated:NO completion:nil];
 }
 
-- (void)valueChanged:(NSNotification *)notification
-{
-    self.level = self.optionsView.gradientSpeedmeter.power;
-}
-
-- (IBAction)sliderValueChanged:(UISlider *)sender
-{
+- (IBAction)sliderValueChanged:(UISlider *)sender {
     [self.optionsView updateHoldDurationWithValue:sender.value];
 }
+
+- (void)didSpeedmeterValueChange:(JMSGradientSpeedmeterView *)sender value:(NSUInteger)value {
+    self.level = value;
+}
+
 
 @end

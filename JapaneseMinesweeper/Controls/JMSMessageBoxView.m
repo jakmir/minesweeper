@@ -23,11 +23,8 @@ CGFloat buttonHeight = 0;
 @synthesize buttonTitle;
 @synthesize useMotionEffects;
 
-- (instancetype)initWithButtonTitle:(NSString *)title actionHandler:(void (^)(void))onButtonTouchUpInsideHandler
-{
-    self = [super init];
-    if (self)
-    {
+- (instancetype)initWithButtonTitle:(NSString *)title actionHandler:(void (^)(void))onButtonTouchUpInsideHandler {
+    if (self = [super init]) {
         self.frame = [UIScreen mainScreen].bounds;
 
         useMotionEffects = NO;
@@ -38,8 +35,7 @@ CGFloat buttonHeight = 0;
 }
 
 // Create the dialog view, and animate opening the dialog
-- (void)show
-{
+- (void)show {
     dialogView = [self createContainerView];
     
     dialogView.layer.shouldRasterize = YES;
@@ -49,8 +45,7 @@ CGFloat buttonHeight = 0;
     self.layer.rasterizationScale = [[UIScreen mainScreen] scale];
     
 #if (defined(__IPHONE_7_0))
-    if (useMotionEffects)
-    {
+    if (useMotionEffects) {
         [self applyMotionEffects];
     }
 #endif
@@ -71,15 +66,14 @@ CGFloat buttonHeight = 0;
     [UIView animateWithDuration:1.0f delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
                      animations:^{
                          self.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.25f];
-                         dialogView.layer.opacity = 1.0f;
-                         dialogView.layer.transform = CATransform3DMakeScale(1, 1, 1);
+                         self->dialogView.layer.opacity = 1.0f;
+                         self->dialogView.layer.transform = CATransform3DMakeScale(1, 1, 1);
                      }
                      completion:NULL
      ];
 }
 
-- (void)dismissMessageBox
-{
+- (void)dismissMessageBox {
     CATransform3D currentTransform = dialogView.layer.transform;
     
     dialogView.layer.opacity = 1.0f;
@@ -91,8 +85,8 @@ CGFloat buttonHeight = 0;
     [UIView animateWithDuration:0.5f delay:0.0 options:UIViewAnimationOptionTransitionNone
                      animations:^{
                          self.backgroundColor = [UIColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:0.0f];
-                         dialogView.layer.transform = CATransform3DConcat(currentTransform, CATransform3DMakeScale(0.6f, 0.6f, 1.0));
-                         dialogView.layer.opacity = 0.0f;
+                         self->dialogView.layer.transform = CATransform3DConcat(currentTransform, CATransform3DMakeScale(0.6f, 0.6f, 1.0));
+                         self->dialogView.layer.opacity = 0.0f;
                      }
                      completion:^(BOOL finished) {
                          for (UIView *v in [self subviews]) {
@@ -103,29 +97,24 @@ CGFloat buttonHeight = 0;
      ];
 }
 
-- (void)close
-{
+- (void)close {
     onButtonTouchUpInside();
     
     [self dismissMessageBox];
 }
 
-- (void)messageBoxTap:(UITapGestureRecognizer *)gestureRecognizer
-{
+- (void)messageBoxTap:(UITapGestureRecognizer *)gestureRecognizer {
     CGPoint touchLocation = [gestureRecognizer locationInView:dialogView];
-    if (!CGRectContainsPoint(dialogView.bounds, touchLocation))
-    {
+    if (!CGRectContainsPoint(dialogView.bounds, touchLocation)) {
         [self dismissMessageBox];
     }
 }
 
-- (void)setSubView: (UIView *)subView
-{
+- (void)setSubView:(UIView *)subView {
     containerView = subView;
 }
 
-- (UIView *)createContainerView
-{
+- (UIView *)createContainerView {
     if (containerView == NULL) {
         containerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 150)];
     }
@@ -167,8 +156,7 @@ CGFloat buttonHeight = 0;
     return dialogContainer;
 }
 
-- (void)addButtonsToView: (UIView *)container
-{
+- (void)addButtonsToView:(UIView *)container {
     CGFloat buttonWidthModifier = 0.8;
     CGFloat buttonWidth = container.bounds.size.width * buttonWidthModifier;
     
@@ -191,8 +179,7 @@ CGFloat buttonHeight = 0;
     [container addSubview:closeButton];
 }
 
-- (CGSize)countDialogSize
-{
+- (CGSize)countDialogSize {
     CGFloat dialogWidth = containerView.frame.size.width;
     CGFloat dialogHeight = containerView.frame.size.height + buttonHeight;
     
@@ -200,16 +187,13 @@ CGFloat buttonHeight = 0;
 }
 
 
-- (CGSize)countScreenSize
-{
+- (CGSize)countScreenSize {
     buttonHeight = kMessageBoxDefaultButtonHeight;
-
     return [UIScreen mainScreen].bounds.size;
 }
 
 #if (defined(__IPHONE_7_0))
-- (void)applyMotionEffects
-{
+- (void)applyMotionEffects {
     UIInterpolatingMotionEffect *horizontalEffect = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"center.x"
                                                                                                     type:UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis];
     horizontalEffect.minimumRelativeValue = @(-kMessageBoxMotionEffectExtent);
@@ -226,7 +210,5 @@ CGFloat buttonHeight = 0;
     [dialogView addMotionEffect:motionEffectGroup];
 }
 #endif
-
-
 
 @end

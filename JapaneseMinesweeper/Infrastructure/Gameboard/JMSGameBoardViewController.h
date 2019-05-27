@@ -19,15 +19,13 @@
 @interface JMSGameBoardViewController : UIViewController<UIPopoverPresentationControllerDelegate, AlteredCellObserver>
 
 @property (weak, nonatomic) JMSMainViewController *mainViewController;
-
 @property (nonatomic, strong) JMSGameModel *gameModel;
+@property (strong, nonatomic) id gameboardModel;
 
 - (void)cellsChanged:(NSArray *)alteredCellsCollection;
 
 - (IBAction)backToMainMenu;
 - (IBAction)resetGameClicked;
-
-@property (strong, nonatomic) id gameboardModel;
 
 - (JMSGameboardView *)gameboardView;
 

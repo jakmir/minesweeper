@@ -10,8 +10,7 @@
 
 @implementation UIColor (ColorFromHexString)
 
-+ (UIColor *)colorFromHexString: (NSString *)hexString
-{
++ (UIColor *)colorFromHexString: (NSString *)hexString {
     uint result = 0;
     NSScanner *scanner = [NSScanner scannerWithString:hexString];
     
@@ -21,8 +20,7 @@
 
 }
 
-+ (UIColor *) colorFromInteger:(UInt32)integer
-{
++ (UIColor *)colorFromInteger:(UInt32)integer {
     return [UIColor colorWithRed:((integer >> 16) & 0xFF) / 255.0
                            green:((integer >> 8) & 0xFF) / 255.0
                             blue:(integer & 0xFF) / 255.0

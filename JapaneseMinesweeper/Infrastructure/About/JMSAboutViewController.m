@@ -25,6 +25,6 @@
     layer.shadowOffset = CGSizeZero;
     layer.shadowRadius = 6;
     layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:self.view.bounds cornerRadius:0].CGPath;
-    
 }
+
 @end

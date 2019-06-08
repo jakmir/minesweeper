@@ -16,29 +16,28 @@
 
 @implementation JMSGradientButton
 
-- (void)drawRect:(CGRect)rect {
-    [super drawRect:rect];
-    
-    if (!self.gradientLayer) {
-        self.gradientLayer = [CAGradientLayer layer];
-        self.gradientLayer.frame = rect;
-        self.gradientLayer.startPoint = CGPointMake(0.5, 0.0);
-        self.gradientLayer.endPoint = CGPointMake(0.5, 1.0);
-        self.gradientLayer.position = CGPointMake(CGRectGetWidth(rect) / 2, CGRectGetHeight(rect) / 2);
+- (CAGradientLayer *)gradientLayer {
+    if (_gradientLayer == nil) {
+        _gradientLayer = [CAGradientLayer layer];
+        _gradientLayer.frame = self.bounds;
+        _gradientLayer.startPoint = CGPointMake(0.5, 0.0);
+        _gradientLayer.endPoint = CGPointMake(0.5, 1.0);
+        _gradientLayer.position = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
         
-        [self.layer insertSublayer:self.gradientLayer
+        [self.layer insertSublayer:_gradientLayer
                              below:[self.layer.sublayers firstObject]];
     }
+    return _gradientLayer;
+}
+
+- (void)awakeFromNib {
+    [super awakeFromNib];
     
     self.layer.cornerRadius = 10.0f;
     self.layer.masksToBounds = YES;
 }
 
 - (void)drawGradientWithStartColor:(UIColor *)startColor finishColor:(UIColor *)finishColor {
-    if (!self.gradientLayer) {
-        return;
-    }
-    
     [CATransaction begin];
     [CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions];
     self.gradientLayer.colors = @[(id)startColor.CGColor, (id)finishColor.CGColor];

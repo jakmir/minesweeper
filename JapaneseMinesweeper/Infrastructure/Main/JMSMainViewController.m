@@ -40,7 +40,7 @@
                                                                                            action:@selector(handleMainScreenTouch:)];
     [self.aboutView addGestureRecognizer:panRecognizer];
     [self.mainView addGestureRecognizer:tapGestureRecognizer];
-    [self.aboutView hideAboutView];
+    [self.aboutView hide];
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
@@ -50,16 +50,11 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    UIImage *wallpaperImage = [UIImage imageNamed:@"wallpaper"];
-    self.view.backgroundColor = [UIColor colorWithPatternImage:wallpaperImage];
-    
     [self.mainView updateButtonsWithModel:self.gameModel];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    
-    [self.mainView drawGradients];
 
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(showAuthenticationViewController)
@@ -115,7 +110,7 @@
 #pragma mark - Screen transition methods
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    [self.aboutView hideAboutView];
+    [self.aboutView hide];
     
     if ([segue.identifier isEqualToString:@"toGame"]) {
         JMSGameBoardViewController *destinationController = (JMSGameBoardViewController *)segue.destinationViewController;
@@ -133,8 +128,7 @@
 - (void)handlePan:(UIPanGestureRecognizer *)gestureRecognizer {
     static CGPoint oldCenter;
     
-    switch (gestureRecognizer.state)
-    {
+    switch (gestureRecognizer.state) {
         case UIGestureRecognizerStateBegan:
             oldCenter = gestureRecognizer.view.center;
             break;

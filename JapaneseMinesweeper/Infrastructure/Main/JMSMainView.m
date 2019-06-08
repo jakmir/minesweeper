@@ -10,6 +10,14 @@
 
 @implementation JMSMainView
 
+- (void)awakeFromNib {
+    [super awakeFromNib];
+
+    UIImage *wallpaperImage = [UIImage imageNamed:@"wallpaper"];
+    self.backgroundColor = [UIColor colorWithPatternImage:wallpaperImage];
+    [self drawGradients];
+}
+
 - (void)updateButtonsWithModel:(id)gameModel {
     NSString *title = gameModel != nil ? NSLocalizedString(@"Continue", @"Continue") : NSLocalizedString(@"New game", @"New game");
     [self.btnStart setTitle:title forState:UIControlStateNormal];
@@ -21,6 +29,8 @@
                                        finishColor:[UIColor gradientFinishColor]];
         [gradientButton.layer setCornerRadius:[[JMSKeyValueSettingsHelper instance] menuButtonCornerRadius]];
         [gradientButton.layer setMasksToBounds:YES];
+
     }
 }
+
 @end

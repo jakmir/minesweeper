@@ -1,19 +1,14 @@
 {
   "images" : [
     {
-      "idiom" : "universal",
-      "scale" : "1x",
-      "filename" : "RecentMine.png"
+      "idiom" : "ipad",
+      "filename" : "RecentMine.png",
+      "scale" : "1x"
     },
     {
-      "idiom" : "universal",
-      "scale" : "2x",
-      "filename" : "RecentMine@2x.png"
-    },
-    {
-      "idiom" : "universal",
-      "scale" : "3x",
-      "filename" : "RecentMine@3x.png"
+      "idiom" : "ipad",
+      "filename" : "RecentMine@2x.png",
+      "scale" : "2x"
     }
   ],
   "info" : {

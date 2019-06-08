@@ -144,7 +144,8 @@
 
 - (void)configureUI {
     BOOL tutorialFinished = self.tutorialManager ? self.tutorialManager.isFinished : YES;
-    [self.gameboardView updateMenuWithFinishedTutorial:tutorialFinished gameFinished:self.gameboardView.mineGridView.gameFinished];
+    [self.gameboardView updateMenuWithFinishedTutorial:tutorialFinished
+                                          gameFinished:self.gameModel.isGameFinished];
     UIColor *patternColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"wallpaper"]];
     [self.gameboardView.resultsView setBackgroundColor:patternColor];
 }
@@ -160,13 +161,16 @@
 - (void)finalizeGame {
     [self.gameboardView.mineGridView finalizeGame];
     BOOL tutorialFinished = self.tutorialManager ? self.tutorialManager.isFinished : YES;
-    [self.gameboardView updateMenuWithFinishedTutorial:tutorialFinished gameFinished:self.gameboardView.mineGridView.gameFinished];
+    [self.gameboardView updateMenuWithFinishedTutorial:tutorialFinished
+                                          gameFinished:self.gameModel.isGameFinished];
 }
 
 #pragma mark - handle taps
 
-- (void)singleTap: (UIGestureRecognizer *)gestureRecognizer {
-    if (self.gameboardView.mineGridView.gameFinished) return; //take from model like (if self.gameboardModel.gameFinished)
+- (void)singleTap:(UIGestureRecognizer *)gestureRecognizer {
+    if (self.gameModel.gameFinished) {
+        return;
+    }
     
     CGPoint coord = [gestureRecognizer locationInView:self.gameboardView.mineGridView];
     
@@ -205,7 +209,7 @@
 }
 
 - (void)longTap:(UIGestureRecognizer *)gestureRecognizer {
-    if (self.gameboardView.mineGridView.gameFinished || gestureRecognizer.state != UIGestureRecognizerStateBegan) {
+    if (self.gameModel.isGameFinished || gestureRecognizer.state != UIGestureRecognizerStateBegan) {
         return;
     }
     
@@ -232,9 +236,10 @@
 
 - (void)showMessageBox {
     NSString *localizedTitle = NSLocalizedString(@"Play again Btn", @"Play again - button title");
+    __weak JMSGameBoardViewController *weakSelf = self;
     JMSMessageBoxView *alertView = [[JMSMessageBoxView alloc] initWithButtonTitle:localizedTitle
                                                                     actionHandler:^{
-                                                                        [self resetGame];
+                                                                        [weakSelf resetGame];
                                                                     }];
     [alertView setContainerView:[JMSMessageBoxView messageBoxContentView]];
     [alertView setUseMotionEffects:true];
@@ -250,7 +255,7 @@
 }
 
 - (IBAction)backToMainMenu {
-    if (self.initialTapPerformed && !self.gameboardView.mineGridView.gameFinished) {
+    if (self.initialTapPerformed && !self.gameModel.isGameFinished) {
         [self.gameModel unregisterObserver:self];
 
         self.mainViewController.gameModel = self.gameModel;
@@ -263,7 +268,8 @@
     if (!self.initialTapPerformed) {
         return;
     }
-    if (self.gameboardView.mineGridView.gameFinished) {
+
+    if (self.gameModel.isGameFinished) {
         [self resetGame];
         return;
     }

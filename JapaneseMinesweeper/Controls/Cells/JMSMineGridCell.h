@@ -12,7 +12,7 @@
 
 @class JMSMineGridView, JMSMineGridCellInfo;
 
-@interface JMSMineGridCell : UIView
+@interface JMSMineGridCell: UIView
 
 - (instancetype)initWithFrame:(CGRect)frame;
 

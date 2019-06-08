@@ -67,7 +67,7 @@ typedef NS_ENUM(NSUInteger, JMSCellAction) {
 
 #pragma mark - Accessors
 
-- (NSInteger) cellsLeftToOpen {
+- (NSInteger)cellsLeftToOpen {
     if (![self isLevelCreated]) {
         return 100 - self.minesCount;
     }
@@ -170,6 +170,10 @@ typedef NS_ENUM(NSUInteger, JMSCellAction) {
 #pragma mark - Map Filling Methods
 
 - (void)fillMapWithLevel:(NSUInteger)level exceptPosition:(JMSPosition)position {
+    if (self.rowCount == 0 || self.colCount == 0) {
+        return;
+    }
+
     for (int mineNumber = 1; mineNumber <= level; mineNumber++) {
         BOOL mine;
         NSInteger r, c;
@@ -226,7 +230,6 @@ typedef NS_ENUM(NSUInteger, JMSCellAction) {
             cell.cellInfo = cellInfo;
         }
 }
-
 
 - (CGFloat)bonusFromPosition:(JMSPosition)position {
     NSInteger leftBound = position.column, rightBound = position.column;
@@ -525,7 +528,10 @@ typedef NS_ENUM(NSUInteger, JMSCellAction) {
     }
     
     [cell setState:MineGridCellStateOpened];
-    JMSAlteredCellInfo *alteredCellInfo = [[JMSAlteredCellInfo alloc] initWithCellInfo:cell col:position.column row:position.row];
+
+    JMSAlteredCellInfo *alteredCellInfo = [[JMSAlteredCellInfo alloc] initWithCellInfo:cell
+                                                                                   col:position.column
+                                                                                   row:position.row];
         
     [self notifyObserversWithChanges:@[alteredCellInfo]];
 
@@ -534,8 +540,10 @@ typedef NS_ENUM(NSUInteger, JMSCellAction) {
         return NO;
     }
     
+    _gameFinished = YES;
+    
     [self notifyWithCellAction:JMSCellActionRanIntoMine];
-            
+    
     NSMutableArray *changedCells = [NSMutableArray array];
     for (NSUInteger col = 0; col < self.colCount; col++) {
         for (NSUInteger row = 0; row < self.rowCount; row++) {
@@ -552,19 +560,20 @@ typedef NS_ENUM(NSUInteger, JMSCellAction) {
     return YES;
 }
 
-- (void) toggleMarkWithPosition:(JMSPosition)position
-{
+- (void)toggleMarkWithPosition:(JMSPosition)position {
     JMSMineGridCellState oldState = [self cellState:position];
 
-    if (self.gameFinished) return;
+    if (self.gameFinished) {
+        return;
+    }
     
     JMSMineGridCellInfo *cell = self.map[position.column][position.row];
     
-    if (cell)
-    {
-        JMSAlteredCellInfo *alteredCellInfo = [[JMSAlteredCellInfo alloc] initWithCellInfo:cell col:position.column row:position.row];
-        switch (cell.state)
-        {
+    if (cell) {
+        JMSAlteredCellInfo *alteredCellInfo = [[JMSAlteredCellInfo alloc] initWithCellInfo:cell
+                                                                                       col:position.column
+                                                                                       row:position.row];
+        switch (cell.state) {
             case MineGridCellStateMarked:
                 [cell setState:MineGridCellStateClosed];
                 [self notifyObserversWithChanges:@[alteredCellInfo]];

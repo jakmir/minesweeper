@@ -10,14 +10,13 @@
 
 @implementation UIColor (ColorFromHexString)
 
-+ (UIColor *)colorFromHexString: (NSString *)hexString {
++ (UIColor *)colorFromHexString:(NSString *)hexString {
     uint result = 0;
     NSScanner *scanner = [NSScanner scannerWithString:hexString];
     
     [scanner scanHexInt:&result];
 
     return [UIColor colorFromInteger:result];
-
 }
 
 + (UIColor *)colorFromInteger:(UInt32)integer {

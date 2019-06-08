@@ -11,7 +11,7 @@
 @interface JMSAboutView : UIView
 
 - (void)animateShowView;
-- (void)hideAboutView;
+- (void)hide;
 - (void)animateJumpBack;
 - (void)animateHideViewWithVelocity:(CGFloat)velocity;
 - (BOOL)isViewInScreen;

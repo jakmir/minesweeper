@@ -6,34 +6,29 @@
 //  Copyright (c) 2015 Jakmir. All rights reserved.
 //
 
-#import "JMSLeaderboardTableViewController.h"
+#import "JMSLeaderboardViewController.h"
 #import "JMSScoreTableViewCell.h"
 #import "JMSLeaderboardManager.h"
-#import "JMSGameSession.h"
+#import "JMSGameSessionModel.h"
 #import "UIColor+ColorFromHexString.h"
+#import "JMSLeaderboardView.h"
 
 static const CGFloat kLeaderboardTableHeaderHeight = 22;
+static NSString *kScoreCellId = @"ScoreCell";
 
-@interface JMSLeaderboardTableViewController ()
+@interface JMSLeaderboardViewController() <UITableViewDataSource, UITableViewDelegate, GKGameCenterControllerDelegate>
 
 @property (nonatomic, strong) NSArray *dataSource;
+@property (nonatomic, strong, readonly) JMSLeaderboardView *leaderboardView;
 
 @end
 
-@implementation JMSLeaderboardTableViewController
+@implementation JMSLeaderboardViewController
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
     
     self.dataSource = [[[JMSLeaderboardManager alloc] init] highScoreList];
-    self.lbEmptyRemark.hidden = self.dataSource.count > 0;
-    
-    CGFloat cornerRadius = [[JMSKeyValueSettingsHelper instance] buttonCornerRadius];
-    [self.btnBackToMainMenu.layer setCornerRadius:cornerRadius];
-    [self.btnShowGameCenterScreen.layer setCornerRadius:cornerRadius];
-    [self.btnBackToMainMenu.layer setMasksToBounds:YES];
-    [self.btnShowGameCenterScreen.layer setMasksToBounds:YES];
 }
 
 - (BOOL)prefersStatusBarHidden {
@@ -48,6 +43,24 @@ static const CGFloat kLeaderboardTableHeaderHeight = 22;
     return @"JMSMainLeaderboard";
 }
 
+#pragma mark - Access Properties
+
+- (JMSLeaderboardView *)leaderboardView {
+    if ([self.view isKindOfClass:[JMSLeaderboardView class]]) {
+        return (JMSLeaderboardView *)self.view;
+    }
+    return nil;
+}
+
+- (void)setDataSource:(NSArray *)dataSource {
+    if (_dataSource != dataSource) {
+        _dataSource = dataSource;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.leaderboardView fillWithModel:dataSource];
+        });
+    }
+}
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -58,6 +71,7 @@ static const CGFloat kLeaderboardTableHeaderHeight = 22;
     return self.dataSource.count;
 }
 
+// TODO: rewrite with autolayout constraints or custom xib
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     CGFloat height = [self headerHeight];
     CGFloat width = CGRectGetWidth(tableView.frame);
@@ -88,9 +102,13 @@ static const CGFloat kLeaderboardTableHeaderHeight = 22;
     return view;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    JMSScoreTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ScoreCell" forIndexPath:indexPath];
-    JMSGameSession *gameSession = self.dataSource[indexPath.row];
+- (UITableViewCell *)tableView:(UITableView *)tableView
+            cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+
+    JMSScoreTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kScoreCellId
+                                                                  forIndexPath:indexPath];
+    JMSGameSessionModel *gameSession = self.dataSource[indexPath.row];
+
     [cell fillWithModel:gameSession];
 
     return cell;
@@ -106,7 +124,7 @@ static const CGFloat kLeaderboardTableHeaderHeight = 22;
     [self showLeaderboard:[self leaderboardName]];
 }
 
-#pragma mark - GameCenter-related actions
+#pragma mark - Game Center-related actions
 
 - (void)showLeaderboard:(NSString *)leaderboardId {
     GKGameCenterViewController *gameCenterController = [[GKGameCenterViewController alloc] init];

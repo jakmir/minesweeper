@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES" initialViewController="vXZ-lx-hvc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES" initialViewController="vXZ-lx-hvc">
     <device id="ipad9_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -543,15 +543,15 @@
             </objects>
             <point key="canvasLocation" x="1941.40625" y="442.96874999999994"/>
         </scene>
-        <!--Leaderboard Table View Controller-->
+        <!--Leaderboard View Controller-->
         <scene sceneID="UI3-1Q-S8x">
             <objects>
-                <viewController id="Skf-Cj-sjx" customClass="JMSLeaderboardTableViewController" sceneMemberID="viewController">
+                <viewController id="Skf-Cj-sjx" customClass="JMSLeaderboardViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="73H-MG-Hw5"/>
                         <viewControllerLayoutGuide type="bottom" id="Q4k-OD-dNq"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="BSd-ud-8D9">
+                    <view key="view" contentMode="scaleToFill" id="BSd-ud-8D9" customClass="JMSLeaderboardView">
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -715,12 +715,13 @@
                             <constraint firstItem="Pd7-7w-cEG" firstAttribute="top" secondItem="wLw-8P-1Wp" secondAttribute="bottom" id="hd7-jY-RHQ"/>
                             <constraint firstItem="wLw-8P-1Wp" firstAttribute="top" secondItem="BSd-ud-8D9" secondAttribute="top" id="nsS-Oi-4vg"/>
                         </constraints>
+                        <connections>
+                            <outlet property="btnBackToMainMenu" destination="4ds-Im-0Uw" id="X2S-MA-V5j"/>
+                            <outlet property="btnShowGameCenterScreen" destination="o8x-Au-iys" id="Ws9-pN-twE"/>
+                            <outlet property="lbEmptyRemark" destination="0TO-so-GXw" id="y2M-DM-5N9"/>
+                            <outlet property="tableView" destination="jQN-Tq-xRD" id="y7A-ba-HnA"/>
+                        </connections>
                     </view>
-                    <connections>
-                        <outlet property="btnBackToMainMenu" destination="4ds-Im-0Uw" id="ahM-EE-FIF"/>
-                        <outlet property="btnShowGameCenterScreen" destination="o8x-Au-iys" id="y1a-Qn-jcQ"/>
-                        <outlet property="lbEmptyRemark" destination="0TO-so-GXw" id="sa3-rc-QFe"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Nu1-zT-s39" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

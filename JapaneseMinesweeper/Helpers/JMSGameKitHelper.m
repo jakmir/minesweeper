@@ -16,12 +16,11 @@ NSString *const kPresentAuthenticationViewController = @"notificationPresentAuth
 
 @end
 
-
 @implementation JMSGameKitHelper
 
 - (instancetype)init {
     if (self = [super init]) {
-        _gameCenterEnabled = YES;
+        self.gameCenterEnabled = YES;
     }
     return self;
 }

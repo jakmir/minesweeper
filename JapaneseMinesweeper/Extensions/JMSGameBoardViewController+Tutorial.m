@@ -12,7 +12,7 @@
 @implementation JMSGameBoardViewController (Tutorial)
 
 - (void)finishTutorial {
-    [self.gameboardView updateMenuWithFinishedTutorial:YES gameFinished:self.gameboardView.mineGridView.gameFinished];
+    [self.gameboardView updateMenuWithFinishedTutorial:YES gameFinished:self.gameModel.isGameFinished];
 }
 
 - (void)addTutorialView:(UIView *)tutorialView {

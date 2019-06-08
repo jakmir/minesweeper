@@ -11,17 +11,9 @@
 #import "JMSMineGridCellInfo.h"
 #import "UIColor+ColorFromHexString.h"
 
-@interface JMSMineGridCell()
-
-@end
-
 @implementation JMSMineGridCell
-{
-    CAGradientLayer *gradientLayer;
-    CAShapeLayer *antLayer;
-}
 
-- (instancetype) initWithFrame:(CGRect)frame {
+- (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         _state = MineGridCellStateClosed;
     }
@@ -42,7 +34,8 @@
 - (void)drawForClosedStateWithContext:(CGContextRef)context rect:(CGRect)rect {
     CGContextSetRGBFillColor(context, 0.8, 0.8, 0.8, 1);
     CGContextFillRect(context, rect);
-    if (self.mineGridView.gameFinished && self.mine) {
+
+    if (self.mine) {
         [[UIImage imageNamed:@"mine"] drawInRect:rect];
     }
 }
@@ -52,6 +45,7 @@
     CGContextSetRGBFillColor(context, 0.9, 0.9, 0.9, 0.5);
     CGContextFillRect(context, rect);
     if (!self.mineGridView.gameFinished || self.mine) {
+        //TODO: dont rely on gameFinished, add MarkedMistakenly state
         [[UIImage imageNamed:@"flag"] drawInRect:rect];
     }
     else {

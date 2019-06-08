@@ -10,7 +10,7 @@
 #import <GameKit/GKGameCenterViewController.h>
 #import "JMSGradientButton.h"
 
-@interface JMSLeaderboardTableViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, GKGameCenterControllerDelegate>
+@interface JMSLeaderboardViewController: UIViewController 
 
 - (IBAction)back;
 - (IBAction)openGameboardScreen;

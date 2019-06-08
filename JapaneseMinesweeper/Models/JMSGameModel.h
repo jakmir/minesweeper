@@ -17,7 +17,9 @@
 @property (nonatomic, readonly) NSInteger colCount;
 
 @property (nonatomic, getter=isLevelCreated) BOOL levelCreated;
-@property (nonatomic) BOOL gameFinished;
+
+@property (nonatomic, readonly, getter=isGameFinished) BOOL gameFinished;
+
 @property (nonatomic) NSUInteger score;
 @property (nonatomic) NSUInteger level;
 @property (nonatomic, readonly) NSUInteger minesCount;

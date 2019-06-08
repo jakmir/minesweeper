@@ -24,9 +24,6 @@ const NSInteger spacing = 1;
 @end
 
 @implementation JMSMineGridView
-{
-    CALayer *layer;
-}
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super initWithCoder:aDecoder]) {
@@ -118,8 +115,7 @@ const NSInteger spacing = 1;
     
     JMSPosition position = {.row = NSNotFound, .column = NSNotFound};
     
-    if (clickedInField && clickedInCell)
-    {
+    if (clickedInField && clickedInCell) {
         position.row = row;
         position.column = col;
     }
@@ -127,8 +123,7 @@ const NSInteger spacing = 1;
     return position;
 }
 
-- (void) finalizeGame
-{
+- (void)finalizeGame {
     _gameFinished = YES;
 }
 

@@ -8,6 +8,7 @@
 
 #import "JMSLeaderboardManager.h"
 #import "JMSGameSession.h"
+#import "JMSGameSessionModel.h"
 
 @implementation JMSLeaderboardManager
 
@@ -79,14 +80,24 @@
     [fetchRequest setFetchOffset:fetchOffset];
     [fetchRequest setFetchLimit:fetchLimit];
     NSError *error;
-    NSArray *result = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+
+    NSArray *managedObjects = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+
     if (error) {
         NSLog(@"Oops, couldn't retrieve high scores. Reason is: %@", [error localizedDescription]);
         return @[];
     }
-    else {
-        return result;
+
+    NSMutableArray *result = [NSMutableArray array];
+    for (JMSGameSession *managedObject in managedObjects) {
+        JMSGameSessionModel *model = [[JMSGameSessionModel alloc] init];
+        model.score = [managedObject.score integerValue];
+        model.level = [managedObject.level integerValue];
+        model.progress = [managedObject.progress doubleValue];
+        model.postedAt = managedObject.postedAt;
+        [result addObject:model];
     }
+    return [result copy];
 }
 
 @end

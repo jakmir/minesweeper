@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface JMSMapModel : NSObject
 
+@property (nonatomic, strong) NSArray *map;
+
 @end
 
 NS_ASSUME_NONNULL_END

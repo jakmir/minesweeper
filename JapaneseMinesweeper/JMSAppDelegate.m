@@ -42,7 +42,7 @@
     [self completeOnboarding];
     
     BOOL isSoundEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"soundEnabled"];
-    [[JMSSoundHelper instance] muteSound:!isSoundEnabled];
+    [[JMSSoundHelper shared] muteSound:!isSoundEnabled];
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:nil];
     return YES;
 }

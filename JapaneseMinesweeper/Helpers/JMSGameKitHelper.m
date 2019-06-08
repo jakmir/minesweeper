@@ -10,14 +10,17 @@
 
 NSString *const kPresentAuthenticationViewController = @"notificationPresentAuthenticationViewController";
 
+@interface JMSGameKitHelper()
+
+@property (nonatomic) BOOL gameCenterEnabled;
+
+@end
+
+
 @implementation JMSGameKitHelper
-{
-    BOOL _gameCenterEnabled;
-}
 
 - (instancetype)init {
-    if (self = [super init])
-    {
+    if (self = [super init]) {
         _gameCenterEnabled = YES;
     }
     return self;
@@ -44,13 +47,12 @@ NSString *const kPresentAuthenticationViewController = @"notificationPresentAuth
            [self setAuthenticationViewController:viewController];
         }
         else {
-            self->_gameCenterEnabled = [GKLocalPlayer localPlayer].isAuthenticated;
+            self.gameCenterEnabled = [GKLocalPlayer localPlayer].isAuthenticated;
         }
     };
 }
 
-- (void)setAuthenticationViewController:(UIViewController *)authenticationViewController
-{
+- (void)setAuthenticationViewController:(UIViewController *)authenticationViewController {
     if (authenticationViewController != nil) {
         _authenticationViewController = authenticationViewController;
         [[NSNotificationCenter defaultCenter] postNotificationName:kPresentAuthenticationViewController object:self];

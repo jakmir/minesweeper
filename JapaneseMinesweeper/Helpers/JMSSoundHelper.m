@@ -9,21 +9,22 @@
 #import "JMSSoundHelper.h"
 #import <AVFoundation/AVFoundation.h>
 
-@implementation JMSSoundHelper
-{
-    NSMutableArray *_players;
-    BOOL _isMuted;
-}
+@interface JMSSoundHelper()
 
-- (id)init
-{
+@property (nonatomic, strong) NSMutableArray *players;
+@property (nonatomic) BOOL isMuted;
+
+@end
+
+@implementation JMSSoundHelper
+
+- (instancetype)init {
     if (self = [super init]) {
     }
     return self;
 }
 
-+ (instancetype)instance
-{
++ (instancetype)shared {
     static JMSSoundHelper *anInstance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -32,8 +33,7 @@
     return anInstance;
 }
 
-- (NSMutableArray *)players
-{
+- (NSMutableArray *)players {
     if (_players == nil) {
         _players = [NSMutableArray array];
     }
@@ -58,8 +58,7 @@
     NSError *error = nil;
     AVAudioPlayer *newPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:soundUrl error:&error];
     
-    if (newPlayer == nil)
-    {
+    if (newPlayer == nil) {
         NSLog(@"Couldn't load %@: %@", soundUrl, error);
         return nil;
     }

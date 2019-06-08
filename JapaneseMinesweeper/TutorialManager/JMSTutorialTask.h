@@ -14,7 +14,7 @@
 
 @property (nonatomic) JMSPosition position;
 @property (nonatomic) JMSAllowedAction action;
-@property (nonatomic) BOOL done;
+@property (nonatomic, getter=isCompleted) BOOL completed;
 
 - (instancetype)initWithPosition:(JMSPosition)position action:(JMSAllowedAction)action;
 

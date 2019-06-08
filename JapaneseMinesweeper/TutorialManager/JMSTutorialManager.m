@@ -166,7 +166,7 @@ static const NSUInteger kFieldDimension = 10;
     __block BOOL result = NO;
     [_tasks enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         JMSTutorialTask *task = obj;
-        if (task.position.row == position.row && task.position.column == position.column && task.done) {
+        if (task.position.row == position.row && task.position.column == position.column && task.isCompleted) {
             result = YES;
             *stop = YES;
         }
@@ -178,7 +178,7 @@ static const NSUInteger kFieldDimension = 10;
     [_tasks enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         JMSTutorialTask *task = obj;
         if (task.position.row == position.row && task.position.column == position.column) {
-            [task setDone:YES];
+            [task setCompleted:YES];
             *stop = YES;
         }
     }];
@@ -187,24 +187,23 @@ static const NSUInteger kFieldDimension = 10;
 }
 
 - (void)checkTasks {
-    __block BOOL allDone = YES;
+    __block BOOL allCompleted = YES;
     [_tasks enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         JMSTutorialTask *task = obj;
-        allDone &= task.done;
-        if (!allDone) {
+        allCompleted &= task.completed;
+        if (!allCompleted) {
             *stop = YES;
         }
     }];
     
-    if (allDone) {
+    if (allCompleted) {
         [self moveToNextStep];
     }
 }
 
 #pragma mark - Tutorial UI-affecting Actions
 
-- (void)updateTutorial
-{
+- (void)updateTutorial {
     UIView *tutorialStepView = [self prepareView];
     [_gameboardController addTutorialView:tutorialStepView];
     

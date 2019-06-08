@@ -14,17 +14,15 @@
     if (self = [super init]) {
         _position = position;
         _action = action;
-        _done = NO;
+        _completed = NO;
     }
     return self;
 }
 
-- (void)setDone:(BOOL)done { // TODO: this place looks suspicious
-    BOOL doneBefore = _done;
-    if (doneBefore == YES && done == NO) {
-        return;
+- (void)setCompleted:(BOOL)completed {
+    if (completed) {
+        _completed = completed;
     }
-    _done = done;
 }
 
 @end

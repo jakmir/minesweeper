@@ -59,7 +59,7 @@
     [userDefaults setBool:self.optionsView.swOpenSafeCells.on forKey:@"shouldOpenSafeCells"];
     [userDefaults synchronize];
     
-    [[JMSSoundHelper instance] muteSound:!self.optionsView.swSoundEnabled.on];
+    [[JMSSoundHelper shared] muteSound:!self.optionsView.swSoundEnabled.on];
     
     [self dismissViewControllerAnimated:NO completion:nil];
 }

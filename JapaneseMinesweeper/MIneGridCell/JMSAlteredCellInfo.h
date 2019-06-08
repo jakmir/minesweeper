@@ -14,4 +14,5 @@
 @property (nonatomic, strong) JMSMineGridCellInfo *cellInfo;
 
 - (instancetype)initWithCellInfo:(JMSMineGridCellInfo *)cellInfo col:(NSUInteger)col row:(NSUInteger)row;
+
 @end

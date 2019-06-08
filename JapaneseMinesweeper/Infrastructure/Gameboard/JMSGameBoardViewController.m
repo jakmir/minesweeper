@@ -337,15 +337,15 @@
 }
 
 - (void)flagAdded {
-    [[JMSSoundHelper instance] playSoundWithAction:JMSSoundActionPutFlag];
+    [[JMSSoundHelper shared] playSoundWithAction:JMSSoundActionPutFlag];
 }
 
 - (void)flagRemoved {
-    [[JMSSoundHelper instance] playSoundWithAction:JMSSoundActionPutFlag];
+    [[JMSSoundHelper shared] playSoundWithAction:JMSSoundActionPutFlag];
 }
 
 - (void)ranIntoMine {
-    [[JMSSoundHelper instance] playSoundWithAction:JMSSoundActionGameFailed];
+    [[JMSSoundHelper shared] playSoundWithAction:JMSSoundActionGameFailed];
     [self postScore];
     [self finalizeGame];
     [self.mainViewController setGameModel:nil];
@@ -353,11 +353,11 @@
 }
 
 - (void)cellSuccessfullyOpened {
-    [[JMSSoundHelper instance] playSoundWithAction:JMSSoundActionCellTap];
+    [[JMSSoundHelper shared] playSoundWithAction:JMSSoundActionCellTap];
 }
 
 - (void)levelCompleted {
-    [[JMSSoundHelper instance] playSoundWithAction:JMSSoundActionLevelCompleted];
+    [[JMSSoundHelper shared] playSoundWithAction:JMSSoundActionLevelCompleted];
     [self postScore];
     [self finalizeGame];
     [self showMessageBox];

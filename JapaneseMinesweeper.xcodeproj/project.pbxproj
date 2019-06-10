@@ -10,6 +10,8 @@
 		92597C52221B2FCF001924ED /* JMSGameModel.m in Sources */ = {isa = PBXBuildFile; fileRef = F75010281D078BC400EC511C /* JMSGameModel.m */; };
 		9289064D2297497600B52773 /* JMSGameModel+Tutorial.m in Sources */ = {isa = PBXBuildFile; fileRef = 9289064C2297497600B52773 /* JMSGameModel+Tutorial.m */; };
 		92CB28AD229B53C0009F5F9A /* JMSMapModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 92CB28AC229B53C0009F5F9A /* JMSMapModel.m */; };
+		92CB28B022AD9109009F5F9A /* JMSMessageBoxView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 92CB28AF22AD9109009F5F9A /* JMSMessageBoxView.xib */; };
+		92CB28B322ADA699009F5F9A /* UIView+MakeFitToEdges.m in Sources */ = {isa = PBXBuildFile; fileRef = 92CB28B222ADA699009F5F9A /* UIView+MakeFitToEdges.m */; };
 		C768A6EC229C997800727084 /* JMSGameSession.m in Sources */ = {isa = PBXBuildFile; fileRef = C768A6EB229C997800727084 /* JMSGameSession.m */; };
 		C768A6EF229C99AB00727084 /* JMSGameSessionModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C768A6EE229C99AB00727084 /* JMSGameSessionModel.m */; };
 		C768A6F2229C9DDC00727084 /* JMSLeaderboardView.m in Sources */ = {isa = PBXBuildFile; fileRef = C768A6F1229C9DDC00727084 /* JMSLeaderboardView.m */; };
@@ -78,6 +80,9 @@
 		9289064C2297497600B52773 /* JMSGameModel+Tutorial.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "JMSGameModel+Tutorial.m"; sourceTree = "<group>"; };
 		92CB28AB229B53C0009F5F9A /* JMSMapModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JMSMapModel.h; sourceTree = "<group>"; };
 		92CB28AC229B53C0009F5F9A /* JMSMapModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JMSMapModel.m; sourceTree = "<group>"; };
+		92CB28AF22AD9109009F5F9A /* JMSMessageBoxView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = JMSMessageBoxView.xib; sourceTree = "<group>"; };
+		92CB28B122ADA699009F5F9A /* UIView+MakeFitToEdges.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+MakeFitToEdges.h"; sourceTree = "<group>"; };
+		92CB28B222ADA699009F5F9A /* UIView+MakeFitToEdges.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIView+MakeFitToEdges.m"; sourceTree = "<group>"; };
 		C768A6EA229C997800727084 /* JMSGameSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMSGameSession.h; sourceTree = "<group>"; };
 		C768A6EB229C997800727084 /* JMSGameSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMSGameSession.m; sourceTree = "<group>"; };
 		C768A6ED229C99AB00727084 /* JMSGameSessionModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JMSGameSessionModel.h; sourceTree = "<group>"; };
@@ -197,6 +202,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		92CB28AE22AD7795009F5F9A /* Headers */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Headers;
+			sourceTree = "<group>";
+		};
 		C768A6E9229C997800727084 /* Managed */ = {
 			isa = PBXGroup;
 			children = (
@@ -373,6 +385,8 @@
 				F75010431D078C5600EC511C /* UIColor+ColorFromHexString.m */,
 				F75010441D078C5600EC511C /* UIColor+GameColorPalette.h */,
 				F75010451D078C5600EC511C /* UIColor+GameColorPalette.m */,
+				92CB28B122ADA699009F5F9A /* UIView+MakeFitToEdges.h */,
+				92CB28B222ADA699009F5F9A /* UIView+MakeFitToEdges.m */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -471,6 +485,7 @@
 		F7C3F9A51B3F472700CCE5C8 /* Controls */ = {
 			isa = PBXGroup;
 			children = (
+				92CB28AE22AD7795009F5F9A /* Headers */,
 				F7C3F9C01B3F4FA400CCE5C8 /* Unused */,
 				F7C3F9A61B3F472700CCE5C8 /* Cells */,
 				F7C3F9AB1B3F472700CCE5C8 /* JMSGradientButton.h */,
@@ -483,6 +498,7 @@
 				F7C3F9B21B3F472700CCE5C8 /* JMSMessageBoxView.m */,
 				F7C3F9B31B3F472700CCE5C8 /* JMSMineGridView.h */,
 				F7C3F9B41B3F472700CCE5C8 /* JMSMineGridView.m */,
+				92CB28AF22AD9109009F5F9A /* JMSMessageBoxView.xib */,
 			);
 			path = Controls;
 			sourceTree = "<group>";
@@ -604,6 +620,7 @@
 				F78047B41D079E4000BEE2D3 /* ui_feedback.wav in Resources */,
 				F78047B31D079E4000BEE2D3 /* put_flag.wav in Resources */,
 				F73BD87119C395F000CD51B9 /* Main.storyboard in Resources */,
+				92CB28B022AD9109009F5F9A /* JMSMessageBoxView.xib in Resources */,
 				F78047B11D079E4000BEE2D3 /* game_over.wav in Resources */,
 				F75010161D078B0100EC511C /* JMSAboutViewController.xib in Resources */,
 				F73BD87319C395F000CD51B9 /* Images.xcassets in Resources */,
@@ -651,6 +668,7 @@
 				F75010461D078C5600EC511C /* JMSGameBoardViewController+Tutorial.m in Sources */,
 				F7C3F9981B3F458700CCE5C8 /* JMSPopoverPresentationController.m in Sources */,
 				F7C3F9BD1B3F472700CCE5C8 /* JMSMineGridView.m in Sources */,
+				92CB28B322ADA699009F5F9A /* UIView+MakeFitToEdges.m in Sources */,
 				C768A6EC229C997800727084 /* JMSGameSession.m in Sources */,
 				F73BD86519C395EF00CD51B9 /* main.m in Sources */,
 				F75010561D078CF300EC511C /* JMSAlteredCellInfo.m in Sources */,
@@ -771,7 +789,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -818,7 +836,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;
@@ -838,7 +856,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/JapaneseMinesweeper/PrefixHeader.pch";
 				INFOPLIST_FILE = JapaneseMinesweeper/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Jakmir.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -860,7 +878,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/JapaneseMinesweeper/PrefixHeader.pch";
 				INFOPLIST_FILE = JapaneseMinesweeper/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Jakmir.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";

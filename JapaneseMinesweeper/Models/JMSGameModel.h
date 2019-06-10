@@ -44,7 +44,7 @@
 - (CGFloat)scoreToAddFromPosition:(JMSPosition)position;
 - (NSInteger)cellsLeftToOpen;
 - (CGFloat)bonusFromPosition:(JMSPosition)position;
-- (NSInteger)markMines;
+- (NSInteger)markRemainingMines;
 - (BOOL)openInZeroDirectionsFromPosition:(JMSPosition)position
                            unmarkedCount:(NSUInteger *)unmarkedCount
                              openedCount:(NSUInteger *)openedCount

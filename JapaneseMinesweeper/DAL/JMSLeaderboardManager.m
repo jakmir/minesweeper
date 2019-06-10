@@ -51,7 +51,7 @@
 }
 
 - (void)cleanUpOutsideTop100 {
-    NSArray *recordsToCleanUp = [self highScoreListWithFetchOffset:100 fetchLimit:0];
+    NSArray *recordsToCleanUp = [self managedHighScoreListWithFetchOffset:100 fetchLimit:0];
     NSError *error;
     for (NSManagedObject *managedObject in recordsToCleanUp) {
         [self.managedObjectContext deleteObject:managedObject];
@@ -67,10 +67,20 @@
 }
 
 - (NSArray *)highScoreList {
-    return [self highScoreListWithFetchOffset:0 fetchLimit:0];
+    NSArray *managedObjects = [self managedHighScoreListWithFetchOffset:0 fetchLimit:0];
+    NSMutableArray *result = [NSMutableArray array];
+    for (JMSGameSession *managedObject in managedObjects) {
+        JMSGameSessionModel *model = [[JMSGameSessionModel alloc] init];
+        model.score = [managedObject.score integerValue];
+        model.level = [managedObject.level integerValue];
+        model.progress = [managedObject.progress doubleValue];
+        model.postedAt = managedObject.postedAt;
+        [result addObject:model];
+    }
+    return [result copy];
 }
 
-- (NSArray *)highScoreListWithFetchOffset:(NSInteger)fetchOffset fetchLimit:(NSInteger)fetchLimit {
+- (NSArray *)managedHighScoreListWithFetchOffset:(NSInteger)fetchOffset fetchLimit:(NSInteger)fetchLimit {
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName:[self entityName]
                                               inManagedObjectContext:self.managedObjectContext];
@@ -88,16 +98,7 @@
         return @[];
     }
 
-    NSMutableArray *result = [NSMutableArray array];
-    for (JMSGameSession *managedObject in managedObjects) {
-        JMSGameSessionModel *model = [[JMSGameSessionModel alloc] init];
-        model.score = [managedObject.score integerValue];
-        model.level = [managedObject.level integerValue];
-        model.progress = [managedObject.progress doubleValue];
-        model.postedAt = managedObject.postedAt;
-        [result addObject:model];
-    }
-    return [result copy];
+    return managedObjects;
 }
 
 @end

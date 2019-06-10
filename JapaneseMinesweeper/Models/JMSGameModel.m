@@ -352,7 +352,7 @@ typedef NS_ENUM(NSUInteger, JMSCellAction) {
 
 #pragma mark - Map Interaction API Methods
 
-- (NSInteger)markMines {
+- (NSInteger)markRemainingMines {
     NSInteger markedCellsCount = 0;
     NSMutableArray *changedCells = [NSMutableArray array];
     
@@ -507,7 +507,8 @@ typedef NS_ENUM(NSUInteger, JMSCellAction) {
     }
     else {
         self.score *= [self levelModifier];
-        [self markMines];
+        _gameFinished = YES;
+        [self markRemainingMines];
         [self notifyWithLevelCompletion];
     }
     
@@ -543,21 +544,37 @@ typedef NS_ENUM(NSUInteger, JMSCellAction) {
     _gameFinished = YES;
     
     [self notifyWithCellAction:JMSCellActionRanIntoMine];
+    [self completeRemainingCells];
     
+    return YES;
+}
+
+- (void)completeRemainingCells {
     NSMutableArray *changedCells = [NSMutableArray array];
     for (NSUInteger col = 0; col < self.colCount; col++) {
         for (NSUInteger row = 0; row < self.rowCount; row++) {
             JMSMineGridCellInfo *thisCell = self.map[col][row];
-            if (thisCell.mine || (thisCell.state == MineGridCellStateMarked && !thisCell.mine)) {
-                JMSAlteredCellInfo *alteredCellInfo = [[JMSAlteredCellInfo alloc] initWithCellInfo:thisCell col:col row:row];
-                [changedCells addObject:alteredCellInfo];
+            switch (thisCell.state) {
+                case MineGridCellStateMarked:
+                    if (!thisCell.mine) {
+                        thisCell.state = MineGridCellStateMarkedMistakenly;
+                    }
+                    break;
+                case MineGridCellStateClosed:
+                    if (thisCell.mine) {
+                        thisCell.state = MineGridCellStateDisclosed;
+                    }
+                    break;
+                default:
+                    continue;
             }
+            JMSAlteredCellInfo *alteredCellInfo = [[JMSAlteredCellInfo alloc] initWithCellInfo:thisCell col:col row:row];
+            [changedCells addObject:alteredCellInfo];
         }
     }
     if (changedCells.count > 0) {
         [self notifyObserversWithChanges:changedCells];
     }
-    return YES;
 }
 
 - (void)toggleMarkWithPosition:(JMSPosition)position {

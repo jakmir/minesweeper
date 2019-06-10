@@ -11,7 +11,7 @@
 @implementation JMSAboutView
 
 - (CGFloat)extraOffset {
-    return 100;
+    return CGRectGetHeight(self.bounds) * 0.4;
 }
 
 - (CGFloat)showAnimationDuration {
@@ -47,7 +47,7 @@
          usingSpringWithDamping:[self damping]
           initialSpringVelocity:velocity
                         options:UIViewAnimationOptionCurveEaseInOut animations:^{
-                            self.center = [self middleBottomPointWithOffset:[self extraOffset]];
+                            [self hide];
                         } completion:nil];
 }
 
@@ -56,13 +56,13 @@
 }
 
 - (void)animateJumpBack {
-    CGFloat timeMultiplier = -(self.center.y - [[UIScreen mainScreen] bounds].size.height + [self extraOffset]) / self.frame.size.height;
+    CGFloat timeMultiplier = -(self.center.y - [[UIScreen mainScreen] bounds].size.height + [self extraOffset]) / CGRectGetHeight(self.frame);
     [UIView animateWithDuration:[self hideAnimationDuration] * timeMultiplier
                           delay:0
          usingSpringWithDamping:[self damping]
           initialSpringVelocity:0.25
                         options:UIViewAnimationOptionCurveEaseInOut animations:^{
-                            self.center = [self middleBottomPointWithOffset:-[self extraOffset]];
+                            [self hide];
                         } completion:nil];
 }
 

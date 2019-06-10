@@ -15,6 +15,7 @@
 
 static const CGFloat kLeaderboardTableHeaderHeight = 22;
 static NSString *kScoreCellId = @"ScoreCell";
+static NSString *kScoreHeaderId = @"ScoreHeader";
 
 @interface JMSLeaderboardViewController() <UITableViewDataSource, UITableViewDelegate, GKGameCenterControllerDelegate>
 
@@ -33,10 +34,6 @@ static NSString *kScoreCellId = @"ScoreCell";
 
 - (BOOL)prefersStatusBarHidden {
     return YES;
-}
-
-- (CGFloat)headerHeight {
-    return kLeaderboardTableHeaderHeight;
 }
 
 - (NSString *)leaderboardName {
@@ -61,6 +58,17 @@ static NSString *kScoreCellId = @"ScoreCell";
     }
 }
 
+#pragma mark - Table view delegate
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    UIView *headerView = [tableView dequeueReusableCellWithIdentifier:kScoreHeaderId];
+    return headerView;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForHeaderInSection:(NSInteger)section {
+    return kLeaderboardTableHeaderHeight;
+}
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -71,46 +79,13 @@ static NSString *kScoreCellId = @"ScoreCell";
     return self.dataSource.count;
 }
 
-// TODO: rewrite with autolayout constraints or custom xib
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    CGFloat height = [self headerHeight];
-    CGFloat width = CGRectGetWidth(tableView.frame);
-    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, width, height)];
-    view.backgroundColor = [UIColor whiteColor];
-    
-    float waypoints[] = {0.04, 0.34, 0.68, 0.93};
-    UILabel *lbLevelCaption = [[UILabel alloc] initWithFrame:CGRectMake(width * waypoints[0], 0, width * (waypoints[1] - waypoints[0]), height)];
-    NSDictionary *attrs = @{
-                            NSForegroundColorAttributeName:
-                                [UIColor darkGrayColor],
-                            NSFontAttributeName:
-                                [UIFont systemFontOfSize:17]
-                            };
-    lbLevelCaption.attributedText = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Level", @"Level: table column header")
-                                                                    attributes:attrs];
-    UILabel *lbProgressCaption = [[UILabel alloc] initWithFrame:CGRectMake(width * waypoints[1], 0, width * (waypoints[2] - waypoints[1]), height)];
-    lbProgressCaption.attributedText = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Progress", @"Progress: table column header")
-                                                                       attributes:attrs];
-
-    UILabel *lbScoreCaption = [[UILabel alloc] initWithFrame:CGRectMake(width * waypoints[2], 0, width * (waypoints[3] - waypoints[2]), height)];
-    lbScoreCaption.textAlignment = NSTextAlignmentRight;
-    lbScoreCaption.attributedText = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Score", @"Score: table column header")
-                                                                    attributes:attrs];
-    [view addSubview:lbScoreCaption];
-    [view addSubview:lbLevelCaption];
-    [view addSubview:lbProgressCaption];
-    return view;
-}
-
 - (UITableViewCell *)tableView:(UITableView *)tableView
             cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 
     JMSScoreTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kScoreCellId
                                                                   forIndexPath:indexPath];
     JMSGameSessionModel *gameSession = self.dataSource[indexPath.row];
-
     [cell fillWithModel:gameSession];
-
     return cell;
 }
 

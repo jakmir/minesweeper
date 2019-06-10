@@ -10,14 +10,9 @@
 
 @interface JMSMessageBoxView : UIView
 
-@property (nonatomic, strong) UIView *dialogView;
-@property (nonatomic, strong) UIView *containerView;
+@property (nonatomic, strong) void (^onButtonTouchUpInside)(void);
 
-@property (nonatomic) BOOL useMotionEffects;
-
-- (instancetype)initWithButtonTitle:(NSString *)title
-                      actionHandler:(void (^)(void))onButtonTouchUpInsideHandler;
 - (void)show;
-- (void)close;
+- (void)hide;
 
 @end

@@ -13,9 +13,20 @@
 #import <UIKit/UIKit.h>
 
 typedef NS_ENUM(NSUInteger, JMSMineGridCellState) {
+    // Opened by player
     MineGridCellStateOpened,
+    
+    // Marked by player and it turned out to be an underlying mine
     MineGridCellStateMarked,
+    
+    // Marked by player and it turned out to be marked mistakenly
+    MineGridCellStateMarkedMistakenly,
+    
+    // Never opened
     MineGridCellStateClosed,
+    
+    // Opened by application
+    MineGridCellStateDisclosed
 };
 
 typedef NS_ENUM(NSUInteger, JMSGameDifficulty) {

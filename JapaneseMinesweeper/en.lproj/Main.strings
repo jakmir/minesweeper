@@ -55,3 +55,12 @@
 
 /* Class = "UILabel"; text = "SCORE"; ObjectID = "oR2-8t-m07"; */
 "oR2-8t-m07.text" = "SCORE";
+
+/* Class = "UILabel"; text = "Level"; ObjectID = "crs-8L-taf"; */
+"crs-8L-taf.text" = "Level";
+
+/* Class = "UILabel"; text = "Progress"; ObjectID = "lAU-gT-el4"; */
+"lAU-gT-el4.text" = "Progress";
+
+/* Class = "UILabel"; text = "Score"; ObjectID = "oJ1-5E-U8s"; */
+"oJ1-5E-U8s.text" = "Score";

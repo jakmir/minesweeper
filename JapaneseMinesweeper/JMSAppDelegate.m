@@ -16,10 +16,9 @@
 
 @implementation JMSAppDelegate
 
-- (void)completeOnboarding {
+- (void)completeOnboardingIfNeeded {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    if (![userDefaults boolForKey:@"userDefaultsInitialized"])
-    {
+    if (![userDefaults boolForKey:@"userDefaultsInitialized"]) {
         [userDefaults setBool:YES forKey:@"userDefaultsInitialized"];
         [userDefaults setInteger:25 forKey:@"level"];
         [userDefaults setBool:YES forKey:@"soundEnabled"];
@@ -30,8 +29,7 @@
     }
 }
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
     static dispatch_once_t predicate;
     dispatch_once(&predicate, ^{
@@ -39,7 +37,7 @@
         srand(timeInterval);
     });
     
-    [self completeOnboarding];
+    [self completeOnboardingIfNeeded];
     
     BOOL isSoundEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"soundEnabled"];
     [[JMSSoundHelper shared] muteSound:!isSoundEnabled];
@@ -132,7 +130,7 @@
     if (!coordinator) {
         return nil;
     }
-    _managedObjectContext = [[NSManagedObjectContext alloc] init];
+    _managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
     [_managedObjectContext setPersistentStoreCoordinator:coordinator];
     return _managedObjectContext;
 }

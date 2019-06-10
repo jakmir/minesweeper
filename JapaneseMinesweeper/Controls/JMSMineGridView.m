@@ -64,7 +64,6 @@ const NSInteger spacing = 1;
             cell.state = MineGridCellStateClosed;
         }
     }
-    _gameFinished = NO;
     [self refreshAllCells];
 }
 
@@ -121,10 +120,6 @@ const NSInteger spacing = 1;
     }
     
     return position;
-}
-
-- (void)finalizeGame {
-    _gameFinished = YES;
 }
 
 - (NSUInteger)markUncoveredMines {

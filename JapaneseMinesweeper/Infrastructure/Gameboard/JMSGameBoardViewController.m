@@ -22,6 +22,9 @@
 #import "JMSGameboardView.h"
 #import "JMSMessageBoxView+LevelCompleted.h"
 #import "JMSGameModel+Tutorial.h"
+#import "UIView+MakeFitToEdges.h"
+
+static NSString * kLeaderboardId = @"JMSMainLeaderboard";
 
 @interface JMSGameBoardViewController ()
 
@@ -55,10 +58,6 @@
 
 - (BOOL)prefersStatusBarHidden {
     return YES;
-}
-
-- (BOOL)shouldDisplayTutorial {
-    return [[NSUserDefaults standardUserDefaults] boolForKey:@"shouldLaunchTutorial"];
 }
 
 - (void)importFromGameSession {
@@ -97,7 +96,8 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 
-    if ([self shouldDisplayTutorial]) {
+    // TODO: move this to UserDefaults key-value manager
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"shouldLaunchTutorial"] == YES) {
         [self createTutorialGame];
         _tutorialManager = [[JMSTutorialManager alloc] initWithGameboardController:self
                                                                               size:self.gameboardView.resultsView.bounds.size];
@@ -130,10 +130,9 @@
 
     [self addGestureRecognizers];
     
-    if ([self shouldDisplayTutorial] && self.tutorialManager) {
+    if ([self.tutorialManager shouldDisplayTutorial]) {
         [self.tutorialManager moveToNextStep];
     }
-    
 }
 
 - (void)removeGestureRecognizers {
@@ -159,7 +158,6 @@
 #pragma mark - Gameboard control methods
 
 - (void)finalizeGame {
-    [self.gameboardView.mineGridView finalizeGame];
     BOOL tutorialFinished = self.tutorialManager ? self.tutorialManager.isFinished : YES;
     [self.gameboardView updateMenuWithFinishedTutorial:tutorialFinished
                                           gameFinished:self.gameModel.isGameFinished];
@@ -176,9 +174,12 @@
     
     JMSPosition position = [self.gameboardView.mineGridView cellPositionWithCoordinateInside:coord];
     
-    if (position.row == NSNotFound || position.column == NSNotFound ||
-        ([self shouldDisplayTutorial] && !self.tutorialManager.isFinished && ![self.tutorialManager isAllowedWithAction:JMSAllowedActionsClick
-                                                                                                               position:position])) return;
+    // TODO: simplify this long condition
+    if (position.row == NSNotFound ||
+        position.column == NSNotFound ||
+        ([self.tutorialManager shouldDisplayTutorial] &&
+         ![self.tutorialManager isFinished] &&
+         ![self.tutorialManager isAllowedWithAction:JMSAllowedActionsClick position:position])) return;
     
     if (!self.initialTapPerformed) {
         [self.gameModel fillMapWithLevel:self.gameModel.level exceptPosition:position];
@@ -192,8 +193,9 @@
     else {
         NSUInteger unmarkedCellsCount;
         NSUInteger openedCellsCount;
-        BOOL shouldOpenSafeCells = (![self shouldDisplayTutorial] && self.shouldOpenCellInZeroDirection) ||
-                                    ([self shouldDisplayTutorial] && self.tutorialManager.currentStep >= JMSTutorialStepLastCellClick);
+    // TODO: simplify this long condition
+        BOOL shouldOpenSafeCells = (![self.tutorialManager shouldDisplayTutorial] && self.shouldOpenCellInZeroDirection) ||
+                                    ([self.tutorialManager shouldDisplayTutorial] && self.tutorialManager.currentStep >= JMSTutorialStepLastCellClick);
         BOOL opened = [self.gameModel openInZeroDirectionsFromPosition:position
                                                          unmarkedCount:&unmarkedCellsCount
                                                            openedCount:&openedCellsCount
@@ -202,7 +204,7 @@
             return;
         }
 
-        if ([self shouldDisplayTutorial] && !self.tutorialManager.isFinished) {
+        if ([self.tutorialManager shouldDisplayTutorial] && !self.tutorialManager.isFinished) {
             [self.tutorialManager completeTaskWithPosition:position];
         }
     }
@@ -216,13 +218,15 @@
     CGPoint touchLocation = [gestureRecognizer locationInView:self.gameboardView.mineGridView];
     JMSPosition position = [self.gameboardView.mineGridView cellPositionWithCoordinateInside:touchLocation];
         
-    if (position.row == NSNotFound || position.column == NSNotFound ||
-        ([self shouldDisplayTutorial] && !self.tutorialManager.isFinished &&
-        ![self.tutorialManager isAllowedWithAction:JMSAllowedActionsMark position:position])) {
-        return;
-    }
+    if (position.row == NSNotFound ||
+        position.column == NSNotFound ||
+        ([self.tutorialManager shouldDisplayTutorial] &&
+         ![self.tutorialManager isFinished] &&
+         ![self.tutorialManager isAllowedWithAction:JMSAllowedActionsMark position:position])) {
+            return;
+        }
         
-    if ([self shouldDisplayTutorial]) {
+    if ([self.tutorialManager shouldDisplayTutorial]) {
         if ([self.tutorialManager taskCompletedWithPosition:position]) {
             return;
         }
@@ -234,21 +238,21 @@
     [self.gameModel toggleMarkWithPosition:position];
 }
 
-- (void)showMessageBox {
-    NSString *localizedTitle = NSLocalizedString(@"Play again Btn", @"Play again - button title");
+- (void)showPlayAgainPrompt {
     __weak JMSGameBoardViewController *weakSelf = self;
-    JMSMessageBoxView *alertView = [[JMSMessageBoxView alloc] initWithButtonTitle:localizedTitle
-                                                                    actionHandler:^{
-                                                                        [weakSelf resetGame];
-                                                                    }];
-    [alertView setContainerView:[JMSMessageBoxView messageBoxContentView]];
-    [alertView setUseMotionEffects:true];
+
+    JMSMessageBoxView *alertView = [[JMSMessageBoxView alloc] initWithFrame:CGRectZero];
+    [alertView setOnButtonTouchUpInside:^{
+        [weakSelf resetGame];
+    }];
+    [self.view makeFitToEdges:alertView];
     [alertView show];
 }
 
 #pragma mark - Upper Menu Actions
 
-- (void)popoverPresentationControllerDidDismissPopover:(UIPopoverPresentationController *)popoverPresentationController {}
+- (void)popoverPresentationControllerDidDismissPopover:(UIPopoverPresentationController *)popoverPresentationController {
+}
 
 - (BOOL)popoverPresentationControllerShouldDismissPopover:(UIPopoverPresentationController *)popoverPresentationController {
     return YES;
@@ -318,7 +322,7 @@
 
 - (void)postScoreToGameCenter {
     // Report the high score to Game Center
-    GKScore *scoreReporter = [[GKScore alloc] initWithLeaderboardIdentifier:@"JMSMainLeaderboard"
+    GKScore *scoreReporter = [[GKScore alloc] initWithLeaderboardIdentifier:kLeaderboardId
                                                                      player:[GKLocalPlayer localPlayer]];
     scoreReporter.value = lroundf(self.gameModel.score);
 
@@ -343,10 +347,14 @@
 }
 
 - (void)flagAdded {
-    [[JMSSoundHelper shared] playSoundWithAction:JMSSoundActionPutFlag];
+    [self flagToggled];
 }
 
 - (void)flagRemoved {
+    [self flagToggled];
+}
+
+- (void)flagToggled {
     [[JMSSoundHelper shared] playSoundWithAction:JMSSoundActionPutFlag];
 }
 
@@ -366,7 +374,7 @@
     [[JMSSoundHelper shared] playSoundWithAction:JMSSoundActionLevelCompleted];
     [self postScore];
     [self finalizeGame];
-    [self showMessageBox];
+    [self showPlayAgainPrompt];
 }
 
 @end

@@ -34,48 +34,53 @@
 - (void)drawForClosedStateWithContext:(CGContextRef)context rect:(CGRect)rect {
     CGContextSetRGBFillColor(context, 0.8, 0.8, 0.8, 1);
     CGContextFillRect(context, rect);
+}
 
-    if (self.mine) {
-        [[UIImage imageNamed:@"mine"] drawInRect:rect];
-    }
+- (void)drawForMarkedMistakenlyStateWithContext:(CGContextRef)context rect:(CGRect)rect {
+    CGContextClearRect(context, rect);
+    CGContextSetRGBFillColor(context, 0.9, 0.9, 0.9, 0.5);
+    CGContextFillRect(context, rect);
+    
+    [[UIImage imageNamed:@"mine"] drawInRect:rect];
+    CGFloat padding = 8;
+    
+    CGContextSetRGBStrokeColor(context, 1, 0.4, 0, 1);
+    CGContextSetLineWidth(context, 12.0);
+    CGContextBeginPath(context);
+    CGContextMoveToPoint(context, padding, padding);
+    CGContextAddLineToPoint(context, rect.size.width - padding, rect.size.height - padding);
+    CGContextMoveToPoint(context, rect.size.width - padding, padding);
+    CGContextAddLineToPoint(context, padding, rect.size.height - padding);
+    CGContextClosePath(context);
+    CGContextDrawPath(context, kCGPathFillStroke);
 }
 
 - (void)drawForMarkedStateWithContext:(CGContextRef)context rect:(CGRect)rect {
     CGContextClearRect(context, rect);
     CGContextSetRGBFillColor(context, 0.9, 0.9, 0.9, 0.5);
     CGContextFillRect(context, rect);
-    if (!self.mineGridView.gameFinished || self.mine) {
-        //TODO: dont rely on gameFinished, add MarkedMistakenly state
-        [[UIImage imageNamed:@"flag"] drawInRect:rect];
-    }
-    else {
-        [[UIImage imageNamed:@"mine"] drawInRect:rect];
-        CGFloat padding = 8;
-        
-        CGContextSetRGBStrokeColor(context, 1, 0.4, 0, 1);
-        CGContextSetLineWidth(context, 12.0);
-        CGContextBeginPath(context);
-        CGContextMoveToPoint(context, padding, padding);
-        CGContextAddLineToPoint(context, rect.size.width - padding, rect.size.height - padding);
-        CGContextMoveToPoint(context, rect.size.width - padding, padding);
-        CGContextAddLineToPoint(context, padding, rect.size.height - padding);
-        CGContextClosePath(context);
-        CGContextDrawPath(context, kCGPathFillStroke);
-    }
+
+    [[UIImage imageNamed:@"flag"] drawInRect:rect];
 }
 
-- (void)drawForOpenedStateWithContext:(CGContextRef)context rect:(CGRect)rect {
+- (void)drawForOpenedOrDisclosedStateWithContext:(CGContextRef)context
+                                            rect:(CGRect)rect
+                                  openedByPlayer:(BOOL)openedByPlayer {
     CGContextClearRect(context, rect);
     CGContextSetRGBFillColor(context, 0.9, 0.9, 0.9, 0.5);
     CGContextFillRect(context, rect);
     if (self.mine) {
-        [[UIImage imageNamed:@"currentMine"] drawInRect:rect];
+        if (openedByPlayer) {
+            [[UIImage imageNamed:@"currentMine"] drawInRect:rect];
+        } else {
+            [[UIImage imageNamed:@"mine"] drawInRect:rect];
+        }
         return;
     }
 
     CGContextSetRGBStrokeColor(context, 0.8, 0.9, 0.9, 0.8);
     CGContextSetLineWidth(context, 1.0);
-    UIFont *font = [UIFont systemFontOfSize:20 weight:UIFontWeightMedium];
+    UIFont *font = [UIFont systemFontOfSize:20 weight:UIFontWeightSemibold];
     CGContextBeginPath(context);
     CGContextMoveToPoint(context, 0, 0);
     CGContextAddLineToPoint(context, rect.size.width, rect.size.height);
@@ -126,9 +131,15 @@
             [self drawForMarkedStateWithContext:context rect:rect];
             break;
         case MineGridCellStateOpened:
-            [self drawForOpenedStateWithContext:context rect:rect];
+            [self drawForOpenedOrDisclosedStateWithContext:context rect:rect
+                                            openedByPlayer:YES];
             break;
-        default:
+        case MineGridCellStateMarkedMistakenly:
+            [self drawForMarkedMistakenlyStateWithContext:context rect:rect];
+            break;
+        case MineGridCellStateDisclosed:
+            [self drawForOpenedOrDisclosedStateWithContext:context rect:rect
+                                            openedByPlayer:NO];
             break;
     }
 }

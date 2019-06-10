@@ -48,6 +48,10 @@ static const NSUInteger kFieldDimension = 10;
 
 #pragma mark - Computable Properties
 
+- (BOOL)shouldDisplayTutorial {
+    return [[NSUserDefaults standardUserDefaults] boolForKey:@"shouldLaunchTutorial"];
+}
+
 - (NSUInteger)fieldDimension {
     return kFieldDimension;
 }
@@ -90,7 +94,8 @@ static const NSUInteger kFieldDimension = 10;
 }
 
 - (BOOL)isAllowedWithAction:(JMSAllowedAction)action position:(JMSPosition)position {
-    return ([_allowedActionsMap[position.column][position.row] integerValue] & action ) == action;
+    NSInteger allowedActions = [_allowedActionsMap[position.column][position.row] integerValue];
+    return ((allowedActions & action ) == action) && !self.isFinished && [self shouldDisplayTutorial];
 }
 
 - (BOOL)putAllowedAction:(JMSAllowedAction)allowedAction position:(JMSPosition)position {

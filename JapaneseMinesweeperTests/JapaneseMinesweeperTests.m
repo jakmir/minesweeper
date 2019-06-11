@@ -44,7 +44,7 @@
     JMSGameModel *gameModel = [[JMSGameModel alloc] initWithLevel:level];
     JMSPosition position = {.column = 0, .row = 0};
     [gameModel fillMapWithLevel:level exceptPosition:position];
-    XCTAssertNotNil(gameModel.map, @"Map is not assigned");
+    XCTAssertNotNil(gameModel.mapModel.map, @"Map is not assigned");
 }
 
 - (void)testGameModelAssignedPositionIsSafeAndClosed {
@@ -53,8 +53,8 @@
     JMSPosition position = {.column = 0, .row = 0};
     [gameModel fillMapWithLevel:level exceptPosition:position];
     
-    XCTAssertTrue(![gameModel mineAtPosition:position] &&
-                   [gameModel cellState:position] == MineGridCellStateClosed);
+    XCTAssertTrue(![gameModel.mapModel isMinePresentAtPosition:position] &&
+                   [gameModel.mapModel cellState:position] == MineGridCellStateClosed);
 }
 
 - (void)testGameModelFirstClickPositionIsSafeAndOpened {
@@ -62,10 +62,10 @@
     JMSGameModel *gameModel = [[JMSGameModel alloc] initWithLevel:level];
     JMSPosition position = {.column = 0, .row = 0};
     [gameModel fillMapWithLevel:level exceptPosition:position];
-    [gameModel singleTappedWithPosition:position];
+    [gameModel openCellWithPosition:position];
     
-    XCTAssertTrue(![gameModel mineAtPosition:position] &&
-                  [gameModel cellState:position] == MineGridCellStateOpened);
+    XCTAssertTrue(![gameModel isMinePresentAtPosition:position] &&
+                  [gameModel.mapModel cellState:position] == MineGridCellStateOpened);
 }
 
 - (void)testGameModelFirstClickPositionIsSafeAndMarked {
@@ -73,10 +73,10 @@
     JMSGameModel *gameModel = [[JMSGameModel alloc] initWithLevel:level];
     JMSPosition position = {.column = 0, .row = 0};
     [gameModel fillMapWithLevel:level exceptPosition:position];
-    [gameModel longTappedWithPosition:position];
+    [gameModel toggleMarkWithPosition:position];
     
-    XCTAssertTrue(![gameModel mineAtPosition:position] &&
-                  [gameModel cellState:position] == MineGridCellStateMarked);
+    XCTAssertTrue(![gameModel isMinePresentAtPosition:position] &&
+                  [gameModel.mapModel cellState:position] == MineGridCellStateMarked);
 }
 
 - (void)testGameModel {
@@ -88,14 +88,11 @@
     [gameModel fillMapWithLevel:level exceptPosition:position];
     
     NSUInteger minesCount = 0;
-    for (NSUInteger col = 0; col < gameModel.map.count; col++)
-    {
-        NSArray *vector = gameModel.map[col];
-        for (NSUInteger row = 0; row < vector.count; row++)
-        {
+    for (NSUInteger col = 0; col < gameModel.mapModel.map.count; col++) {
+        NSArray *vector = gameModel.mapModel.map[col];
+        for (NSUInteger row = 0; row < vector.count; row++) {
             JMSMineGridCellInfo *mineGridCellInfo = vector[row];
-            if (mineGridCellInfo.mine)
-            {
+            if (mineGridCellInfo.mine) {
                 minesCount++;
             }
         }

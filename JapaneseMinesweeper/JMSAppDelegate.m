@@ -18,13 +18,13 @@
 
 - (void)completeOnboardingIfNeeded {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    if (![userDefaults boolForKey:@"userDefaultsInitialized"]) {
-        [userDefaults setBool:YES forKey:@"userDefaultsInitialized"];
-        [userDefaults setInteger:25 forKey:@"level"];
-        [userDefaults setBool:YES forKey:@"soundEnabled"];
-        [userDefaults setBool:YES forKey:@"shouldOpenSafeCells"];
-        [userDefaults setFloat:0.3 forKey:@"holdDuration"];
-        [userDefaults setBool:YES forKey:@"shouldLaunchTutorial"];
+    if (![userDefaults boolForKey:kUserDefaultsInitializedKey]) {
+        [userDefaults setBool:YES forKey:kUserDefaultsInitializedKey];
+        [userDefaults setInteger:25 forKey:kLevelKey];
+        [userDefaults setBool:YES forKey:kSoundEnabledKey];
+        [userDefaults setBool:YES forKey:kShouldOpenSafeCellsKey];
+        [userDefaults setFloat:0.3 forKey:kHoldDurationKey];
+        [userDefaults setBool:YES forKey:kShouldLaunchTutorialKey];
         [userDefaults synchronize];
     }
 }
@@ -39,7 +39,7 @@
     
     [self completeOnboardingIfNeeded];
     
-    BOOL isSoundEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"soundEnabled"];
+    BOOL isSoundEnabled = [[JMSSettings shared] soundEnabled];
     [[JMSSoundHelper shared] muteSound:!isSoundEnabled];
 
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:nil];

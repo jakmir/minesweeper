@@ -27,7 +27,7 @@
     for (JMSGradientButton *gradientButton in self.gradientButtons) {
         [gradientButton drawGradientWithStartColor:[UIColor gradientStartColor]
                                        finishColor:[UIColor gradientFinishColor]];
-        [gradientButton.layer setCornerRadius:[[JMSKeyValueSettingsHelper instance] menuButtonCornerRadius]];
+        [gradientButton.layer setCornerRadius:[[JMSSettings shared] menuButtonCornerRadius]];
         [gradientButton.layer setMasksToBounds:YES];
 
     }

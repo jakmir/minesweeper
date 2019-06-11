@@ -9,7 +9,7 @@
 #ifndef JapaneseMinesweeper_PrefixHeader_pch
 #define JapaneseMinesweeper_PrefixHeader_pch
 
-#import "Helpers/JMSKeyValueSettingsHelper.h"
+#import "Helpers/JMSSettings.h"
 #import "UIColor+GameColorPalette.h"
 
 #endif

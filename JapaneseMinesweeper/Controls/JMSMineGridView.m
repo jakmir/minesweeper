@@ -122,19 +122,6 @@ const NSInteger spacing = 1;
     return position;
 }
 
-- (NSUInteger)markUncoveredMines {
-    NSUInteger count = 0;
-    for (NSArray *column in self.map) {
-        for (JMSMineGridCell *cell in column) {
-            if (cell.mine && cell.state == MineGridCellStateClosed) {
-                [cell setState:MineGridCellStateMarked];
-                count++;
-            }
-        }
-    }
-    return count;
-}
-
 #pragma mark - Export/Import methods
 
 - (NSArray *)exportMap {
@@ -208,7 +195,7 @@ const NSInteger spacing = 1;
     for (int col = 0; col < count; col++) {
         for (int row = 0; row < count; row++)  {
             JMSPosition position = {.column = col, .row = row};
-            JMSAlteredCellInfo *alteredCellModel = (JMSAlteredCellInfo *)gameSessionInfo.map[col][row];
+            JMSAlteredCellInfo *alteredCellModel = (JMSAlteredCellInfo *)gameSessionInfo.mapModel.map[col][row];
             alteredCellModel.position = position;
             [self updateCellWithAlteredCellModel:alteredCellModel];
         }

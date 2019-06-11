@@ -6,10 +6,10 @@
 //  Copyright © 2019 Jakmir. All rights reserved.
 //
 
-#import "JMSGameModel+Tutorial.h"
+#import "JMSMapModel+Tutorial.h"
 #import "JMSMineGridCellInfo.h"
 
-@implementation JMSGameModel (Tutorial)
+@implementation JMSMapModel (Tutorial)
 
 - (void)fillTutorialMapWithLevel:(NSUInteger)level {
     NSInteger rowToExclude = 4, columnToExclude = 5;
@@ -44,7 +44,7 @@
         mineGridCell.mine = YES;
     }
     
-    self.levelCreated = YES;
+    self.mapReady = YES;
 
     [self evaluateMapCellInfos];
 }

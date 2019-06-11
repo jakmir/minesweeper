@@ -6,11 +6,11 @@
 //  Copyright © 2019 Jakmir. All rights reserved.
 //
 
-#import "JMSGameModel.h"
+#import "JMSMapModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface JMSGameModel (Tutorial)
+@interface JMSMapModel (Tutorial)
 
 - (void)fillTutorialMapWithLevel:(NSUInteger)level;
 

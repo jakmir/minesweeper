@@ -21,18 +21,17 @@ static const NSUInteger kFieldDimension = 10;
 @interface JMSTutorialManager()
 
 @property (nonatomic, readonly) CGSize size;
+@property (nonatomic) JMSTutorialStep tutorialStep;
+@property (nonatomic, weak) JMSGameBoardViewController *gameboardController;
+@property (nonatomic, strong) NSMutableArray *allowedActionsMap;
+
+@property (nonatomic, strong) UIView *previousTutorialStepView;
+
+@property (nonatomic, strong) NSMutableArray *tasks;
 
 @end
 
 @implementation JMSTutorialManager
-{
-    JMSTutorialStep _tutorialStep;
-    JMSGameBoardViewController *_gameboardController;
-    NSMutableArray *_allowedActionsMap;
-    
-    UIView *_previousTutorialStepView;
-    NSMutableArray *_tasks;
-}
 
 #pragma mark - Init
 
@@ -48,8 +47,8 @@ static const NSUInteger kFieldDimension = 10;
 
 #pragma mark - Computable Properties
 
-- (BOOL)shouldDisplayTutorial {
-    return [[NSUserDefaults standardUserDefaults] boolForKey:@"shouldLaunchTutorial"];
+- (BOOL)shouldLaunchTutorial {
+    return [[JMSSettings shared] shouldLaunchTutorial];
 }
 
 - (NSUInteger)fieldDimension {
@@ -86,23 +85,21 @@ static const NSUInteger kFieldDimension = 10;
         [self updateTutorial];
     }
     if (_tutorialStep == JMSTutorialStepCompleted) {
-        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-        [userDefaults setBool:NO forKey:@"shouldLaunchTutorial"];
-        [userDefaults synchronize];
+        [[JMSSettings shared] setShouldLaunchTutorial:NO];
         [_gameboardController finishTutorial];
     }
 }
 
 - (BOOL)isAllowedWithAction:(JMSAllowedAction)action position:(JMSPosition)position {
-    NSInteger allowedActions = [_allowedActionsMap[position.column][position.row] integerValue];
-    return ((allowedActions & action ) == action) && !self.isFinished && [self shouldDisplayTutorial];
+    NSInteger allowedActions = [self.allowedActionsMap[position.column][position.row] integerValue];
+    return (allowedActions & action ) == action;
 }
 
 - (BOOL)putAllowedAction:(JMSAllowedAction)allowedAction position:(JMSPosition)position {
     if (position.row < 0 || position.column < 0 || position.row >= [self fieldDimension] || position.column >= [self fieldDimension])
         return NO;
     
-    _allowedActionsMap[position.column][position.row] = @(allowedAction);
+    self.allowedActionsMap[position.column][position.row] = @(allowedAction);
     return YES;
 }
 
@@ -110,21 +107,21 @@ static const NSUInteger kFieldDimension = 10;
     if (position.row < 0 || position.column < 0 || position.row >= [self fieldDimension] || position.column >= [self fieldDimension])
         return JMSAllowedActionsNone;
     
-    return [_allowedActionsMap[position.column][position.row] integerValue];
+    return [self.allowedActionsMap[position.column][position.row] integerValue];
 }
 
 - (void)putAllowedActions {
     [self clearAllowedActionsMap];
     [self clearTasks];
     
-    switch (_tutorialStep)
+    switch (self.tutorialStep)
     {
         case JMSTutorialStepFirstCellClick:
         {
             JMSPosition position = {.column = 5, .row = 4};
             JMSAllowedAction action = JMSAllowedActionsClick;
             [self putAllowedAction:action position:position];
-            [_tasks addObject:[[JMSTutorialTask alloc] initWithPosition:position action:action]];
+            [self.tasks addObject:[[JMSTutorialTask alloc] initWithPosition:position action:action]];
             break;
         }
         case JMSTutorialStepSecondCellClick:
@@ -132,7 +129,7 @@ static const NSUInteger kFieldDimension = 10;
             JMSPosition position = {.column = 5, .row = 1};
             JMSAllowedAction action = JMSAllowedActionsClick;
             [self putAllowedAction:action position:position];
-            [_tasks addObject:[[JMSTutorialTask alloc] initWithPosition:position action:action]];
+            [self.tasks addObject:[[JMSTutorialTask alloc] initWithPosition:position action:action]];
             break;
         }
         case JMSTutorialStepPutFlags:
@@ -141,8 +138,8 @@ static const NSUInteger kFieldDimension = 10;
             JMSPosition position2 = {.column = 5, .row = 3};
             [self putAllowedAction:JMSAllowedActionsMark position:position1];
             [self putAllowedAction:JMSAllowedActionsMark position:position2];
-            [_tasks addObject:[[JMSTutorialTask alloc] initWithPosition:position1 action:JMSAllowedActionsMark]];
-            [_tasks addObject:[[JMSTutorialTask alloc] initWithPosition:position2 action:JMSAllowedActionsMark]];
+            [self.tasks addObject:[[JMSTutorialTask alloc] initWithPosition:position1 action:JMSAllowedActionsMark]];
+            [self.tasks addObject:[[JMSTutorialTask alloc] initWithPosition:position2 action:JMSAllowedActionsMark]];
             break;
         }
         case JMSTutorialStepThirdCellClick:
@@ -150,7 +147,7 @@ static const NSUInteger kFieldDimension = 10;
             JMSPosition position = {.column = 5, .row = 0};
             JMSAllowedAction action = JMSAllowedActionsClick;
             [self putAllowedAction:action position:position];
-            [_tasks addObject:[[JMSTutorialTask alloc] initWithPosition:position action:action]];
+            [self.tasks addObject:[[JMSTutorialTask alloc] initWithPosition:position action:action]];
             break;
         }
         case JMSTutorialStepLastCellClick:
@@ -158,7 +155,7 @@ static const NSUInteger kFieldDimension = 10;
             JMSPosition position = {.column = 8, .row = 4};
             JMSAllowedAction action = JMSAllowedActionsClick;
             [self putAllowedAction:action position:position];
-            [_tasks addObject:[[JMSTutorialTask alloc] initWithPosition:position action:action]];
+            [self.tasks addObject:[[JMSTutorialTask alloc] initWithPosition:position action:action]];
             break;
         }
         default:
@@ -169,7 +166,7 @@ static const NSUInteger kFieldDimension = 10;
 
 - (BOOL)taskCompletedWithPosition:(JMSPosition)position {
     __block BOOL result = NO;
-    [_tasks enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+    [self.tasks enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         JMSTutorialTask *task = obj;
         if (task.position.row == position.row && task.position.column == position.column && task.isCompleted) {
             result = YES;
@@ -180,7 +177,7 @@ static const NSUInteger kFieldDimension = 10;
 }
 
 - (void)completeTaskWithPosition:(JMSPosition)position {
-    [_tasks enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+    [self.tasks enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         JMSTutorialTask *task = obj;
         if (task.position.row == position.row && task.position.column == position.column) {
             [task setCompleted:YES];
@@ -193,7 +190,7 @@ static const NSUInteger kFieldDimension = 10;
 
 - (void)checkTasks {
     __block BOOL allCompleted = YES;
-    [_tasks enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+    [self.tasks enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         JMSTutorialTask *task = obj;
         allCompleted &= task.completed;
         if (!allCompleted) {
@@ -210,65 +207,63 @@ static const NSUInteger kFieldDimension = 10;
 
 - (void)updateTutorial {
     UIView *tutorialStepView = [self prepareView];
-    [_gameboardController addTutorialView:tutorialStepView];
+    [self.gameboardController addTutorialView:tutorialStepView];
     
     CGSize screenSize = [[UIScreen mainScreen] bounds].size;
-    NSLog(@"%@", NSStringFromCGRect(tutorialStepView.frame));
-    tutorialStepView.frame = CGRectOffset(tutorialStepView.frame, screenSize.width, 0);
-    NSLog(@"%@", NSStringFromCGRect(tutorialStepView.frame));    
+    tutorialStepView.frame = CGRectOffset(tutorialStepView.frame, screenSize.width, 0);  
     [UIView animateWithDuration:1 delay:0
                         options:UIViewAnimationOptionTransitionCrossDissolve
                      animations:^{
-                         if (self->_previousTutorialStepView) {
-                             self->_previousTutorialStepView.frame = CGRectOffset(self->_previousTutorialStepView.frame, -screenSize.width, 0);
+                         if (self.previousTutorialStepView) {
+                             self.previousTutorialStepView.frame = CGRectOffset(self.previousTutorialStepView.frame, -screenSize.width, 0);
                          }
                          tutorialStepView.frame = CGRectOffset(tutorialStepView.frame, -screenSize.width, 0);
                          
                      } completion:^(BOOL finished) {
-                         self->_previousTutorialStepView = tutorialStepView;
+                         self.previousTutorialStepView = tutorialStepView;
                          [self putAllowedActions];
                          [self updateHighlightedCells];
                      }];
 }
 
 - (void)clearTasks {
-    [_tasks removeAllObjects];
+    [self.tasks removeAllObjects];
 }
 
 - (void)clearAllowedActionsMap {
-    if (!_gameboardController) {
+    if (!self.gameboardController) {
         return;
     }
-    if (!_allowedActionsMap) {
-        _allowedActionsMap = [NSMutableArray array];
+    if (!self.allowedActionsMap) {
+        self.allowedActionsMap = [NSMutableArray array];
         for (NSUInteger col = 0; col < [self fieldDimension]; col++) {
             NSMutableArray *vector = [NSMutableArray array];
             for (NSUInteger row = 0; row < [self fieldDimension]; row++) {
                 [vector addObject:@(JMSAllowedActionsNone)];
             }
-            [_allowedActionsMap addObject:vector];
+            [self.allowedActionsMap addObject:vector];
         }
     }
 
     for (NSUInteger col = 0; col < [self fieldDimension]; col++) {
-        NSMutableArray *vector = _allowedActionsMap[col];
+        NSMutableArray *vector = self.allowedActionsMap[col];
         for (NSUInteger row = 0; row < [self fieldDimension]; row++) {
             vector[row] = @(JMSAllowedActionsNone);
         }
     }
     
-    [_gameboardController removeHighlights];
+    [self.gameboardController removeHighlights];
 }
 
 - (void)updateHighlightedCells {
     for (NSUInteger col = 0; col < [self fieldDimension]; col++) {
-        NSMutableArray *vector = _allowedActionsMap[col];
+        NSMutableArray *vector = self.allowedActionsMap[col];
         for (NSUInteger row = 0; row < [self fieldDimension]; row++) {
             if ([vector[row] integerValue] == JMSAllowedActionsNone) {
                 continue;
             }
             JMSPosition position = {.column = col, .row = row};
-            [_gameboardController highlightCellWithPosition:position];
+            [self.gameboardController highlightCellWithPosition:position];
         }
     }
 }
@@ -308,7 +303,7 @@ static const NSUInteger kFieldDimension = 10;
     [tutorialStepView addSubview:lbHeader];
     
     JMSPosition position = {.column = 5, .row = 4};
-    JMSMineGridCellNeighboursSummary cellSummary = [_gameboardController.gameModel cellSummary:position];
+    JMSMineGridCellNeighboursSummary cellSummary = [self.gameboardController.gameModel.mapModel cellSummary:position];
     
     
     UILabel *description = [[UILabel alloc] initWithFrame:CGRectMake(kTutorialViewPadding,

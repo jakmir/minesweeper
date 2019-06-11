@@ -15,9 +15,9 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
     
-    [self.btnSave drawGradientWithStartColor:[[JMSKeyValueSettingsHelper instance] gradientStartColor]
-                                 finishColor:[[JMSKeyValueSettingsHelper instance] gradientFinishColor]];
-    [self.btnSave.layer setCornerRadius:[[JMSKeyValueSettingsHelper instance] menuButtonCornerRadius]];
+    [self.btnSave drawGradientWithStartColor:[[JMSSettings shared] gradientStartColor]
+                                 finishColor:[[JMSSettings shared] gradientFinishColor]];
+    [self.btnSave.layer setCornerRadius:[[JMSSettings shared] menuButtonCornerRadius]];
     [self.btnSave.layer setMasksToBounds:YES];
 }
 

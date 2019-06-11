@@ -11,8 +11,8 @@
 
 @interface JMSSoundHelper()
 
-@property (nonatomic, strong) NSMutableArray *players;
 @property (nonatomic) BOOL isMuted;
+@property (nonatomic) SystemSoundID soundId;
 
 @end
 
@@ -31,42 +31,6 @@
         anInstance = [[JMSSoundHelper alloc] init];
     });
     return anInstance;
-}
-
-- (NSMutableArray *)players {
-    if (_players == nil) {
-        _players = [NSMutableArray array];
-    }
-    return _players;
-}
-
-
-- (AVAudioPlayer *)audioPlayerForSoundAction:(JMSSoundAction)soundAction {
-    NSURL *soundUrl = [[NSBundle mainBundle] URLForResource:[self soundNameByAction:soundAction] withExtension:@"wav"];
-    
-    NSArray *availablePlayers = [[self players] copy];
-    
-    NSPredicate *filteringPredicate = [NSPredicate predicateWithBlock:^BOOL(AVAudioPlayer *evaluatedObject, NSDictionary *bindings) {
-        return !evaluatedObject.playing && [evaluatedObject.url isEqual:soundUrl];
-    }];
-
-    NSArray *filteredAvailablePlayers = [availablePlayers filteredArrayUsingPredicate:filteringPredicate];
-    if (filteredAvailablePlayers.count > 0) {
-        return [filteredAvailablePlayers firstObject];
-    }
-    
-    NSError *error = nil;
-    AVAudioPlayer *newPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:soundUrl error:&error];
-    
-    if (newPlayer == nil) {
-        NSLog(@"Couldn't load %@: %@", soundUrl, error);
-        return nil;
-    }
-    
-    [[self players] addObject:newPlayer];
-
-    return newPlayer;
-    
 }
 
 - (NSString *)soundNameByAction:(JMSSoundAction)soundAction {
@@ -94,11 +58,12 @@
     if (_isMuted) {
         return;
     }
-
-    @synchronized ([self class]) {
-        AVAudioPlayer *player = [self audioPlayerForSoundAction:soundAction];
-        [player play];
-    }
+    NSString *soundPath = [[NSBundle mainBundle]
+                            pathForResource:[self soundNameByAction:soundAction] ofType:@"wav"];
+    NSURL *soundURL = [NSURL fileURLWithPath:soundPath];
+    AudioServicesCreateSystemSoundID((__bridge CFURLRef)soundURL, &_soundId);
+    AudioServicesPlaySystemSound(self.soundId);
+    
 }
 
 @end

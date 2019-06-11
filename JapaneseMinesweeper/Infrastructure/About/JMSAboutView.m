@@ -10,6 +10,19 @@
 
 @implementation JMSAboutView
 
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    
+    self.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"xv"]];
+    
+    CALayer *layer = self.layer;
+    layer.shadowColor = [UIColor blackColor].CGColor;
+    layer.shadowOpacity = 0.5;
+    layer.shadowOffset = CGSizeZero;
+    layer.shadowRadius = 6;
+    layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:self.bounds cornerRadius:0].CGPath;
+}
+
 - (CGFloat)extraOffset {
     return CGRectGetHeight(self.bounds) * 0.4;
 }

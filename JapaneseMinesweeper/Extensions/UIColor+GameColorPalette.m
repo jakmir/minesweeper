@@ -12,19 +12,19 @@
 @implementation UIColor (GameColorPalette)
 
 + (UIColor *)progressPercentageLabelColor {
-    return [[JMSKeyValueSettingsHelper instance] progressPercentageLabelColor];
+    return [[JMSSettings shared] progressPercentageLabelColor];
 }
 
 + (UIColor *)completedPercentageLabelColor {
-    return [[JMSKeyValueSettingsHelper instance] completedPercentageLabelColor];
+    return [[JMSSettings shared] completedPercentageLabelColor];
 }
 
 + (UIColor *)gradientStartColor {
-    return [[JMSKeyValueSettingsHelper instance] gradientStartColor];
+    return [[JMSSettings shared] gradientStartColor];
 }
 
 + (UIColor *)gradientFinishColor {
-    return [[JMSKeyValueSettingsHelper instance] gradientFinishColor];
+    return [[JMSSettings shared] gradientFinishColor];
 }
 
 + (UIColor *)juicyOrangeColor {
@@ -40,7 +40,7 @@
 }
 
 + (UIColor *)antDashedBorderColor {
-    return [[JMSKeyValueSettingsHelper instance] antDashedBorderColor];
+    return [[JMSSettings shared] antDashedBorderColor];
 }
 
 + (UIColor *)needleColor {

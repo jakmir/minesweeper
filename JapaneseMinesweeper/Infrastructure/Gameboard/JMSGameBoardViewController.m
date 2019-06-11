@@ -20,8 +20,7 @@
 #import "JMSPopoverPresentationController.h"
 #import "JMSTutorialManager.h"
 #import "JMSGameboardView.h"
-#import "JMSMessageBoxView+LevelCompleted.h"
-#import "JMSGameModel+Tutorial.h"
+#import "JMSGameModel+TutorialWrapper.h"
 #import "UIView+MakeFitToEdges.h"
 
 static NSString * kLeaderboardId = @"JMSMainLeaderboard";
@@ -51,7 +50,7 @@ static NSString * kLeaderboardId = @"JMSMainLeaderboard";
 
     UILongPressGestureRecognizer *longTapRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self
                                                                                                     action:@selector(longTap:)];
-    CGFloat minimumPressDuration = [[NSUserDefaults standardUserDefaults] floatForKey:@"holdDuration"];
+    CGFloat minimumPressDuration = [[JMSSettings shared] minimumPressDuration];
     longTapRecognizer.minimumPressDuration = minimumPressDuration;
     [self.gameboardView.mineGridView addGestureRecognizer:longTapRecognizer];
 }
@@ -66,14 +65,14 @@ static NSString * kLeaderboardId = @"JMSMainLeaderboard";
     JMSGameModel *gameSessionInfo = self.mainViewController.gameModel;
     [gameSessionInfo registerObserver:self];
     
-    [self.gameboardView.mineGridView importFromGameboardMap:gameSessionInfo.map];
+    [self.gameboardView.mineGridView importFromGameboardMap:gameSessionInfo.mapModel.map];
     [self.gameboardView fillWithModel:gameSessionInfo];
 }
 
 - (void)createNewGame {
     self.initialTapPerformed = NO;
     
-    NSUInteger level = [[NSUserDefaults standardUserDefaults] integerForKey:@"level"];
+    NSUInteger level = [[JMSSettings shared] level];
     NSArray *map = [self.gameboardView.mineGridView exportMap];
     JMSGameModel *gameModel = [[JMSGameModel alloc] initWithLevel:level map:map];
     [gameModel registerObserver:self];
@@ -84,7 +83,7 @@ static NSString * kLeaderboardId = @"JMSMainLeaderboard";
 - (void)createTutorialGame {
     self.initialTapPerformed = YES;
     
-    NSUInteger level = [[NSUserDefaults standardUserDefaults] integerForKey:@"level"];
+    NSUInteger level = [[JMSSettings shared] level];
     NSArray *map = [self.gameboardView.mineGridView exportMap];
     JMSGameModel *gameModel = [[JMSGameModel alloc] initWithLevel:level map:map];
     [gameModel registerObserver:self];
@@ -96,8 +95,7 @@ static NSString * kLeaderboardId = @"JMSMainLeaderboard";
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 
-    // TODO: move this to UserDefaults key-value manager
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"shouldLaunchTutorial"] == YES) {
+    if ([[JMSSettings shared] shouldLaunchTutorial]) {
         [self createTutorialGame];
         _tutorialManager = [[JMSTutorialManager alloc] initWithGameboardController:self
                                                                               size:self.gameboardView.resultsView.bounds.size];
@@ -110,7 +108,7 @@ static NSString * kLeaderboardId = @"JMSMainLeaderboard";
             [self createNewGame];
         }
     }
-    self.shouldOpenCellInZeroDirection = [[NSUserDefaults standardUserDefaults] boolForKey:@"shouldOpenSafeCells"];
+    self.shouldOpenCellInZeroDirection = [[JMSSettings shared] shouldOpenSafeCells];
     
     [self configureUI];
 }
@@ -130,7 +128,7 @@ static NSString * kLeaderboardId = @"JMSMainLeaderboard";
 
     [self addGestureRecognizers];
     
-    if ([self.tutorialManager shouldDisplayTutorial]) {
+    if ([self.tutorialManager shouldLaunchTutorial]) {
         [self.tutorialManager moveToNextStep];
     }
 }
@@ -177,12 +175,14 @@ static NSString * kLeaderboardId = @"JMSMainLeaderboard";
     // TODO: simplify this long condition
     if (position.row == NSNotFound ||
         position.column == NSNotFound ||
-        ([self.tutorialManager shouldDisplayTutorial] &&
+        ([self.tutorialManager shouldLaunchTutorial] &&
          ![self.tutorialManager isFinished] &&
          ![self.tutorialManager isAllowedWithAction:JMSAllowedActionsClick position:position])) return;
     
     if (!self.initialTapPerformed) {
+        
         [self.gameModel fillMapWithLevel:self.gameModel.level exceptPosition:position];
+
         self.initialTapPerformed = YES;
     }
     
@@ -191,20 +191,18 @@ static NSString * kLeaderboardId = @"JMSMainLeaderboard";
         return;
     }
     else {
-        NSUInteger unmarkedCellsCount;
-        NSUInteger openedCellsCount;
     // TODO: simplify this long condition
-        BOOL shouldOpenSafeCells = (![self.tutorialManager shouldDisplayTutorial] && self.shouldOpenCellInZeroDirection) ||
-                                    ([self.tutorialManager shouldDisplayTutorial] && self.tutorialManager.currentStep >= JMSTutorialStepLastCellClick);
-        BOOL opened = [self.gameModel openInZeroDirectionsFromPosition:position
-                                                         unmarkedCount:&unmarkedCellsCount
-                                                           openedCount:&openedCellsCount
-                                                   shouldOpenSafeCells:shouldOpenSafeCells];
-        if (!opened) {
+        BOOL shouldOpenSafeCells = (![self.tutorialManager shouldLaunchTutorial] && self.shouldOpenCellInZeroDirection) ||
+                                    ([self.tutorialManager shouldLaunchTutorial] && self.tutorialManager.currentStep >= JMSTutorialStepLastCellClick);
+
+        BOOL isAnythingOpened = [self.gameModel openInZeroDirectionsFromPosition:position
+                                                             shouldOpenSafeCells:shouldOpenSafeCells];
+
+        if (!isAnythingOpened) {
             return;
         }
 
-        if ([self.tutorialManager shouldDisplayTutorial] && !self.tutorialManager.isFinished) {
+        if ([self.tutorialManager shouldLaunchTutorial] && !self.tutorialManager.isFinished) {
             [self.tutorialManager completeTaskWithPosition:position];
         }
     }
@@ -220,13 +218,13 @@ static NSString * kLeaderboardId = @"JMSMainLeaderboard";
         
     if (position.row == NSNotFound ||
         position.column == NSNotFound ||
-        ([self.tutorialManager shouldDisplayTutorial] &&
+        ([self.tutorialManager shouldLaunchTutorial] &&
          ![self.tutorialManager isFinished] &&
          ![self.tutorialManager isAllowedWithAction:JMSAllowedActionsMark position:position])) {
             return;
         }
         
-    if ([self.tutorialManager shouldDisplayTutorial]) {
+    if ([self.tutorialManager shouldLaunchTutorial]) {
         if ([self.tutorialManager taskCompletedWithPosition:position]) {
             return;
         }
@@ -297,7 +295,7 @@ static NSString * kLeaderboardId = @"JMSMainLeaderboard";
 }
 
 - (void)resetGame {
-    [self.gameboardView.mineGridView resetGame];
+    [self.gameboardView resetGame];
     [self.gameModel unregisterObserver:self];
     self.gameModel = nil;
     [self.mainViewController setGameModel:self.gameModel];

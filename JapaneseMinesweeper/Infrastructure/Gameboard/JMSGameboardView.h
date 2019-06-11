@@ -29,6 +29,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *btnMainMenu;
 @property (weak, nonatomic) IBOutlet UIButton *btnResetGame;
 
+- (void)resetGame;
 - (void)fillWithModel:(JMSGameModel *)model;
 - (UIImage *)mineGridViewSnapshot;
 - (void)updateMenuWithFinishedTutorial:(BOOL)tutorialFinished gameFinished:(BOOL)gameFinished;

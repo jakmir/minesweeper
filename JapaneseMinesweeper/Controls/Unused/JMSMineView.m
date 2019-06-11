@@ -15,8 +15,6 @@
 
 - (void)drawRect:(CGRect)rect
 {
-    NSLog(@"%s", __FUNCTION__);
-    
     CGColorRef fillColor = [UIColor lightGrayColor].CGColor;
     
     [super drawRect:rect];

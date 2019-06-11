@@ -51,7 +51,7 @@ static const UInt32 kTooManyMarkedMinesColor = 0xffff7f7f;
         caption = NSLocalizedString(@"Reset game", @"Reset game - button caption");
     }
     
-    CGFloat cornerRadius = [[JMSKeyValueSettingsHelper instance] buttonCornerRadius];
+    CGFloat cornerRadius = [[JMSSettings shared] buttonCornerRadius];
     
     [self.btnResetGame setTitleColor:captionColor forState:UIControlStateNormal];
     [self.btnResetGame setTitle:caption forState:UIControlStateNormal];
@@ -65,4 +65,7 @@ static const UInt32 kTooManyMarkedMinesColor = 0xffff7f7f;
     [self.btnMainMenu.layer setMasksToBounds:YES];
 }
 
+- (void)resetGame {
+    [self.mineGridView resetGame];
+}
 @end

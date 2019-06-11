@@ -22,11 +22,10 @@
 @implementation JMSOptionsViewController
 
 - (void)initializeFromUserDefaults {
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    self.level = [userDefaults integerForKey:@"level"];
-    self.optionsView.swSoundEnabled.on = [userDefaults boolForKey:@"soundEnabled"];
-    self.optionsView.swOpenSafeCells.on = [userDefaults boolForKey:@"shouldOpenSafeCells"];
-    CGFloat holdDuration = [userDefaults floatForKey:@"holdDuration"];
+    self.level = [[JMSSettings shared] level];
+    self.optionsView.swSoundEnabled.on = [[JMSSettings shared] soundEnabled];
+    self.optionsView.swOpenSafeCells.on = [[JMSSettings shared] shouldOpenSafeCells];
+    CGFloat holdDuration = [[JMSSettings shared] minimumPressDuration];
     self.optionsView.slHoldDuration.value = holdDuration;
     [self sliderValueChanged:self.optionsView.slHoldDuration];
 }
@@ -51,14 +50,12 @@
 }
 
 - (IBAction)save {
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    
-    [userDefaults setInteger:self.level forKey:@"level"];
-    [userDefaults setBool:self.optionsView.swSoundEnabled.on forKey:@"soundEnabled"];
-    [userDefaults setFloat:self.optionsView.slHoldDuration.value forKey:@"holdDuration"];
-    [userDefaults setBool:self.optionsView.swOpenSafeCells.on forKey:@"shouldOpenSafeCells"];
-    [userDefaults synchronize];
-    
+    JMSSettings *settings = [JMSSettings shared];
+    [settings setLevel:self.level];
+    [settings setSoundEnabled:self.optionsView.swSoundEnabled.on];
+    [settings setMinimumPressDuration:self.optionsView.slHoldDuration.value];
+    [settings setShouldOpenSafeCells:self.optionsView.swOpenSafeCells.on];
+
     [[JMSSoundHelper shared] muteSound:!self.optionsView.swSoundEnabled.on];
     
     [self dismissViewControllerAnimated:NO completion:nil];
@@ -71,6 +68,5 @@
 - (void)didSpeedmeterValueChange:(JMSGradientSpeedmeterView *)sender value:(NSUInteger)value {
     self.level = value;
 }
-
 
 @end

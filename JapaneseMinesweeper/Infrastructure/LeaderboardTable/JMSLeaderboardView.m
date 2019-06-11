@@ -22,7 +22,7 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
     
-    CGFloat cornerRadius = [[JMSKeyValueSettingsHelper instance] buttonCornerRadius];
+    CGFloat cornerRadius = [[JMSSettings shared] buttonCornerRadius];
     [self.btnBackToMainMenu.layer setCornerRadius:cornerRadius];
     [self.btnShowGameCenterScreen.layer setCornerRadius:cornerRadius];
     [self.btnBackToMainMenu.layer setMasksToBounds:YES];

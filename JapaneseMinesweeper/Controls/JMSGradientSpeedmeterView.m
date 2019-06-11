@@ -134,7 +134,7 @@
     
     NSUInteger totalSteps = discreteStepsCount + extraSteps * 3;
     for (NSUInteger i = 0; i < totalSteps; i++) {
-        CGFloat hue = 0.25 * (1 - (CGFloat)i/totalSteps);
+        CGFloat hue = 0.25 * (1 - (CGFloat)i / totalSteps);
         [[UIColor colorWithHue:hue saturation:1 brightness:1 alpha:1] set];
         [cell fill];
         [cell stroke];

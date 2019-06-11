@@ -10,13 +10,9 @@
 #import "Structs.h"
 #import "AlteredCellObserver.h"
 #import "Enums.h"
+#import "JMSMapModel.h"
 
 @interface JMSGameModel : NSObject
-
-@property (nonatomic, readonly) NSInteger rowCount;
-@property (nonatomic, readonly) NSInteger colCount;
-
-@property (nonatomic, getter=isLevelCreated) BOOL levelCreated;
 
 @property (nonatomic, readonly, getter=isGameFinished) BOOL gameFinished;
 
@@ -24,10 +20,12 @@
 @property (nonatomic) NSUInteger level;
 @property (nonatomic, readonly) NSUInteger minesCount;
 
-@property (nonatomic, strong) NSArray *map;
+@property (nonatomic, strong) JMSMapModel *mapModel;
 
 - (instancetype)initWithLevel:(NSUInteger)level map:(NSArray *)map;
 - (instancetype)initWithLevel:(NSUInteger)level;
+
+- (void)fillMapWithLevel:(NSUInteger)level exceptPosition:(JMSPosition)position;
 
 - (NSUInteger)markedCellsCount;
 
@@ -35,19 +33,14 @@
 
 - (CGFloat)progress;
 - (BOOL)isMinePresentAtPosition:(JMSPosition)position;
-- (void)fillMapWithLevel:(NSUInteger)level exceptPosition:(JMSPosition)position;
-- (void)evaluateMapCellInfos;
-- (JMSMineGridCellState) cellState:(JMSPosition)position;
-- (JMSMineGridCellNeighboursSummary) cellSummary:(JMSPosition)position;
+
 - (CGFloat)levelModifier;
 - (CGFloat)cellBasedScore;
 - (CGFloat)scoreToAddFromPosition:(JMSPosition)position;
 - (NSInteger)cellsLeftToOpen;
-- (CGFloat)bonusFromPosition:(JMSPosition)position;
 - (NSInteger)markRemainingMines;
+
 - (BOOL)openInZeroDirectionsFromPosition:(JMSPosition)position
-                           unmarkedCount:(NSUInteger *)unmarkedCount
-                             openedCount:(NSUInteger *)openedCount
                      shouldOpenSafeCells:(BOOL)shouldOpenSafeCells;
 
 - (BOOL)openCellWithPosition:(JMSPosition)position;
